@@ -54,7 +54,7 @@ class ComposerInstaller
 
     protected static function copyDistributionFiles()
     {
-        if (!file_exists(!self::KUICK_PATH)) {
+        if (!file_exists(self::KUICK_PATH)) {
             return;
         }
         copy(self::KUICK_PATH . self::INDEX_FILE, BASE_PATH . self::INDEX_FILE);
