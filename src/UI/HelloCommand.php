@@ -10,10 +10,12 @@
 
 namespace Kuick\UI;
 
-class DefaultCommand implements CommandInterface
+class HelloCommand implements CommandInterface
 {
+    private const MESSAGE_TEMPLATE = 'Kuick says: Hello %s!';
+
     public function __invoke(array $arguments): string
     {
-        return 'Kuick says: hello!';
+        return sprintf(self::MESSAGE_TEMPLATE, isset($arguments[0]) ? $arguments[0] : 'you');
     }
 }

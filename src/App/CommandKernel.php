@@ -10,14 +10,14 @@
 
 namespace Kuick\App;
 
-use Kuick\Router\CommandLauncher;
-use Kuick\Router\CommandMatcher;
+use Kuick\Console\CommandLauncher;
+use Kuick\Console\CommandMatcher;
 use Throwable;
 
 /**
  *
  */
-class CLIKernel
+class CommandKernel
 {
     private const CONTAINER_DEFINITION_LOCATIONS = [
         BASE_PATH . '/etc/*.di.php',
@@ -27,17 +27,21 @@ class CLIKernel
         BASE_PATH . '/src/UI/*.php',
         BASE_PATH . '/vendor/kuick-framework/src/UI/*.php',
     ];
+    private const NEW_LINE_CHAR = "\n";
 
     public function __invoke(array $arguments): void
     {
         try {
-            $container = ContainerFactory::create(self::CONTAINER_DEFINITION_LOCATIONS, self::CONTAINER_CLASS_LOCATIONS);
+            $container = ContainerFactory::create(
+                self::CONTAINER_DEFINITION_LOCATIONS,
+                self::CONTAINER_CLASS_LOCATIONS
+            );
             echo $container->get(CommandLauncher::class)(
                 $container->get(CommandMatcher::class)->matchCommand($arguments),
                 $arguments
-            ) . "\n";
+            ) . self::NEW_LINE_CHAR;
         } catch (Throwable $error) {
-            echo $error->getMessage();
+            echo $error->getMessage() . self::NEW_LINE_CHAR;
         }
     }
 

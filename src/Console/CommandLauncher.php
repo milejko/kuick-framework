@@ -8,7 +8,7 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-namespace Kuick\Router;
+namespace Kuick\Console;
 
 use Kuick\App\KernelException;
 use Kuick\UI\CommandInterface;
@@ -25,10 +25,10 @@ class CommandLauncher
 
     public function __invoke(array $command, array $arguments): string
     {
-        $command = $this->container->get($command['action']);
+        $command = $this->container->get($command['command']);
         if (!($command instanceof CommandInterface)) {
-            throw new KernelException($command['action'] . ' is not a Command');
+            throw new KernelException($command['command'] . ' is not a Command');
         }
-        return $command->__invoke($arguments);
+        return $command->__invoke(array_slice($arguments, 2));
     }
 }

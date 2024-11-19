@@ -8,12 +8,10 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-use Kuick\UI\HelloCommand;
+namespace Kuick\Console;
 
-return [
-    [
-        'name' => 'hello',
-        'command' => HelloCommand::class,
-        'description' => 'It says hello to you ie. ./console.php hello Joe'
-    ]
-];
+use Exception;
+
+class ConsoleException extends Exception
+{
+}

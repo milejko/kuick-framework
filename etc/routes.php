@@ -14,11 +14,11 @@ use Kuick\UI\OpsAction;
 use Kuick\UI\OpsGuard;
 
 return [
-    'home' => [
+    [
         'path' => '/',
         'action' => DefaultRootAction::class,
     ],
-    'operations' => [
+    [
         'method' => RequestMethod::OPTIONS,
         'path' => '/api/ops',
         'action' => OpsAction::class,

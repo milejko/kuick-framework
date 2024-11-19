@@ -9,16 +9,13 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-use Kuick\App\CLIKernel;
+use Kuick\App\CommandKernel;
 
-//definicja katalogu bazowego
-define('BASE_PATH', realpath(__DIR__ . '/../'));
+define('BASE_PATH', __DIR__ . '/../');
 
-//dołączenie autoloadera
 require BASE_PATH . '/vendor/autoload.php';
 
-//unlimited execution time and large memory limit - 2GB
 ini_set('max_execution_time', 0);
 ini_set('memory_limit', '2048M');
 
-(new CLIKernel())($argv);
+(new CommandKernel())($argv);

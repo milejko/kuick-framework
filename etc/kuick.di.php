@@ -10,9 +10,9 @@
 
 namespace  Kuick\App;
 
+use Kuick\Console\CommandLauncher;
+use Kuick\Console\CommandMatcher;
 use Kuick\Router\ActionLauncher;
-use Kuick\Router\CommandLauncher;
-use Kuick\Router\CommandMatcher;
 use Kuick\Router\RouteMatcher;
 
 use function DI\autowire;

@@ -23,6 +23,11 @@ class RouteMatcher
     {
     }
 
+    public function getRoutes(): array
+    {
+        return $this->routes;
+    }
+
     public function matchRoute(Request $request): array
     {
         foreach ($this->routes as $route) {

@@ -8,24 +8,31 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-namespace Kuick\Router;
+namespace Kuick\Console;
 
 use Kuick\App\KernelException;
-use Kuick\Http\Request;
+use Kuick\UI\CommandListingCommand;
 
 /**
  *
  */
 class CommandMatcher
 {
+    private const LIST_COMMAND = ['name' => 'default', 'command' => CommandListingCommand::class];
+
     public function __construct(private array $commands = [])
     {
+    }
+
+    public function getCommands(): array
+    {
+        return $this->commands;
     }
 
     public function matchCommand(array $arguments): array
     {
         if (!isset($arguments[1])) {
-            throw new KernelException('Command name not specified');    
+            return self::LIST_COMMAND;
         }
         foreach ($this->commands as $command) {
             (new CommandValidator)($command);

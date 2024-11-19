@@ -48,7 +48,7 @@ class ComposerInstaller
     protected static function createSysDirs()
     {
         foreach (self::$sysDirs as $dir) {
-            !file_exists(BASE_PATH . '/' . $dir) ? mkdir(BASE_PATH . '/' . $dir, 0777, true) : null;
+            !file_exists(BASE_PATH . DIRECTORY_SEPARATOR . $dir) ? mkdir(BASE_PATH . DIRECTORY_SEPARATOR . $dir, 0777, true) : null;
             chmod($dir, 0777);
         }
     }
