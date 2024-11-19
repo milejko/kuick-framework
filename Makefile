@@ -32,5 +32,6 @@ push: version.txt
 #########################################
 start: version.txt
 	docker build --target=dev-server --tag=$(IMAGE_NAME):$(shell cat version.txt)-dev .
+	docker run --rm --name kuick-dev -v ./:/var/www/html $(IMAGE_NAME):$(shell cat version.txt)-dev composer install
 	docker run --rm --name kuick-dev -v ./:/var/www/html -p 8080:8080 $(IMAGE_NAME):$(shell cat version.txt)-dev
 
