@@ -14,3 +14,11 @@ define('BASE_PATH', realpath(__DIR__ . '/../'));
 
 //dołączenie autoloadera
 require BASE_PATH . '/vendor/autoload.php';
+
+//unlimited execution time and large memory limit - 2GB
+ini_set('max_execution_time', 0);
+ini_set('memory_limit', '2048M');
+
+//add commands and run
+$this->symfonyConsoleApplication->addCommands($this->getApplicationCommands());
+$this->symfonyConsoleApplication->run();

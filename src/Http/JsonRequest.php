@@ -17,6 +17,6 @@ class JsonRequest extends Request
 {
     public function __construct()
     {
-        $this->withHeader(ContentType::HEADER_NAME, ContentType::JSON);
+        $this->withHeader(HeaderContentType::HEADER_NAME, HeaderContentType::JSON);
     }
 }

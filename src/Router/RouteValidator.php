@@ -11,7 +11,7 @@
 namespace Kuick\Router;
 
 use Kuick\Http\HttpException;
-use Kuick\Http\HttpMethod;
+use Kuick\Http\RequestMethod;
 
 /**
  *
@@ -45,7 +45,7 @@ class RouteValidator
 
     private function validateMethod(array $route): void
     {
-        if (isset($route['method']) && !in_array($route['method'], HttpMethod::ALL_METHODS)) {
+        if (isset($route['method']) && !in_array($route['method'], RequestMethod::ALL_METHODS)) {
             throw new HttpException('Route method invalid');
         }
     }

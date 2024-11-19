@@ -17,7 +17,7 @@ class JsonResponse extends Response
 {
     public function __construct(private array $data, private int $code = self::CODE_OK)
     {
-        $this->withHeader(ContentType::HEADER_NAME, ContentType::JSON, $this->code);
+        $this->withHeader(HeaderContentType::HEADER_NAME, HeaderContentType::JSON, $this->code);
         $this->withBody(json_encode($this->data));
     }
 }

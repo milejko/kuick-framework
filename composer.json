@@ -21,7 +21,9 @@
         "ext-pcre": "*",
         "ext-pdo": "*",
         "ext-reflection": "*",
-        "ext-spl": "*"
+        "ext-spl": "*",
+        "php-di/php-di": "^7.0",
+        "symfony/console": "^6.0"
     },
     "scripts": {
         "fix:phpcbf": "phpcbf",

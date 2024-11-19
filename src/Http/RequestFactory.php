@@ -20,11 +20,11 @@ class RequestFactory
 
     private static array $serverVars;
 
-    public static function createRequestWithServerGlobals(array $serverVars, string $body = ''): Request
+    public static function create(array $serverVars, string $body = ''): Request
     {
         self::$serverVars = $serverVars;
         $request = new Request();
-        $request->withMethod(self::getServerVariable(self::REQUEST_METHOD, HttpMethod::GET));
+        $request->withMethod(self::getServerVariable(self::REQUEST_METHOD, RequestMethod::GET));
         $request->withUri(
             strpos(self::getServerVariable('SERVER_PROTOCOL'), 'HTTPS') ? 'https://' : 'http://' .
             self::getServerVariable('HTTP_HOST') . self::getServerVariable('REQUEST_URI')

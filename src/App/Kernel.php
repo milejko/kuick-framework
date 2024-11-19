@@ -10,7 +10,7 @@
 
 namespace Kuick\App;
 
-use Kuick\Http\JsonResponse;
+use Kuick\Http\JsonErrorResponse;
 use Kuick\Http\Request;
 use Kuick\Router\ActionLauncher;
 use Kuick\Router\RouteMatcher;
@@ -67,9 +67,7 @@ class Kernel
                 $this->request
             )->send();
         } catch (Throwable $error) {
-            (new JsonResponse([
-                'error' => $error->getMessage(),
-            ], $error->getCode()))->send();
+            (new JsonErrorResponse($error, $error->getCode()))->send();
         }
     }
 }
