@@ -1,6 +1,6 @@
 <?php
 
-use Kuick\Actions\DefaultRootAction;
+use Kuick\UI\DefaultRootAction;
 use Kuick\Http\HttpMethod;
 
 return [

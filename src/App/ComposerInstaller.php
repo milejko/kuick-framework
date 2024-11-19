@@ -19,7 +19,7 @@ class ComposerInstaller
 {
     private const KUICK_PATH = BASE_PATH . '/vendor/kuick/framework';
     private const INDEX_FILE = '/public/index.php';
-    private const CONSOLE_FILE = '/bin/console';
+    private const CONSOLE_FILE = '/bin/console.php';
     private const CONFIG_FILE = '/etc/config.php';
     private const ROUTES_FILE = '/etc/routes.php';
 

@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 
 /**
@@ -8,12 +9,8 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-namespace Kuick\Http;
+//definicja katalogu bazowego
+define('BASE_PATH', realpath(__DIR__ . '/../'));
 
-class NotFoundException extends HttpException
-{
-    private const MESSAGE = 'Not found';
-
-    protected $code = Response::CODE_NOT_FOUND;
-    protected $message = self::MESSAGE;
-}
+//dołączenie autoloadera
+require BASE_PATH . '/vendor/autoload.php';
