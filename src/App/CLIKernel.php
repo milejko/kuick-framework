@@ -10,16 +10,14 @@
 
 namespace Kuick\App;
 
-use Kuick\Http\JsonErrorResponse;
-use Kuick\Http\Request;
-use Kuick\Router\ActionLauncher;
-use Kuick\Router\RouteMatcher;
+use Kuick\Router\CommandLauncher;
+use Kuick\Router\CommandMatcher;
 use Throwable;
 
 /**
  *
  */
-final class Kernel
+class CLIKernel
 {
     private const CONTAINER_DEFINITION_LOCATIONS = [
         BASE_PATH . '/etc/*.di.php',
@@ -30,16 +28,17 @@ final class Kernel
         BASE_PATH . '/vendor/kuick-framework/src/UI/*.php',
     ];
 
-    public function __invoke(Request $request): void
+    public function __invoke(array $arguments): void
     {
         try {
             $container = ContainerFactory::create(self::CONTAINER_DEFINITION_LOCATIONS, self::CONTAINER_CLASS_LOCATIONS);
-            ($container->get(ActionLauncher::class))(
-                $container->get(RouteMatcher::class)->matchRoute($request),
-                $request
-            )->send();
+            echo $container->get(CommandLauncher::class)(
+                $container->get(CommandMatcher::class)->matchCommand($arguments),
+                $arguments
+            ) . "\n";
         } catch (Throwable $error) {
-            (new JsonErrorResponse($error, $error->getCode()))->send();
+            echo $error->getMessage();
         }
     }
+
 }

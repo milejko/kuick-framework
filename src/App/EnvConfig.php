@@ -8,10 +8,8 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-use Kuick\App\Kernel;
-use Kuick\Http\RequestFactory;
+namespace Kuick\App;
 
-define('BASE_PATH', __DIR__ . '/../');
-require BASE_PATH . '/vendor/autoload.php';
-
-(new Kernel())(RequestFactory::create($_SERVER, file_get_contents('php://input')));
+class EnvConfig extends KernelConfig
+{
+}

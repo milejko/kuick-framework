@@ -11,7 +11,6 @@
 namespace Kuick\Router;
 
 use Kuick\Http\HttpNotFoundException;
-use Kuick\Http\NotFoundException;
 use Kuick\Http\Request;
 use Kuick\Http\RequestMethod;
 
@@ -27,6 +26,7 @@ class RouteMatcher
     public function matchRoute(Request $request): array
     {
         foreach ($this->routes as $route) {
+            (new RouteValidator)($route);    
             $routeMethod = isset($route['method']) ? $route['method'] : RequestMethod::GET;
             if ($request->getMethod() != $routeMethod) {
                 continue;

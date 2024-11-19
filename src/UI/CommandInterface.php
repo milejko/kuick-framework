@@ -8,10 +8,14 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-use Kuick\App\Kernel;
-use Kuick\Http\RequestFactory;
+namespace Kuick\UI;
 
-define('BASE_PATH', __DIR__ . '/../');
-require BASE_PATH . '/vendor/autoload.php';
+use Kuick\Http\Request;
 
-(new Kernel())(RequestFactory::create($_SERVER, file_get_contents('php://input')));
+/**
+ *
+ */
+interface CommandInterface
+{
+    public function __invoke(array $arguments): string;
+}

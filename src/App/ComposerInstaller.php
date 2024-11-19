@@ -22,6 +22,7 @@ class ComposerInstaller
     private const CONSOLE_FILE = '/bin/console.php';
     private const CONFIG_FILE = '/etc/config.php';
     private const ROUTES_FILE = '/etc/routes.php';
+    private const COMMANDS_FILE = '/etc/commands.php';
 
     protected static array $sysDirs = ['etc', 'public', 'bin', 'var'];
 
@@ -65,6 +66,9 @@ class ComposerInstaller
         }
         if (!file_exists(BASE_PATH . self::ROUTES_FILE)) {
             copy(self::KUICK_PATH . self::ROUTES_FILE, BASE_PATH . self::ROUTES_FILE);
+        }
+        if (!file_exists(BASE_PATH . self::COMMANDS_FILE)) {
+            copy(self::KUICK_PATH . self::COMMANDS_FILE, BASE_PATH . self::COMMANDS_FILE);
         }
     }
 }

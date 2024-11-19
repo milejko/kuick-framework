@@ -8,8 +8,9 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-namespace Kuick\Guards;
+namespace Kuick\UI;
 
+use Kuick\App\KernelConfig;
 use Kuick\Http\HttpForbiddenException;
 use Kuick\Http\HttpUnauthorizedException;
 use Kuick\Http\Request;
@@ -17,14 +18,21 @@ use Kuick\UI\GuardInterface;
 
 class OpsGuard implements GuardInterface
 {
-    private const OPS_TOKEN = 'test';
+    private const AUTHORIZATION_HEADER = 'Authorization';
+    private const OPS_TOKEN_PREFIX = 'Bearer ';
+
+    public function __construct(private KernelConfig $kernelConfig)
+    {
+        
+    }
 
     public function __invoke(Request $request): void
     {
-        if (!$request->getQueryParam('token')) {
+        if (!$request->getHeader(self::AUTHORIZATION_HEADER)) {
             throw new HttpUnauthorizedException('Token is missing');
         }
-        if ($request->getQueryParam('token') != self::OPS_TOKEN) {
+        $expectedToken = self::OPS_TOKEN_PREFIX . $this->kernelConfig->get('opsToken');
+        if ($request->getHeader(self::AUTHORIZATION_HEADER) != $expectedToken) {
             throw new HttpForbiddenException('Token invalid');
         }
     }
