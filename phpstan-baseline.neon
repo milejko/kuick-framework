@@ -1,0 +1,6 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#invalid type Composer\\\\Script\\\\Event#"
+			count: 3
+			path: src/App/ComposerInstaller.php
