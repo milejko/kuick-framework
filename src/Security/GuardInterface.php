@@ -10,7 +10,7 @@
 
 namespace Kuick\Security;
 
-use Kuick\Http\Request;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provides actions with optional security layer, like: header validation, request filterint etc.

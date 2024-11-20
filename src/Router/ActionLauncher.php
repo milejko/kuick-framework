@@ -11,20 +11,17 @@
 namespace Kuick\Router;
 
 use Kuick\Http\HttpException;
-use Kuick\Http\Request;
-use Kuick\Http\Response;
-use Kuick\Http\ResponseCode;
 use Kuick\UI\ActionInterface;
 use Kuick\Security\GuardInterface;
 use Psr\Container\ContainerInterface;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  *
  */
 class ActionLauncher
 {
-    private const EMPTY_OPTIONS_HEADER = 'X-Options-Request';
-
     public function __construct(private ContainerInterface $container)
     {
     }
@@ -32,7 +29,7 @@ class ActionLauncher
     public function __invoke(array $route, Request $request): Response
     {
         if (empty($route)) {
-            return (new Response)->withHeader(self::EMPTY_OPTIONS_HEADER, ResponseCode::NO_CONTENT, ResponseCode::NO_CONTENT);
+            return (new Response())->setStatusCode(Response::HTTP_NO_CONTENT);
         }
         if (isset($route['guards'])) {
             $this->executeGuards($route['guards'], $request);

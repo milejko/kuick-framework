@@ -12,8 +12,8 @@ namespace Kuick\Ops\Security;
 
 use Kuick\App\AppConfig;
 use Kuick\Http\HttpForbiddenException;
-use Kuick\Http\Request;
 use Kuick\Security\GuardInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 class OpsGuard implements GuardInterface
 {
@@ -28,7 +28,7 @@ class OpsGuard implements GuardInterface
     public function __invoke(Request $request): void
     {
         //token mismatch
-        if ($request->getHeader(self::AUTHORIZATION_HEADER) != sprintf(self::BEARER_TOKEN_TEMPLATE, $this->appConfig->get(self::TOKEN_CONFIG_KEY))) {
+        if ($request->headers->get(self::AUTHORIZATION_HEADER) != sprintf(self::BEARER_TOKEN_TEMPLATE, $this->appConfig->get(self::TOKEN_CONFIG_KEY))) {
             throw new HttpForbiddenException(self::MESSAGE_TOKEN_MISMATCH);
         }
     }

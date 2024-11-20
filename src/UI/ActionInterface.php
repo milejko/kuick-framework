@@ -10,8 +10,8 @@
 
 namespace Kuick\UI;
 
-use Kuick\Http\Request;
-use Kuick\Http\Response;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Kuick Actions should implement this interface

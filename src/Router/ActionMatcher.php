@@ -12,8 +12,7 @@ namespace Kuick\Router;
 
 use Kuick\App\RoutesConfig;
 use Kuick\Http\HttpNotFoundException;
-use Kuick\Http\Request;
-use Kuick\Http\RequestMethod;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  *
@@ -33,15 +32,15 @@ class ActionMatcher
     {
         foreach ($this->routes->getAll() as $route) {
             (new ActionValidator())($route);
-            $routeMethod = $route['method'] ?? RequestMethod::GET;
+            $routeMethod = $route['method'] ?? Request::METHOD_GET;
             if ($request->getMethod() != $routeMethod) {
                 continue;
             }
-            if (preg_match('#^' . $route['pattern'] . '$#', $request->getPath())) {
+            if (preg_match('#^' . $route['pattern'] . '$#', $request->getPathInfo())) {
                 return $route;
             }
         }
-        if (RequestMethod::OPTIONS == $request->getMethod()) {
+        if (Request::METHOD_OPTIONS == $request->getMethod()) {
             return [];
         }
         throw new HttpNotFoundException('Route not found');

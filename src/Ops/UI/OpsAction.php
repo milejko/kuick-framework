@@ -11,9 +11,9 @@
 namespace Kuick\Ops\UI;
 
 use Kuick\App\AppConfig;
-use Kuick\Http\JsonResponse;
-use Kuick\Http\Request;
 use Kuick\UI\ActionInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 class OpsAction implements ActionInterface
 {
@@ -27,11 +27,10 @@ class OpsAction implements ActionInterface
             'request' => [
                 'method' => $request->getMethod(),
                 'uri' => $request->getUri(),
-                'headers' => $request->getHeaders(),
-                'path' => $request->getPath(),
-                'pathElements' => $request->getPathElements(),
-                'queryParams' => $request->getQueryParams(),
-                'body' => $request->getBody(),
+                'headers' => $request->headers->all(),
+                'path' => $request->getPathInfo(),
+                'queryParams' => $request->query->all(),
+                'body' => $request->getContent(),
             ],
             'config' => $this->appConfig->getAll(),
             'server' => [

@@ -11,7 +11,7 @@
 namespace Kuick\Router;
 
 use Kuick\Http\HttpException;
-use Kuick\Http\RequestMethod;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  *
@@ -55,7 +55,20 @@ class ActionValidator
 
     private function validateMethod(array $route): void
     {
-        if (isset($route['method']) && !in_array($route['method'], RequestMethod::ALL_METHODS)) {
+        if (
+            isset($route['method']) && !in_array(
+                $route['method'],
+                [
+                    Request::METHOD_GET,
+                    Request::METHOD_HEAD,
+                    Request::METHOD_OPTIONS,
+                    Request::METHOD_POST,
+                    Request::METHOD_PUT,
+                    Request::METHOD_DELETE,
+                    Request::METHOD_PATCH,
+                ]
+            )
+        ) {
             throw new HttpException('Action: ' . $route['pattern'] . ' method invalid');
         }
     }

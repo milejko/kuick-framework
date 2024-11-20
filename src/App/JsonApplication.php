@@ -10,10 +10,10 @@
 
 namespace Kuick\App;
 
-use Kuick\Http\JsonErrorResponse;
-use Kuick\Http\Request;
 use Kuick\Router\ActionLauncher;
 use Kuick\Router\ActionMatcher;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Throwable;
 
 /**
@@ -41,7 +41,12 @@ final class JsonApplication
                 $request
             )->send();
         } catch (Throwable $error) {
-            (new JsonErrorResponse($error, $error->getCode()))->send();
+            $errorResponse = new JsonResponse([
+                'error' => $error->getMessage(),
+                'trace' => getenv('APP_ENV') == 'dev' ? $error->getTrace(): 'not a dev environment',
+            ]);
+            $errorResponse->setStatusCode($error->getCode() > 0 ? $error->getCode() : JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+            $errorResponse->send();
         }
     }
 }
