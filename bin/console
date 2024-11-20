@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 
 /**
@@ -8,14 +9,10 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-namespace Kuick\Http;
+define('BASE_PATH', realpath(dirname(__DIR__)));
 
-use Exception;
+require BASE_PATH . '/vendor/autoload.php';
 
-class HttpException extends Exception
-{
-    private const MESSAGE = 'Internal server error';
-
-    protected $code = Response::CODE_ERROR;
-    protected $message = self::MESSAGE;
-}
+(new Kuick\App\ConsoleApplication)(
+    $argv
+);

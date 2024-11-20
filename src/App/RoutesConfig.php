@@ -8,14 +8,21 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-namespace Kuick\Http;
+namespace Kuick\App;
 
-use Exception;
-
-class HttpException extends Exception
+class RoutesConfig
 {
-    private const MESSAGE = 'Internal server error';
+    public function __construct(private array $values)
+    {
+    }
 
-    protected $code = Response::CODE_ERROR;
-    protected $message = self::MESSAGE;
+    public function get(string $name): array
+    {
+        return $this->values[$name] ?? [];
+    }
+
+    public function getAll(): array
+    {
+        return $this->values;
+    }
 }

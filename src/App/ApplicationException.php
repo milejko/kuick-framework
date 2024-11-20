@@ -8,14 +8,10 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-namespace Kuick\Http;
+namespace Kuick\App;
 
 use Exception;
 
-class HttpException extends Exception
+class AppException extends Exception
 {
-    private const MESSAGE = 'Internal server error';
-
-    protected $code = Response::CODE_ERROR;
-    protected $message = self::MESSAGE;
 }

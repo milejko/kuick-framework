@@ -8,14 +8,12 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-namespace Kuick\Http;
+use Kuick\UI\Example\Console\HelloCommand;
 
-use Exception;
-
-class HttpException extends Exception
-{
-    private const MESSAGE = 'Internal server error';
-
-    protected $code = Response::CODE_ERROR;
-    protected $message = self::MESSAGE;
-}
+return [
+    //You probably need to remove this sample command
+    'hello' => [
+        'command' => HelloCommand::class,
+        //'description' => 'Optional description'
+    ]
+];

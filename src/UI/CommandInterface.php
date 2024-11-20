@@ -8,14 +8,12 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-namespace Kuick\Http;
+namespace Kuick\UI;
 
-use Exception;
-
-class HttpException extends Exception
+/**
+ *
+ */
+interface CommandInterface
 {
-    private const MESSAGE = 'Internal server error';
-
-    protected $code = Response::CODE_ERROR;
-    protected $message = self::MESSAGE;
+    public function __invoke(array $arguments): string;
 }

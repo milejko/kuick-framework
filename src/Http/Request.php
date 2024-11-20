@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Message Broker
+ * Kuick Framework (https://github.com/milejko/kuick-framework)
  *
- * @link       https://github.com/milejko/message-broker.git
- * @copyright  Copyright (c) 2024 Mariusz Miłejko (mariusz@milejko.pl)
+ * @link       https://github.com/milejko/kuick-framework
+ * @copyright  Copyright (c) 2010-2024 Mariusz Miłejko (mariusz@milejko.pl)
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
@@ -24,8 +24,8 @@ class Request
 
     public function withMethod(string $method): self
     {
-        if (!in_array($method, HttpMethod::ALL_METHODS)) {
-            throw new BadRequestException('Method invalid');
+        if (!in_array($method, RequestMethod::ALL_METHODS)) {
+            throw new HttpBadRequestException('Method invalid');
         }
         $this->method = $method;
         return $this;
@@ -77,6 +77,11 @@ class Request
         return $this->path;
     }
 
+    public function getPathElements(): array
+    {
+        return explode(DIRECTORY_SEPARATOR, trim($this->path, DIRECTORY_SEPARATOR));
+    }
+
     public function getBody(): string
     {
         return $this->body;
@@ -86,7 +91,7 @@ class Request
     {
         $decodedBody = json_decode($this->getBody(), true);
         if (null === $decodedBody) {
-            throw new BadRequestException('Request body is not a valid JSON');
+            throw new HttpBadRequestException('Request body is not a valid JSON');
         }
         return $decodedBody;
     }
@@ -94,7 +99,7 @@ class Request
     public function getHeaders(): array
     {
         $headers = [];
-        foreach ($this->getHeaders() as $headerName => $headerValue) {
+        foreach ($this->headers as $headerName => $headerValue) {
             $headers[] = $headerName . ': ' . $headerValue;
         }
         return $headers;
@@ -117,6 +122,6 @@ class Request
 
     public function getQueryParam(string $name): ?string
     {
-        return isset($this->queryParams[$name]) ? $this->queryParams[$name] : null;
+        return $this->queryParams[$name] ?? null;
     }
 }

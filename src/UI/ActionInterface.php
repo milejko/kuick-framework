@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Message Broker
+ * Kuick Framework (https://github.com/milejko/kuick-framework)
  *
- * @link       https://github.com/milejko/message-broker.git
- * @copyright  Copyright (c) 2024 Mariusz Miłejko (mariusz@milejko.pl)
+ * @link       https://github.com/milejko/kuick-framework
+ * @copyright  Copyright (c) 2010-2024 Mariusz Miłejko (mariusz@milejko.pl)
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
@@ -14,7 +14,7 @@ use Kuick\Http\Request;
 use Kuick\Http\Response;
 
 /**
- *
+ * Kuick Actions should implement this interface
  */
 interface ActionInterface
 {

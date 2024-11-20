@@ -8,14 +8,8 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-namespace Kuick\Http;
+use Kuick\Security\Ops\OpsGuard;
 
-use Exception;
-
-class HttpException extends Exception
-{
-    private const MESSAGE = 'Internal server error';
-
-    protected $code = Response::CODE_ERROR;
-    protected $message = self::MESSAGE;
-}
+return [
+    OpsGuard::TOKEN_CONFIG_KEY => 'change-this-token',
+];

@@ -2,19 +2,19 @@
 
 namespace Tests\Kuick\Actions;
 
-use Kuick\Actions\DefaultRootAction;
 use Kuick\Http\RequestFactory;
+use Kuick\UI\Example\HelloAction;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Kuick\Actions\DefaultRootAction
+ * @covers \Kuick\UI\Example\HelloAction
  */
-class DefaultRootActionTest extends TestCase
+class HelloActionTest extends TestCase
 {
     public function testIfKuickSaysHello(): void
     {
-        $request = RequestFactory::createRequestWithServerGlobals([]);
-        $response = (new DefaultRootAction)($request);
+        $request = RequestFactory::create([]);
+        $response = (new HelloAction())($request);
         self::assertEquals('["Kuick says: hello!"]', $response->getBody());
         self::assertEquals([
             [

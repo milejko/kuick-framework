@@ -1,10 +1,16 @@
 <?php
 
-use Kuick\App\Kernel;
-use Kuick\Http\RequestFactory;
+/**
+ * Kuick Framework (https://github.com/milejko/kuick-framework)
+ *
+ * @link       https://github.com/milejko/kuick-framework
+ * @copyright  Copyright (c) 2010-2024 Mariusz Miłejko (mariusz@milejko.pl)
+ * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
+ */
 
-define('BASE_PATH', __DIR__ . '/../');
+define('BASE_PATH', realpath(dirname(__DIR__)));
 require BASE_PATH . '/vendor/autoload.php';
 
-$request = RequestFactory::createRequestWithServerGlobals($_SERVER, file_get_contents('php://input'));
-(new Kernel($request))->run();
+(new Kuick\App\JsonApplication)(
+    Kuick\Http\RequestFactory::create($_SERVER, file_get_contents('php://input'))
+);

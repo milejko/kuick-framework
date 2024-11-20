@@ -8,14 +8,14 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-namespace Kuick\Http;
+namespace Kuick\Security;
 
-use Exception;
+use Kuick\Http\Request;
 
-class HttpException extends Exception
+/**
+ * Provides actions with optional security layer, like: header validation, request filterint etc.
+ */
+interface GuardInterface
 {
-    private const MESSAGE = 'Internal server error';
-
-    protected $code = Response::CODE_ERROR;
-    protected $message = self::MESSAGE;
+    public function __invoke(Request $request): void;
 }
