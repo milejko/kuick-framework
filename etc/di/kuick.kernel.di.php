@@ -22,15 +22,15 @@ return [
         $configs = [];
         //global config
         foreach (glob(BASE_PATH . '/etc/*.config.php') as $configFile) {
-            $configs += include $configFile;
+            $configs = array_merge($configs, include $configFile);
         }
         //environment specific config (higher priority)
         $appEnv = getenv('APP_ENV') ?: 'prod';
         foreach (glob(BASE_PATH . '/etc/*.config.' . $appEnv . '.php') as $configFile) {
-            $configs += include $configFile;
+            $configs = array_merge($configs, include $configFile);
         }
         //env config (highest priority)
-        $configs += getenv();
+        $configs = array_merge($configs, getenv());
         $config = new AppConfig($configs);
 
         $defaultCharset = 'UTF-8';
@@ -50,7 +50,7 @@ return [
     ActionMatcher::class => function () {
         $routes = [];
         foreach (glob(BASE_PATH . '/etc/routes/*.actions.php') as $routeFile) {
-            $routes += include $routeFile;
+            $routes = array_merge($routes, include $routeFile);
         }
         return new ActionMatcher(new RoutesConfig($routes));
     },
@@ -58,7 +58,7 @@ return [
     CommandMatcher::class => function () {
         $commands = [];
         foreach (glob(BASE_PATH . '/etc/routes/*.commands.php') as $commandFile) {
-            $commands += include $commandFile;
+            $commands = array_merge($commands, include $commandFile);
         }
         return new CommandMatcher(new RoutesConfig($commands));
     },
