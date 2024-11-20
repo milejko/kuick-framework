@@ -23,11 +23,10 @@ final class JsonApplication
 {
     private const CONTAINER_DEFINITION_LOCATIONS = [
         BASE_PATH . '/etc/di/*.di.php',
-        BASE_PATH . '/vendor/kuick-framework/etc/di/*.di.php',
+        BASE_PATH . '/vendor/kuick/framework/etc/di/*.di.php',
     ];
     private const CONTAINER_ENV_SPECIFIC_DEFINITION_LOCATIONS = [
         BASE_PATH . '/etc/di/*.di.%s.php',
-        BASE_PATH . '/vendor/kuick-framework/etc/di/*.di.%s.php',
     ];
 
     public function __invoke(Request $request): void
