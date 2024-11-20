@@ -10,8 +10,8 @@
 
 namespace Kuick\Router;
 
-use Kuick\Http\HttpException;
 use Kuick\UI\ActionInterface;
+use Kuick\UI\UIException;
 use Kuick\Security\GuardInterface;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -36,7 +36,7 @@ class ActionLauncher
         }
         $action = $this->container->get($route['action']);
         if (!($action instanceof ActionInterface)) {
-            throw new HttpException($route['action'] . ' is not an Action');
+            throw new UIException($route['action'] . ' is not an Action');
         }
         return $action->__invoke($request);
     }
@@ -46,7 +46,7 @@ class ActionLauncher
         foreach ($guards as $guardName) {
             $guard = $this->container->get($guardName);
             if (!($guard instanceof GuardInterface)) {
-                throw new HttpException($guardName . ' is not a Guard');
+                throw new UIException($guardName . ' is not a Guard');
             }
             $guard->__invoke($request);
         }
