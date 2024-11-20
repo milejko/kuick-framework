@@ -18,7 +18,7 @@ class ResponseCode
     public const OK = 200;
     public const ACCEPTED = 202;
     public const NO_CONTENT = 204;
-    
+
     public const MOVED_PERMANENTLY = 301;
 
     public const BAD_REQUEST = 400;

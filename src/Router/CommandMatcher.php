@@ -36,7 +36,7 @@ class CommandMatcher
             return self::LIST_COMMAND;
         }
         foreach ($this->routes->getAll() as $commandName => $command) {
-            (new CommandRouteValidator)($commandName, $command);
+            (new CommandRouteValidator())($commandName, $command);
             if ($arguments[1] == $commandName) {
                 return $command;
             }

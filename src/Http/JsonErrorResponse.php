@@ -19,6 +19,9 @@ class JsonErrorResponse extends Response
 {
     public function __construct(Throwable $error, private int $code = ResponseCode::INTERNAL_SERVER_ERROR)
     {
+        if (!in_array($code, ResponseCode::ALL_CODES)) {
+            $this->code = ResponseCode::INTERNAL_SERVER_ERROR;
+        }
         $this->withHeader(HeaderContentType::HEADER_NAME, HeaderContentType::JSON, $this->code);
         $this->withBody(json_encode(['error' => $error->getMessage()]));
     }

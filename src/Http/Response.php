@@ -18,7 +18,7 @@ class Response
     public const CODE_OK = 200;
     public const CODE_ACCEPTED = 202;
     public const CODE_NO_CONTENT = 204;
-    
+
     public const CODE_MOVED_PERMANENTLY = 301;
 
     public const CODE_BAD_REQUEST = 400;
@@ -61,7 +61,7 @@ class Response
         $this->body = $body;
         return $this;
     }
-    
+
     public function getBody(): string
     {
         return $this->body;

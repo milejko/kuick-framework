@@ -32,7 +32,7 @@ class ActionMatcher
     public function findRoute(Request $request): array
     {
         foreach ($this->routes->getAll() as $routePattern => $route) {
-            (new ActionValidator)($routePattern, $route);
+            (new ActionValidator())($routePattern, $route);
             $routeMethod = $route['method'] ?? RequestMethod::GET;
             if ($request->getMethod() != $routeMethod) {
                 continue;
