@@ -12,7 +12,8 @@ use Kuick\UI\Example\Console\HelloCommand;
 
 return [
     //You probably need to remove this sample command
-    'hello' => [
+    [
+        'name' => 'hello',
         'command' => HelloCommand::class,
         //'description' => 'Optional description'
     ]

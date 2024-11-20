@@ -32,10 +32,10 @@ class ActionValidator
     private function validatePattern(array $route): void
     {
         if (!isset($route['pattern'])) {
-            throw new HttpException('One or more routes are missing pattern');
+            throw new HttpException('One or more actions are missing pattern');
         }
         if (!is_string($route['pattern'])) {
-            throw new HttpException('One or more routes pattern is invalid');
+            throw new HttpException('One or more actions pattern is invalid');
         }
     }
 
@@ -49,21 +49,21 @@ class ActionValidator
             $parameterCount--;
         }
         if (count($route) != $parameterCount) {
-            throw new HttpException('Route: ' . $route['pattern'] . ' has invalid parameter count');
+            throw new HttpException('Action: ' . $route['pattern'] . ' has invalid parameter count');
         }
     }
 
     private function validateMethod(array $route): void
     {
         if (isset($route['method']) && !in_array($route['method'], RequestMethod::ALL_METHODS)) {
-            throw new HttpException('Route: ' . $route['pattern'] . ' method invalid');
+            throw new HttpException('Action: ' . $route['pattern'] . ' method invalid');
         }
     }
 
     private function validateAction(array $route): void
     {
         if (!isset($route['action'])) {
-            throw new HttpException('Route: ' . $route['pattern'] . ' is missing action class name');
+            throw new HttpException('Action: ' . $route['pattern'] . ' is missing action class name');
         }
         if (!class_exists($route['action'])) {
             throw new HttpException('Action "' . $route['action'] . '" does not exist');
@@ -76,7 +76,7 @@ class ActionValidator
             return;
         }
         if (!is_array($route['guards'])) {
-            throw new HttpException('Route: ' . $route['pattern'] . ' guards malformed, not an array');
+            throw new HttpException('Action: ' . $route['pattern'] . ' guards malformed, not an array');
         }
         foreach ($route['guards'] as $guard) {
             $this->validateGuard($guard);

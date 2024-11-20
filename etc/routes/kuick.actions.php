@@ -17,11 +17,12 @@ return [
     //You probably need to remove/replace this route
     [
         'pattern' => '/',
+        'method' => RequestMethod::GET, //optional
         'action' => HelloAction::class,
     ],
     [
         'pattern' => '/api/ops',
-        'method' => RequestMethod::OPTIONS,
+        //'method' => RequestMethod::GET, //optional
         'action' => OpsAction::class,
         'guards' => [OpsGuard::class]
     ],

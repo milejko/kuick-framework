@@ -41,6 +41,9 @@ class ActionMatcher
                 return $route;
             }
         }
+        if (RequestMethod::OPTIONS == $request->getMethod()) {
+            return [];
+        }
         throw new HttpNotFoundException('Route not found');
     }
 }
