@@ -34,6 +34,7 @@ class ActionMatcher
         if (Request::METHOD_OPTIONS == $request->getMethod()) {
             return [];
         }
+        $methodNotAllowed = false;
         foreach ($this->routes->getAll() as $route) {
             (new ActionValidator())($route);
             $routeMethod = $route['method'] ?? Request::METHOD_GET;            
@@ -46,10 +47,10 @@ class ActionMatcher
             if ($request->getMethod() == $routeMethod || $request->getMethod() == Request::METHOD_HEAD) {
                 return $route;
             }
-            throw new UIMethodNotAllowedException();
+            $methodNotAllowed = true;
         }
-        if (Request::METHOD_OPTIONS == $request->getMethod()) {
-            return [];
+        if ($methodNotAllowed) {
+            throw new UIMethodNotAllowedException();
         }
         throw new UINotFoundException();
     }
