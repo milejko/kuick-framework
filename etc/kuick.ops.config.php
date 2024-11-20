@@ -8,7 +8,7 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-use Kuick\Security\Ops\OpsGuard;
+use Kuick\Ops\Security\OpsGuard;
 
 return [
     OpsGuard::TOKEN_CONFIG_KEY => 'change-this-token',

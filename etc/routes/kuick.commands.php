@@ -8,7 +8,7 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-use Kuick\UI\Example\Console\HelloCommand;
+use Kuick\Example\UI\Console\HelloCommand;
 
 return [
     //You probably need to remove this sample command

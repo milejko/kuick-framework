@@ -8,7 +8,7 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-namespace Kuick\UI\Example\Console;
+namespace Kuick\Example\UI\Console;
 
 use Kuick\UI\CommandInterface;
 

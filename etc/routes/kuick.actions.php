@@ -8,10 +8,10 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
+use Kuick\Example\UI\HelloAction;
 use Kuick\Http\RequestMethod;
-use Kuick\Security\Ops\OpsGuard;
-use Kuick\UI\Example\HelloAction;
-use Kuick\UI\Ops\OpsAction;
+use Kuick\Ops\Security\OpsGuard;
+use Kuick\Ops\UI\OpsAction;
 
 return [
     //You probably need to remove/replace this route

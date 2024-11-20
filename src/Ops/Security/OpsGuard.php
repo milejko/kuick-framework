@@ -8,7 +8,7 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-namespace Kuick\Security\Ops;
+namespace Kuick\Ops\Security;
 
 use Kuick\App\AppConfig;
 use Kuick\Http\HttpForbiddenException;

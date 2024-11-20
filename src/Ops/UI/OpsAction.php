@@ -8,7 +8,7 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-namespace Kuick\UI\Ops;
+namespace Kuick\Ops\UI;
 
 use Kuick\App\AppConfig;
 use Kuick\Http\JsonResponse;
