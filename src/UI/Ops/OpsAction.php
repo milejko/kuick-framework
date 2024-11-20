@@ -8,17 +8,17 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-namespace Kuick\UI;
+namespace Kuick\UI\Ops;
 
 use Kuick\App\AppConfig;
 use Kuick\Http\JsonResponse;
 use Kuick\Http\Request;
+use Kuick\UI\ActionInterface;
 
 class OpsAction implements ActionInterface
 {
     public function __construct(private AppConfig $appConfig)
     {
-        
     }
 
     public function __invoke(Request $request): JsonResponse

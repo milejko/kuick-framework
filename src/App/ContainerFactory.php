@@ -21,7 +21,7 @@ class ContainerFactory
     private const CONTAINER_PATH = BASE_PATH . '/var/tmp';
     private const CONTAINER_FILENAME = 'CompiledContainer.php';
 
-    public static function create(array $definitionPathPatterns): ContainerInterface
+    public static function create(array $definitionPathPatterns, array $envDefinitionPathPatterns): ContainerInterface
     {
         //remove previous compilation if cache disabled
         if (getenv('APP_ENV') == 'dev') {
@@ -35,9 +35,16 @@ class ContainerFactory
         //clear build
         self::removeContainer();
         $builder = self::getBuilder();
-        //adding definitions
+        //adding global definitions
         foreach ($definitionPathPatterns as $definitionsLocation) {
             foreach (glob($definitionsLocation) as $definitionFile) {
+                $builder->addDefinitions($definitionFile);
+            }
+        }
+        //adding env definitions
+        $appEnv = getenv('APP_ENV') ?: 'prod';
+        foreach ($envDefinitionPathPatterns as $envDefinitionsLocation) {
+            foreach (glob(sprintf($envDefinitionsLocation, $appEnv)) as $definitionFile) {
                 $builder->addDefinitions($definitionFile);
             }
         }

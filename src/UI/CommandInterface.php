@@ -11,7 +11,7 @@
 namespace Kuick\UI;
 
 /**
- * 
+ *
  */
 interface CommandInterface
 {

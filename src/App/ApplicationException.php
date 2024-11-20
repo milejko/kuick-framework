@@ -8,9 +8,10 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-define('BASE_PATH', realpath(dirname(__DIR__)));
-require BASE_PATH . '/vendor/autoload.php';
+namespace Kuick\App;
 
-(new Kuick\App\JsonApplication)(
-    Kuick\Http\RequestFactory::create($_SERVER, file_get_contents('php://input'))
-);
+use Exception;
+
+class AppException extends Exception
+{
+}

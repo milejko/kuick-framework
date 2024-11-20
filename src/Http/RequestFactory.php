@@ -42,6 +42,6 @@ class RequestFactory
 
     private static function getServerVariable(string $key, string $default = ''): mixed
     {
-        return isset(self::$serverVars[$key]) ? self::$serverVars[$key]: $default;
+        return self::$serverVars[$key] ?? $default;
     }
 }

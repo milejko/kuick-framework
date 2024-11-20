@@ -8,9 +8,9 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-define('BASE_PATH', realpath(dirname(__DIR__)));
-require BASE_PATH . '/vendor/autoload.php';
-
-(new Kuick\App\JsonApplication)(
-    Kuick\Http\RequestFactory::create($_SERVER, file_get_contents('php://input'))
-);
+return [
+    'app_charset'   => 'UTF-8',
+    'app_locale'    => 'en_US.utf-8',
+    'app_timezone'  => 'Europe/London',
+    'app_env'       => 'prod',
+];

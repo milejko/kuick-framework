@@ -122,6 +122,6 @@ class Request
 
     public function getQueryParam(string $name): ?string
     {
-        return isset($this->queryParams[$name]) ? $this->queryParams[$name] : null;
+        return $this->queryParams[$name] ?? null;
     }
 }

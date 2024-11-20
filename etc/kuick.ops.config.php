@@ -8,9 +8,8 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-define('BASE_PATH', realpath(dirname(__DIR__)));
-require BASE_PATH . '/vendor/autoload.php';
+use Kuick\Security\Ops\OpsGuard;
 
-(new Kuick\App\JsonApplication)(
-    Kuick\Http\RequestFactory::create($_SERVER, file_get_contents('php://input'))
-);
+return [
+    OpsGuard::TOKEN_CONFIG_KEY => 'change-this-token',
+];

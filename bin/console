@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 
 /**
@@ -9,8 +10,9 @@
  */
 
 define('BASE_PATH', realpath(dirname(__DIR__)));
+
 require BASE_PATH . '/vendor/autoload.php';
 
-(new Kuick\App\JsonApplication)(
-    Kuick\Http\RequestFactory::create($_SERVER, file_get_contents('php://input'))
+(new Kuick\App\ConsoleApplication)(
+    $argv
 );

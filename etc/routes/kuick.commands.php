@@ -8,9 +8,12 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-define('BASE_PATH', realpath(dirname(__DIR__)));
-require BASE_PATH . '/vendor/autoload.php';
+use Kuick\UI\Example\Console\HelloCommand;
 
-(new Kuick\App\JsonApplication)(
-    Kuick\Http\RequestFactory::create($_SERVER, file_get_contents('php://input'))
-);
+return [
+    //You probably need to remove this sample command
+    'hello' => [
+        'command' => HelloCommand::class,
+        //'description' => 'Optional description'
+    ]
+];
