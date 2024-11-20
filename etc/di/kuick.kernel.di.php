@@ -19,47 +19,69 @@ use Kuick\Router\ActionMatcher;
  */ 
 return [    
     AppConfig::class => function () {
+        //config cache
+        $appEnv = getenv('APP_ENV') ?: 'prod';
+        $cacheFile = BASE_PATH . '/var/tmp/kuick.config.cache.php';
+        if ($appEnv != 'dev') {
+            $cacheContent = @file_get_contents($cacheFile);
+            if ($cacheContent) {
+                return unserialize($cacheContent);
+            }
+        }
         $configs = [];
         //global config
         foreach (glob(BASE_PATH . '/etc/*.config.php') as $configFile) {
             $configs = array_merge($configs, include $configFile);
         }
         //environment specific config (higher priority)
-        $appEnv = getenv('APP_ENV') ?: 'prod';
         foreach (glob(BASE_PATH . '/etc/*.config.' . $appEnv . '.php') as $configFile) {
             $configs = array_merge($configs, include $configFile);
         }
         //env config (highest priority)
         $configs = array_merge($configs, getenv());
         $config = new AppConfig($configs);
-
-        $defaultCharset = 'UTF-8';
-        $defaultLocale = 'en_US.utf-8';
-        $defaultTimezone = 'Europe/London';
-    
-        $charset = $config->get('app_charset', $defaultCharset);
-        mb_internal_encoding($charset);
-        ini_set('default_charset', $charset);
-        date_default_timezone_set($config->get('app_timezone', $defaultTimezone));
-        setlocale(LC_ALL, $config->get('app_locale', $defaultLocale));
-        setlocale(LC_NUMERIC, $defaultLocale);
-
+        //write cache
+        file_put_contents($cacheFile, serialize($config));
         return $config;
     },
 
     ActionMatcher::class => function () {
+        //config cache
+        $appEnv = getenv('APP_ENV') ?: 'prod';
+        $cacheFile = BASE_PATH . '/var/tmp/kuick.actionmatcher.cache.php';
+        if ($appEnv != 'dev') {
+            $cacheContent = @file_get_contents($cacheFile);
+            if ($cacheContent) {
+                return unserialize($cacheContent);
+            }
+        }
         $routes = [];
         foreach (glob(BASE_PATH . '/etc/routes/*.actions.php') as $routeFile) {
             $routes = array_merge($routes, include $routeFile);
         }
-        return new ActionMatcher(new RoutesConfig($routes));
+        $actionMatcher = new ActionMatcher(new RoutesConfig($routes));
+        //write cache
+        file_put_contents($cacheFile, serialize($actionMatcher));
+        return $actionMatcher;
     },
 
     CommandMatcher::class => function () {
+        //config cache
+        $appEnv = getenv('APP_ENV') ?: 'prod';
+        $cacheFile = BASE_PATH . '/var/tmp/kuick.commandmatcher.cache.php';
+        if ($appEnv != 'dev') {
+            $cacheContent = @file_get_contents($cacheFile);
+            if ($cacheContent) {
+                return unserialize($cacheContent);
+            }
+        }
         $commands = [];
         foreach (glob(BASE_PATH . '/etc/routes/*.commands.php') as $commandFile) {
             $commands = array_merge($commands, include $commandFile);
         }
-        return new CommandMatcher(new RoutesConfig($commands));
+        $commandMatcher = new CommandMatcher(new RoutesConfig($commands));
+        //write cache
+        file_put_contents($cacheFile, serialize($commandMatcher));
+        return $commandMatcher;
     },
 ];

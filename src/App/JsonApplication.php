@@ -36,6 +36,19 @@ final class JsonApplication
                 self::CONTAINER_DEFINITION_LOCATIONS,
                 self::CONTAINER_ENV_SPECIFIC_DEFINITION_LOCATIONS
             );
+
+            $defaultCharset = 'UTF-8';
+            $defaultLocale = 'en_US.utf-8';
+            $defaultTimezone = 'Europe/London';
+        
+            $config = $container->get(AppConfig::class);
+            $charset = $config->get('app_charset', $defaultCharset);
+            mb_internal_encoding($charset);
+            ini_set('default_charset', $charset);
+            date_default_timezone_set($config->get('app_timezone', $defaultTimezone));
+            setlocale(LC_ALL, $config->get('app_locale', $defaultLocale));
+            setlocale(LC_NUMERIC, $defaultLocale);
+    
             ($container->get(ActionLauncher::class))(
                 $container->get(ActionMatcher::class)->findRoute($request),
                 $request
@@ -43,7 +56,7 @@ final class JsonApplication
         } catch (Throwable $error) {
             $errorResponse = new JsonResponse([
                 'error' => $error->getMessage(),
-                'trace' => getenv('APP_ENV') == 'dev' ? $error->getTrace(): 'not a dev environment',
+                'trace' => getenv('APP_ENV') == 'dev' ? $error->getTrace() : 'not a dev environment',
             ]);
             $errorResponse->setStatusCode($error->getCode() > 0 ? $error->getCode() : JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
             $errorResponse->send();

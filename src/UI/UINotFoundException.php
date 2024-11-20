@@ -8,19 +8,13 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-namespace Kuick\App;
+namespace Kuick\UI;
 
-class RoutesConfig
+use Exception;
+use Symfony\Component\HttpFoundation\Response;
+
+class UINotFoundException extends Exception
 {
-    public function __construct(private array $values) {}
-
-    public function get(string $name): array
-    {
-        return $this->values[$name] ?? [];
-    }
-
-    public function getAll(): array
-    {
-        return $this->values;
-    }
+    protected $code = Response::HTTP_NOT_FOUND;
+    protected $message = 'Not found';
 }
