@@ -12,5 +12,5 @@ define('BASE_PATH', realpath(dirname(__DIR__)));
 require BASE_PATH . '/vendor/autoload.php';
 
 (new Kuick\App\JsonApplication)(
-    Kuick\Http\RequestFactory::create($_SERVER, file_get_contents('php://input'))
+    Symfony\Component\HttpFoundation\Request::createFromGlobals()
 );

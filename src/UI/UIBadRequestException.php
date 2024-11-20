@@ -8,15 +8,13 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-namespace Kuick\Http;
+namespace Kuick\UI;
 
-/**
- *
- */
-class JsonRequest extends Request
+use Exception;
+use Symfony\Component\HttpFoundation\Response;
+
+class UIBadRequestException extends Exception
 {
-    public function __construct()
-    {
-        $this->withHeader(HeaderContentType::HEADER_NAME, HeaderContentType::JSON);
-    }
+    protected $code = Response::HTTP_BAD_REQUEST;
+    protected $message = 'Bad request';
 }

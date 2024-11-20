@@ -8,16 +8,13 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-namespace Kuick\Http;
+namespace Kuick\UI;
 
-/**
- *
- */
-class HeaderContentType
+use Exception;
+use Symfony\Component\HttpFoundation\Response;
+
+class UIUnauthorizedException extends Exception
 {
-    public const HEADER_NAME = 'Content-type';
-    public const JSON = 'application/json';
-    public const TEXT = 'text/plain';
-    public const HTML = 'text/html';
-    public const XML = 'text/xml';
+    protected $code = Response::HTTP_UNAUTHORIZED;
+    protected $message = 'Unauthorized';
 }

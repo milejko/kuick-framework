@@ -11,6 +11,7 @@
 namespace Kuick\Router;
 
 use Kuick\App\AppException;
+use Kuick\Console\ConsoleException;
 use Kuick\UI\CommandInterface;
 use Psr\Container\ContainerInterface;
 
@@ -19,15 +20,13 @@ use Psr\Container\ContainerInterface;
  */
 class CommandLauncher
 {
-    public function __construct(private ContainerInterface $container)
-    {
-    }
+    public function __construct(private ContainerInterface $container) {}
 
     public function __invoke(array $command, array $arguments): string
     {
         $command = $this->container->get($command['command']);
         if (!($command instanceof CommandInterface)) {
-            throw new AppException($command['command'] . ' is not a Command');
+            throw new ConsoleException($command['command'] . ' is not a Command');
         }
         return $command->__invoke(array_slice($arguments, 2));
     }

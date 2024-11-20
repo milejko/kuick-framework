@@ -8,12 +8,13 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-namespace Kuick\Http;
+namespace Kuick\UI;
 
-class HttpForbiddenException extends HttpException
+use Exception;
+use Symfony\Component\HttpFoundation\Response;
+
+class UIException extends Exception
 {
-    private const MESSAGE = 'Forbidden';
-
-    protected $code = Response::CODE_FORBIDDEN;
-    protected $message = self::MESSAGE;
+    protected $code = Response::HTTP_INTERNAL_SERVER_ERROR;
+    protected $message = 'Internal server error';
 }

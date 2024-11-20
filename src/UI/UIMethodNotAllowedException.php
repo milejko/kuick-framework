@@ -8,12 +8,13 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-namespace Kuick\Http;
+namespace Kuick\UI;
 
-class HttpUnauthorizedException extends HttpException
+use Exception;
+use Symfony\Component\HttpFoundation\Response;
+
+class UIMethodNotAllowedException extends Exception
 {
-    private const MESSAGE = 'Unauthorized';
-
-    protected $code = Response::CODE_UNAUTHORIZED;
-    protected $message = self::MESSAGE;
+    protected $code = Response::HTTP_METHOD_NOT_ALLOWED;
+    protected $message = 'Method not allowed';
 }

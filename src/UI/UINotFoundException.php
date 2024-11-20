@@ -8,14 +8,13 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-namespace Kuick\Http;
+namespace Kuick\UI;
 
 use Exception;
+use Symfony\Component\HttpFoundation\Response;
 
-class HttpException extends Exception
+class UINotFoundException extends Exception
 {
-    private const MESSAGE = 'Internal server error';
-
-    protected $code = Response::CODE_ERROR;
-    protected $message = self::MESSAGE;
+    protected $code = Response::HTTP_NOT_FOUND;
+    protected $message = 'Not found';
 }

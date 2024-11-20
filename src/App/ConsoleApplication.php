@@ -37,6 +37,18 @@ class ConsoleApplication
                 self::CONTAINER_ENV_SPECIFIC_DEFINITION_LOCATIONS
             );
 
+            $defaultCharset = 'UTF-8';
+            $defaultLocale = 'en_US.utf-8';
+            $defaultTimezone = 'Europe/London';
+        
+            $config = $container->get(AppConfig::class);
+            $charset = $config->get('app_charset', $defaultCharset);
+            mb_internal_encoding($charset);
+            ini_set('default_charset', $charset);
+            date_default_timezone_set($config->get('app_timezone', $defaultTimezone));
+            setlocale(LC_ALL, $config->get('app_locale', $defaultLocale));
+            setlocale(LC_NUMERIC, $defaultLocale);
+
             ini_set('max_execution_time', 0);
             ini_set('memory_limit', '2048M');
             //@TODO: Command input/output instead of strings

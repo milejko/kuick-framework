@@ -10,9 +10,9 @@
 
 namespace Kuick\Example\UI;
 
-use Kuick\Http\JsonResponse;
-use Kuick\Http\Request;
 use Kuick\UI\ActionInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 class HelloAction implements ActionInterface
 {

@@ -8,12 +8,13 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-namespace Kuick\Http;
+namespace Kuick\UI;
 
-class HttpBadRequestException extends HttpException
+use Exception;
+use Symfony\Component\HttpFoundation\Response;
+
+class UIForbiddenException extends Exception
 {
-    private const MESSAGE = 'Bad request';
-
-    protected $code = Response::CODE_BAD_REQUEST;
-    protected $message = self::MESSAGE;
+    protected $code = Response::HTTP_FORBIDDEN;
+    protected $message = 'Forbidden';
 }

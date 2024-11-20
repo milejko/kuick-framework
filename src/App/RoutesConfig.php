@@ -12,9 +12,7 @@ namespace Kuick\App;
 
 class RoutesConfig
 {
-    public function __construct(private array $values)
-    {
-    }
+    public function __construct(private array $values) {}
 
     public function get(string $name): array
     {
