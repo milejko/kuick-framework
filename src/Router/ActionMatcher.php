@@ -44,7 +44,7 @@ class ActionMatcher
             if (Request::METHOD_HEAD == $request->getMethod() && Request::METHOD_GET == $routeMethod) {
                 $routeMethod = Request::METHOD_GET;
             }
-            if ($request->getMethod() == $routeMethod || $request->getMethod() == Request::METHOD_HEAD) {
+            if ($request->getMethod() == $routeMethod) {
                 return $route;
             }
             $methodNotAllowed = true;
