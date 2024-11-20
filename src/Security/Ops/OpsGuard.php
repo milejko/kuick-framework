@@ -23,9 +23,7 @@ class OpsGuard implements GuardInterface
     private const BEARER_TOKEN_TEMPLATE = 'Bearer %s';
     private const MESSAGE_TOKEN_MISMATCH = 'Token is missing or invalid';
 
-    public function __construct(private AppConfig $appConfig)
-    {
-    }
+    public function __construct(private AppConfig $appConfig) {}
 
     public function __invoke(Request $request): void
     {

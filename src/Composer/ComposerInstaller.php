@@ -70,7 +70,11 @@ class ComposerInstaller
         chmod(BASE_PATH . self::CONSOLE_FILE, 0755);
         foreach (self::ETC_FILE_LOCATIONS as $etcFileLocation) {
             foreach (glob(BASE_PATH . $etcFileLocation) as $etcFilePath) {
-                echo $etcFilePath;
+                $localEtcFileName = str_replace(self::KUICK_PATH, BASE_PATH, $etcFilePath);
+                if (file_exists($localEtcFileName)) {
+                    continue;
+                }
+                copy($etcFileLocation, $localEtcFileName);
             }
         }
     }
