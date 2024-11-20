@@ -29,10 +29,15 @@ class ComposerInstaller
     private const TMP_DIR = '/var/tmp';
     private const SYS_DIRS = ['etc', 'etc/di', 'etc/routes', 'public', 'bin'];
 
+    private static bool $freshInstallation = true;
+
     protected static function initAutoload(Event $event)
     {
         $vendorDir = $event->getComposer()->getConfig()->get('vendor-dir');
         define('BASE_PATH', realpath(dirname($vendorDir)));
+        if (file_exists(BASE_PATH . self::INDEX_FILE) || file_exists(BASE_PATH . self::CONSOLE_FILE)) {
+            self::$freshInstallation = false;
+        }
         require $vendorDir . '/autoload.php';
     }
 
@@ -44,6 +49,9 @@ class ComposerInstaller
     public static function postInstall(Event $event)
     {
         self::initAutoload($event);
+        if (!self::$freshInstallation) {
+            return;
+        }
         self::createSysDirs();
         self::copyDistributionFiles();
     }
@@ -72,7 +80,7 @@ class ComposerInstaller
             foreach (glob(BASE_PATH . self::KUICK_PATH . $etcFileLocation) as $etcFilePath) {
                 $localEtcFileName = str_replace(BASE_PATH . self::KUICK_PATH, BASE_PATH, $etcFilePath);
                 //if something is in a specific dir - do not do anything
-                if (file_exists(dirname($localEtcFileName))) {
+                if (file_exists($localEtcFileName)) {
                     continue;
                 }
                 copy($etcFilePath, $localEtcFileName);
