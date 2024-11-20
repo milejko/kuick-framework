@@ -10,10 +10,8 @@
 
 namespace Kuick\UI;
 
-use Kuick\Http\Request;
-
 /**
- *
+ * 
  */
 interface CommandInterface
 {

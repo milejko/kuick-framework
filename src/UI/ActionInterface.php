@@ -14,7 +14,7 @@ use Kuick\Http\Request;
 use Kuick\Http\Response;
 
 /**
- *
+ * Kuick Actions should implement this interface
  */
 interface ActionInterface
 {

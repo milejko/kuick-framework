@@ -14,7 +14,7 @@ use Kuick\Http\HttpException;
 use Kuick\Http\Request;
 use Kuick\Http\Response;
 use Kuick\UI\ActionInterface;
-use Kuick\UI\GuardInterface;
+use Kuick\Security\GuardInterface;
 use Psr\Container\ContainerInterface;
 
 /**

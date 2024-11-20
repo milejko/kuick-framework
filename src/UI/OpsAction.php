@@ -10,13 +10,13 @@
 
 namespace Kuick\UI;
 
-use Kuick\App\EnvConfig;
+use Kuick\App\AppConfig;
 use Kuick\Http\JsonResponse;
 use Kuick\Http\Request;
 
 class OpsAction implements ActionInterface
 {
-    public function __construct(private EnvConfig $envConfig)
+    public function __construct(private AppConfig $appConfig)
     {
         
     }
@@ -24,14 +24,21 @@ class OpsAction implements ActionInterface
     public function __invoke(Request $request): JsonResponse
     {
         return new JsonResponse([
-            'method' => $request->getMethod(),
-            'uri' => $request->getUri(),
-            'headers' => $request->getHeaders(),
-            'path' => $request->getPath(),
-            'pathElements' => $request->getPathElements(),
-            'queryParams' => $request->getQueryParams(),
-            'body' => $request->getBody(),
-            'env' => $this->envConfig->getAll(),
+            'request' => [
+                'method' => $request->getMethod(),
+                'uri' => $request->getUri(),
+                'headers' => $request->getHeaders(),
+                'path' => $request->getPath(),
+                'pathElements' => $request->getPathElements(),
+                'queryParams' => $request->getQueryParams(),
+                'body' => $request->getBody(),
+            ],
+            'config' => $this->appConfig->getAll(),
+            'server' => [
+                'phpversion' => phpversion(),
+                'extensions' => implode(', ', get_loaded_extensions()),
+                'configuration' => ini_get_all(null, false),
+            ]
         ]);
     }
 }

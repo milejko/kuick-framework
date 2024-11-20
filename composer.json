@@ -47,10 +47,10 @@
         ],
         "generate:phpmd-baseline": "phpmd --generate-baseline ./src text phpmd.xml.dist",
         "post-install-cmd": [
-            "Kuick\\App\\ComposerInstaller::postInstall"
+            "Kuick\\Composer\\ComposerInstaller::postInstall"
         ],
         "post-update-cmd": [
-            "Kuick\\App\\ComposerInstaller::postUpdate"
+            "Kuick\\Composer\\ComposerInstaller::postUpdate"
         ]
     },
     "autoload": {
