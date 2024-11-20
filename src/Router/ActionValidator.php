@@ -18,17 +18,28 @@ use Kuick\Http\RequestMethod;
  */
 class ActionValidator
 {
-    private const MAX_ROUTE_PARAMS = 3;
+    private const MAX_ROUTE_PARAMS = 4;
 
-    public function __invoke(string $routePattern, array $route): void
+    public function __invoke(array $route): void
     {
-        $this->validateParameterCount($routePattern, $route);
-        $this->validateMethod($routePattern, $route);
-        $this->validateAction($routePattern, $route);
-        $this->validateGuards($routePattern, $route);
+        $this->validatePattern($route);
+        $this->validateParameterCount($route);
+        $this->validateMethod($route);
+        $this->validateAction($route);
+        $this->validateGuards($route);
     }
 
-    private function validateParameterCount(string $routePattern, array $route): void
+    private function validatePattern(array $route): void
+    {
+        if (!isset($route['pattern'])) {
+            throw new HttpException('One or more routes are missing pattern');
+        }
+        if (!is_string($route['pattern'])) {
+            throw new HttpException('One or more routes pattern is invalid');
+        }
+    }
+
+    private function validateParameterCount(array $route): void
     {
         $parameterCount = self::MAX_ROUTE_PARAMS;
         if (!isset($route['method'])) {
@@ -38,34 +49,34 @@ class ActionValidator
             $parameterCount--;
         }
         if (count($route) != $parameterCount) {
-            throw new HttpException('Route: ' . $routePattern. ' has invalid parameter count');
+            throw new HttpException('Route: ' . $route['pattern'] . ' has invalid parameter count');
         }
     }
 
-    private function validateMethod(string $routePattern, array $route): void
+    private function validateMethod(array $route): void
     {
         if (isset($route['method']) && !in_array($route['method'], RequestMethod::ALL_METHODS)) {
-            throw new HttpException('Route: ' . $routePattern . ' method invalid');
+            throw new HttpException('Route: ' . $route['pattern'] . ' method invalid');
         }
     }
 
-    private function validateAction(string $routePattern, array $route): void
+    private function validateAction(array $route): void
     {
         if (!isset($route['action'])) {
-            throw new HttpException('Route: ' . $routePattern . ' is missing action class name');
+            throw new HttpException('Route: ' . $route['pattern'] . ' is missing action class name');
         }
         if (!class_exists($route['action'])) {
             throw new HttpException('Action "' . $route['action'] . '" does not exist');
         }
     }
 
-    private function validateGuards(string $routePattern, array $route): void
+    private function validateGuards(array $route): void
     {
         if (!isset($route['guards'])) {
             return;
         }
         if (!is_array($route['guards'])) {
-            throw new HttpException('Route: ' . $routePattern . ' guards malformed, not an array');
+            throw new HttpException('Route: ' . $route['pattern'] . ' guards malformed, not an array');
         }
         foreach ($route['guards'] as $guard) {
             $this->validateGuard($guard);

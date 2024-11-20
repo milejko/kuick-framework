@@ -71,7 +71,8 @@ class ComposerInstaller
         foreach (self::ETC_FILE_LOCATIONS as $etcFileLocation) {
             foreach (glob(BASE_PATH . self::KUICK_PATH . $etcFileLocation) as $etcFilePath) {
                 $localEtcFileName = str_replace(BASE_PATH . self::KUICK_PATH, BASE_PATH, $etcFilePath);
-                if (file_exists($localEtcFileName)) {
+                //if something is in a specific dir - do not do anything
+                if (file_exists(dirname($localEtcFileName))) {
                     continue;
                 }
                 copy($etcFilePath, $localEtcFileName);

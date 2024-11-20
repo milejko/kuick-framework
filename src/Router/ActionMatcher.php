@@ -31,13 +31,13 @@ class ActionMatcher
 
     public function findRoute(Request $request): array
     {
-        foreach ($this->routes->getAll() as $routePattern => $route) {
-            (new ActionValidator())($routePattern, $route);
+        foreach ($this->routes->getAll() as $route) {
+            (new ActionValidator())($route);
             $routeMethod = $route['method'] ?? RequestMethod::GET;
             if ($request->getMethod() != $routeMethod) {
                 continue;
             }
-            if (preg_match('#^' . $routePattern . '$#', $request->getPath())) {
+            if (preg_match('#^' . $route['pattern'] . '$#', $request->getPath())) {
                 return $route;
             }
         }

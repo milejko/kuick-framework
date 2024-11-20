@@ -14,11 +14,13 @@ use Kuick\UI\Example\HelloAction;
 use Kuick\UI\Ops\OpsAction;
 
 return [
-    //You probably need to remove/replace this action
-    '/' => [
+    //You probably need to remove/replace this route
+    [
+        'pattern' => '/',
         'action' => HelloAction::class,
     ],
-    '/api/ops' => [
+    [
+        'pattern' => '/api/ops',
         'method' => RequestMethod::OPTIONS,
         'action' => OpsAction::class,
         'guards' => [OpsGuard::class]
