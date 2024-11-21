@@ -11,14 +11,13 @@
 namespace Kuick\Ops\Security;
 
 use Kuick\App\AppConfig;
+use Kuick\Http\Request;
+use Kuick\Http\UnauthorizedException;
 use Kuick\Security\GuardInterface;
-use Kuick\UI\UIForbiddenException;
-use Kuick\UI\UIUnauthorizedException;
-use Symfony\Component\HttpFoundation\Request;
 
 class OpsGuard implements GuardInterface
 {
-    public const TOKEN_CONFIG_KEY = 'kuick_guards_ops_token';
+    public const TOKEN_CONFIG_KEY = 'kuick_ops_token';
 
     private const AUTHORIZATION_HEADER = 'Authorization';
     private const BEARER_TOKEN_TEMPLATE = 'Bearer %s';
@@ -31,12 +30,12 @@ class OpsGuard implements GuardInterface
     {
         $requestToken = $request->headers->get(self::AUTHORIZATION_HEADER);
         if (null === $requestToken) {
-            throw new UIUnauthorizedException(self::ERROR_MISSING_TOKEN);
+            throw new UnauthorizedException(self::ERROR_MISSING_TOKEN);
         }
         $expectedToken = sprintf(self::BEARER_TOKEN_TEMPLATE, $this->appConfig->get(self::TOKEN_CONFIG_KEY));
         //token mismatch
         if ($requestToken != $expectedToken) {
-            throw new UIForbiddenException(self::ERROR_INVALID_TOKEN);
+            throw new UnauthorizedException(self::ERROR_INVALID_TOKEN);
         }
     }
 }

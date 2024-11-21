@@ -10,23 +10,22 @@
 
 namespace Kuick\Router;
 
+use JsonException;
+use Kuick\Http\JsonResponse;
+use Kuick\Http\Request;
+use Kuick\Http\Response;
 use Kuick\UI\ActionInterface;
-use Kuick\UI\UIException;
 use Kuick\Security\GuardInterface;
 use Psr\Container\ContainerInterface;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  *
  */
 class ActionLauncher
 {
-    public function __construct(private ContainerInterface $container)
-    {
-    }
+    public function __construct(private ContainerInterface $container) {}
 
-    public function __invoke(array $route, Request $request): Response
+    public function __invoke(array $route, Request $request): Response|JsonResponse
     {
         if (empty($route)) {
             return (new Response())->setStatusCode(Response::HTTP_NO_CONTENT);
@@ -36,7 +35,7 @@ class ActionLauncher
         }
         $action = $this->container->get($route['action']);
         if (!($action instanceof ActionInterface)) {
-            throw new UIException($route['action'] . ' is not an Action');
+            throw new JsonException($route['action'] . ' is not an Action');
         }
         return $action->__invoke($request);
     }
@@ -46,7 +45,7 @@ class ActionLauncher
         foreach ($guards as $guardName) {
             $guard = $this->container->get($guardName);
             if (!($guard instanceof GuardInterface)) {
-                throw new UIException($guardName . ' is not a Guard');
+                throw new JsonException($guardName . ' is not a Guard');
             }
             $guard->__invoke($request);
         }

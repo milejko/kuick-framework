@@ -11,9 +11,9 @@
 namespace Kuick\Router;
 
 use Kuick\App\RoutesConfig;
-use Kuick\UI\UIMethodNotAllowedException;
-use Kuick\UI\UINotFoundException;
-use Symfony\Component\HttpFoundation\Request;
+use Kuick\Http\MethodNotAllowedException;
+use Kuick\Http\NotFoundException;
+use Kuick\Http\Request;
 
 /**
  *
@@ -36,7 +36,6 @@ class ActionMatcher
         }
         $methodNotAllowed = false;
         foreach ($this->routes->getAll() as $route) {
-            (new ActionValidator())($route);
             $routeMethod = $route['method'] ?? Request::METHOD_GET;            
             if (!preg_match('#^' . $route['pattern'] . '$#', $request->getPathInfo())) {
                 continue;
@@ -50,8 +49,8 @@ class ActionMatcher
             $methodNotAllowed = true;
         }
         if ($methodNotAllowed) {
-            throw new UIMethodNotAllowedException();
+            throw new MethodNotAllowedException();
         }
-        throw new UINotFoundException();
+        throw new NotFoundException();
     }
 }

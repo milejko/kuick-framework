@@ -8,16 +8,8 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-namespace Kuick\Example\UI;
+namespace Kuick\Http;
 
-use Kuick\Http\JsonResponse;
-use Kuick\Http\Request;
-use Kuick\UI\ActionInterface;
+use Symfony\Component\HttpFoundation\JsonResponse as SymfonyJsonResponse;
 
-class HelloAction implements ActionInterface
-{
-    public function __invoke(Request $request): JsonResponse
-    {
-        return new JsonResponse(['Kuick says: hello!']);
-    }
-}
+class JsonResponse extends SymfonyJsonResponse {}

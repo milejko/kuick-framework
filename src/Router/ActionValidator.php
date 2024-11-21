@@ -10,8 +10,8 @@
 
 namespace Kuick\Router;
 
-use Kuick\UI\UIException;
-use Symfony\Component\HttpFoundation\Request;
+use Kuick\Http\InternalServerErrorException;
+use Kuick\Http\Request;
 
 /**
  *
@@ -32,10 +32,10 @@ class ActionValidator
     private function validatePattern(array $route): void
     {
         if (!isset($route['pattern'])) {
-            throw new UIException('One or more actions are missing pattern');
+            throw new InternalServerErrorException('One or more actions are missing pattern');
         }
         if (!is_string($route['pattern'])) {
-            throw new UIException('One or more actions pattern is invalid');
+            throw new InternalServerErrorException('One or more actions pattern is invalid');
         }
     }
 
@@ -49,37 +49,24 @@ class ActionValidator
             $parameterCount--;
         }
         if (count($route) != $parameterCount) {
-            throw new UIException('Action: ' . $route['pattern'] . ' has invalid parameter count');
+            throw new InternalServerErrorException('Action: ' . $route['pattern'] . ' has invalid parameter count');
         }
     }
 
     private function validateMethod(array $route): void
     {
-        if (
-            isset($route['method']) && !in_array(
-                $route['method'],
-                [
-                    Request::METHOD_GET,
-                    Request::METHOD_HEAD,
-                    Request::METHOD_OPTIONS,
-                    Request::METHOD_POST,
-                    Request::METHOD_PUT,
-                    Request::METHOD_DELETE,
-                    Request::METHOD_PATCH,
-                ]
-            )
-        ) {
-            throw new UIException('Action: ' . $route['pattern'] . ' method invalid');
+        if (isset($route['method']) && !in_array($route['method'], Request::ALL_METHODS)) {
+            throw new InternalServerErrorException('Action: ' . $route['pattern'] . ' method invalid');
         }
     }
 
     private function validateAction(array $route): void
     {
         if (!isset($route['action'])) {
-            throw new UIException('Action: ' . $route['pattern'] . ' is missing action class name');
+            throw new InternalServerErrorException('Action: ' . $route['pattern'] . ' is missing action class name');
         }
         if (!class_exists($route['action'])) {
-            throw new UIException('Action "' . $route['action'] . '" does not exist');
+            throw new InternalServerErrorException('Action "' . $route['action'] . '" does not exist');
         }
     }
 
@@ -89,7 +76,7 @@ class ActionValidator
             return;
         }
         if (!is_array($route['guards'])) {
-            throw new UIException('Action: ' . $route['pattern'] . ' guards malformed, not an array');
+            throw new InternalServerErrorException('Action: ' . $route['pattern'] . ' guards malformed, not an array');
         }
         foreach ($route['guards'] as $guard) {
             $this->validateGuard($guard);
@@ -99,7 +86,7 @@ class ActionValidator
     private function validateGuard(string $guard): void
     {
         if (!class_exists($guard)) {
-            throw new UIException('Guard "' . $guard . '" does not exist');
+            throw new InternalServerErrorException('Guard "' . $guard . '" does not exist');
         }
     }
 }
