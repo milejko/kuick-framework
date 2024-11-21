@@ -11,18 +11,14 @@
 use Kuick\Example\UI\HelloAction;
 use Kuick\Ops\Security\OpsGuard;
 use Kuick\Ops\UI\OpsAction;
-use Symfony\Component\HttpFoundation\Request;
 
 return [
-    //You probably need to remove/replace this route
     [
         'pattern' => '/',
-        'method' => Request::METHOD_GET, //optional
         'action' => HelloAction::class,
     ],
     [
         'pattern' => '/api/ops',
-        //'method' => Request::METHOD_GET, //optional
         'action' => OpsAction::class,
         'guards' => [OpsGuard::class]
     ],

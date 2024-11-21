@@ -12,5 +12,6 @@ return [
     'app_charset'   => 'UTF-8',
     'app_locale'    => 'en_US.utf-8',
     'app_timezone'  => 'Europe/London',
-    'app_env'       => 'prod',
+
+    'kuick_ops_token' => 'change-this-token',
 ];

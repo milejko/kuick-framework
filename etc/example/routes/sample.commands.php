@@ -8,13 +8,12 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-namespace Kuick\UI;
+use Kuick\Example\UI\Console\HelloCommand;
 
-use Exception;
-use Symfony\Component\HttpFoundation\Response;
-
-class UIException extends Exception
-{
-    protected $code = Response::HTTP_INTERNAL_SERVER_ERROR;
-    protected $message = 'Internal server error';
-}
+return [
+    [
+        'name' => 'hello',
+        'command' => HelloCommand::class,
+        //'description' => 'Optional description'
+    ],
+];

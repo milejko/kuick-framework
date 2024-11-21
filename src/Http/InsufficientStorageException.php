@@ -8,13 +8,9 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-namespace Kuick\UI;
+namespace Kuick\Http;
 
-use Exception;
-use Symfony\Component\HttpFoundation\Response;
-
-class UIUnauthorizedException extends Exception
+class InsufficientStorageException extends ResponseException
 {
-    protected $code = Response::HTTP_UNAUTHORIZED;
-    protected $message = 'Unauthorized';
+    protected $code = Response::HTTP_INSUFFICIENT_STORAGE;
 }

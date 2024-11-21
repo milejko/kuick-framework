@@ -12,6 +12,8 @@ namespace  Kuick\App;
 
 use Kuick\Router\CommandMatcher;
 use Kuick\Router\ActionMatcher;
+use Kuick\Router\ActionValidator;
+use Kuick\Router\CommandRouteValidator;
 
 /**
  * PHP-DI definitions
@@ -20,21 +22,24 @@ use Kuick\Router\ActionMatcher;
 return [    
     AppConfig::class => function () {
         //config cache
-        $appEnv = getenv('APP_ENV') ?: 'prod';
         $cacheFile = BASE_PATH . '/var/tmp/kuick.config.cache.php';
-        if ($appEnv != 'dev') {
+        if (Application::getAppEnv() != Application::APP_ENV_DEV) {
             $cacheContent = @file_get_contents($cacheFile);
             if ($cacheContent) {
                 return unserialize($cacheContent);
             }
         }
         $configs = [];
-        //global config
+        //vendor config (lowest priority)
+        foreach (glob(BASE_PATH . '/vendor/kuick/*/etc/*.config.php') as $configFile) {
+            $configs = array_merge($configs, include $configFile);
+        }
+        //global config (normal priority)
         foreach (glob(BASE_PATH . '/etc/*.config.php') as $configFile) {
             $configs = array_merge($configs, include $configFile);
         }
         //environment specific config (higher priority)
-        foreach (glob(BASE_PATH . '/etc/*.config.' . $appEnv . '.php') as $configFile) {
+        foreach (glob(BASE_PATH . '/etc/*.config.' . $appEnv . '.php') as $configFile) {   
             $configs = array_merge($configs, include $configFile);
         }
         //env config (highest priority)
@@ -47,9 +52,8 @@ return [
 
     ActionMatcher::class => function () {
         //config cache
-        $appEnv = getenv('APP_ENV') ?: 'prod';
         $cacheFile = BASE_PATH . '/var/tmp/kuick.actionmatcher.cache.php';
-        if ($appEnv != 'dev') {
+        if (Application::getAppEnv() != Application::APP_ENV_DEV) {
             $cacheContent = @file_get_contents($cacheFile);
             if ($cacheContent) {
                 return unserialize($cacheContent);
@@ -59,6 +63,10 @@ return [
         foreach (glob(BASE_PATH . '/etc/routes/*.actions.php') as $routeFile) {
             $routes = array_merge($routes, include $routeFile);
         }
+        //validating routes
+        foreach ($routes as $route) {
+            (new ActionValidator())($route);
+        }
         $actionMatcher = new ActionMatcher(new RoutesConfig($routes));
         //write cache
         file_put_contents($cacheFile, serialize($actionMatcher));
@@ -67,9 +75,8 @@ return [
 
     CommandMatcher::class => function () {
         //config cache
-        $appEnv = getenv('APP_ENV') ?: 'prod';
         $cacheFile = BASE_PATH . '/var/tmp/kuick.commandmatcher.cache.php';
-        if ($appEnv != 'dev') {
+        if (Application::getAppEnv() != Application::APP_ENV_DEV) {
             $cacheContent = @file_get_contents($cacheFile);
             if ($cacheContent) {
                 return unserialize($cacheContent);
@@ -78,6 +85,9 @@ return [
         $commands = [];
         foreach (glob(BASE_PATH . '/etc/routes/*.commands.php') as $commandFile) {
             $commands = array_merge($commands, include $commandFile);
+        }
+        foreach ($commands as $command) {
+            (new CommandRouteValidator())($command);
         }
         $commandMatcher = new CommandMatcher(new RoutesConfig($commands));
         //write cache

@@ -8,13 +8,9 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-namespace Kuick\UI;
+namespace Kuick\Http;
 
-use Exception;
-use Symfony\Component\HttpFoundation\Response;
-
-class UIBadRequestException extends Exception
+class BadGatewayException extends ResponseException
 {
-    protected $code = Response::HTTP_BAD_REQUEST;
-    protected $message = 'Bad request';
+    protected $code = Response::HTTP_BAD_GATEWAY;
 }

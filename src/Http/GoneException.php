@@ -8,13 +8,9 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-namespace Kuick\UI;
+namespace Kuick\Http;
 
-use Exception;
-use Symfony\Component\HttpFoundation\Response;
-
-class UIForbiddenException extends Exception
+class GoneException extends ResponseException
 {
-    protected $code = Response::HTTP_FORBIDDEN;
-    protected $message = 'Forbidden';
+    protected $code = Response::HTTP_GONE;
 }

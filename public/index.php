@@ -8,9 +8,7 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-define('BASE_PATH', realpath(dirname(__DIR__)));
+define('BASE_PATH', dirname(__DIR__));
 require BASE_PATH . '/vendor/autoload.php';
 
-(new Kuick\App\JsonApplication)(
-    Symfony\Component\HttpFoundation\Request::createFromGlobals()
-);
+(new Kuick\App\Application)->handleRequest(Kuick\Http\Request::createFromGlobals());

@@ -11,9 +11,9 @@
 namespace Kuick\Ops\UI;
 
 use Kuick\App\AppConfig;
+use Kuick\Http\JsonResponse;
+use Kuick\Http\Request;
 use Kuick\UI\ActionInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 
 class OpsAction implements ActionInterface
 {
@@ -35,6 +35,7 @@ class OpsAction implements ActionInterface
             'config' => $this->appConfig->getAll(),
             'server' => [
                 'phpversion' => phpversion(),
+                'peakMemory' => memory_get_peak_usage(),
                 'extensions' => implode(', ', get_loaded_extensions()),
                 'configuration' => ini_get_all(null, false),
             ]
