@@ -17,7 +17,7 @@ use Kuick\Security\GuardInterface;
 
 class OpsGuard implements GuardInterface
 {
-    public const TOKEN_CONFIG_KEY = 'kuick_ops_token';
+    public const TOKEN_CONFIG_KEY = 'kuick_ops_guard_token';
 
     private const AUTHORIZATION_HEADER = 'Authorization';
     private const BEARER_TOKEN_TEMPLATE = 'Bearer %s';

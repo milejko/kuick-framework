@@ -29,6 +29,14 @@ final class Application
     public const APP_ENV_PROD = 'prod';
     private const APP_ENV_ENV_KEY = 'APP_ENV';
 
+    private const CONFIG_LOCALE_KEY = 'kuick_locale';
+    private const CONFIG_CHARSET_KEY = 'kuick_charset';
+    private const CONFIG_TIMEZONE_KEY = 'kuick_timezone';
+
+    private const DEFAULT_LOCALE = 'en_US.utf-8';
+    private const DEFAULT_TIMEZONE = 'Europe/Warsaw';
+    private const DEFAULT_CHARSET = 'UTF-8';
+
     private const CONTAINER_DEFINITION_LOCATIONS = [
         BASE_PATH . '/etc/di/*.di.php',
         BASE_PATH . '/vendor/kuick/*/etc/di/*.di.php',
@@ -36,7 +44,6 @@ final class Application
     private const CONTAINER_ENV_SPECIFIC_DEFINITION_LOCATIONS = [
         BASE_PATH . '/etc/di/*.di@%s.php',
     ];
-    private const NUMERIC_LOCALE = 'en_US.utf-8';
 
     private ContainerInterface $container;
 
@@ -84,13 +91,15 @@ final class Application
     private function setupLocale(): self
     {
         $appConfig = $this->container->get(AppConfig::class);
-        $charset = $appConfig->get('app_charset');
+        $charset = $appConfig->get(self::CONFIG_CHARSET_KEY, self::DEFAULT_CHARSET);
+        $timezone = $appConfig->get(self::CONFIG_TIMEZONE_KEY, self::DEFAULT_TIMEZONE);
         mb_internal_encoding($charset);
         ini_set('default_charset', $charset);
-        date_default_timezone_set($appConfig->get('app_timezone'));
-        setlocale(LC_ALL, $appConfig->get('app_locale'));
-        //numbers are always localized
-        setlocale(LC_NUMERIC, self::NUMERIC_LOCALE);
+        date_default_timezone_set($timezone);
+        ini_set('date.timezone', $timezone);
+        setlocale(LC_ALL, $appConfig->get(self::CONFIG_LOCALE_KEY, self::DEFAULT_LOCALE));
+        //numbers are always localized to en_US.utf-8'
+        setlocale(LC_NUMERIC, self::DEFAULT_LOCALE);
         return $this;
     }
 }

@@ -8,12 +8,10 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-use Kuick\Example\UI\Console\HelloCommand;
-
 return [
-    [
-        'name' => 'hello',
-        'command' => HelloCommand::class,
-        //'description' => 'Optional description'
-    ],
+    'kuick_charset'   => 'UTF-8',
+    'kuick_locale'    => 'en_US.utf-8',
+    'kuick_timezone'  => 'UTC',
+
+    'kuick_ops_guards_token' => 'secret-token',
 ];
