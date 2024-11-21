@@ -9,5 +9,5 @@
  */
 
 return [
-    'kuick_ops_token' => 'test',
+    'kuick_ops_token' => '',
 ];

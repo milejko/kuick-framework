@@ -22,7 +22,7 @@ use Kuick\Router\CommandRouteValidator;
 return [    
     AppConfig::class => function () {
         //config cache
-        $cacheFile = BASE_PATH . '/var/tmp/kuick.config.cache.php';
+        $cacheFile = BASE_PATH . '/var/tmp/kuick.config.cache.' . Application::getAppEnv();
         if (Application::getAppEnv() != Application::APP_ENV_DEV) {
             $cacheContent = @file_get_contents($cacheFile);
             if ($cacheContent) {
@@ -39,7 +39,7 @@ return [
             $configs = array_merge($configs, include $configFile);
         }
         //environment specific config (higher priority)
-        foreach (glob(BASE_PATH . '/etc/*.config.' . $appEnv . '.php') as $configFile) {   
+        foreach (glob(BASE_PATH . '/etc/*.config@' . Application::getAppEnv() . '.php') as $configFile) {   
             $configs = array_merge($configs, include $configFile);
         }
         //env config (highest priority)
@@ -52,7 +52,7 @@ return [
 
     ActionMatcher::class => function () {
         //config cache
-        $cacheFile = BASE_PATH . '/var/tmp/kuick.actionmatcher.cache.php';
+        $cacheFile = BASE_PATH . '/var/tmp/kuick.actionmatcher.cache.' . Application::getAppEnv();
         if (Application::getAppEnv() != Application::APP_ENV_DEV) {
             $cacheContent = @file_get_contents($cacheFile);
             if ($cacheContent) {
@@ -75,7 +75,7 @@ return [
 
     CommandMatcher::class => function () {
         //config cache
-        $cacheFile = BASE_PATH . '/var/tmp/kuick.commandmatcher.cache.php';
+        $cacheFile = BASE_PATH . '/var/tmp/kuick.commandmatcher.cache.' . Application::getAppEnv();
         if (Application::getAppEnv() != Application::APP_ENV_DEV) {
             $cacheContent = @file_get_contents($cacheFile);
             if ($cacheContent) {

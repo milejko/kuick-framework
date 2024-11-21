@@ -35,7 +35,7 @@ class OpsGuard implements GuardInterface
         $expectedToken = sprintf(self::BEARER_TOKEN_TEMPLATE, $this->appConfig->get(self::TOKEN_CONFIG_KEY));
         //token mismatch
         if ($requestToken != $expectedToken) {
-            throw new UnauthorizedException(self::ERROR_INVALID_TOKEN . $requestToken . $expectedToken);
+            throw new UnauthorizedException(self::ERROR_INVALID_TOKEN);
         }
     }
 }

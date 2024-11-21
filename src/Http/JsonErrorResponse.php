@@ -16,16 +16,19 @@ use Throwable;
 class JsonErrorResponse extends JsonResponse
 {
     public function __construct(Throwable $error) {
-        $responseCode = in_array($error->getCode(), Response::ALL_HTTP_CODES) ? 
+        $responseCode = isset(Response::$statusTexts[$error->getCode()]) ? 
             $error->getCode() : 
             Response::HTTP_INTERNAL_SERVER_ERROR;
-        $messageArray = ['error' => $error->getMessage()];
+        $message = ('' != $error->getMessage()) ? $error->getMessage() : Response::$statusTexts[$responseCode];
+        $messageArray = [
+            'error' => $message
+        ];
         if (Application::getAppEnv() == Application::APP_ENV_PROD) {
             return parent::__construct($messageArray, $responseCode, [], false);
         }
         $messageArray['debugData'] = [
             'exceptionClass' => get_class($this),
-            'message' => $error->getMessage(),
+            'message' => $message,
             'file' => $error->getFile(),
             'line' => $error->getLine(),
             'trace' => $error->getTrace(),

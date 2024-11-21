@@ -35,7 +35,7 @@ class OpsAction implements ActionInterface
             'config' => $this->appConfig->getAll(),
             'server' => [
                 'phpversion' => phpversion(),
-                'peakMemory' => memory_get_peak_usage(),
+                'peakMemory' => round(memory_get_peak_usage() / 1024 / 1024, 2) . ' MB',
                 'extensions' => implode(', ', get_loaded_extensions()),
                 'configuration' => ini_get_all(null, false),
             ]
