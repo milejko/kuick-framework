@@ -11,6 +11,7 @@
 namespace Kuick\Composer;
 
 use Composer\Script\Event;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  *
@@ -20,12 +21,8 @@ class ComposerInstaller
     private const KUICK_PATH =  '/vendor/kuick/framework';
     private const INDEX_FILE = '/public/index.php';
     private const CONSOLE_FILE = '/bin/console';
-    private const ETC_FILE_LOCATIONS = [
-        '/etc/*.config.php',
-        '/etc/routes/*.actions.php',
-        '/etc/routes/*.commands.php',
-        '/etc/di/sample.di.php',
-    ];
+    private const SOURCE_ETC_DIR = '/etc/example';
+    private const TARGET_ETC_DIR = '/etc';
     private const TMP_DIR = '/var/tmp';
     private const SYS_DIRS = ['etc', 'etc/di', 'etc/routes', 'public', 'bin'];
 
@@ -76,15 +73,7 @@ class ComposerInstaller
         copy(BASE_PATH . self::KUICK_PATH . self::INDEX_FILE, BASE_PATH . self::INDEX_FILE);
         copy(BASE_PATH . self::KUICK_PATH . self::CONSOLE_FILE, BASE_PATH . self::CONSOLE_FILE);
         chmod(BASE_PATH . self::CONSOLE_FILE, 0755);
-        foreach (self::ETC_FILE_LOCATIONS as $etcFileLocation) {
-            foreach (glob(BASE_PATH . self::KUICK_PATH . $etcFileLocation) as $etcFilePath) {
-                $localEtcFileName = str_replace(BASE_PATH . self::KUICK_PATH, BASE_PATH, $etcFilePath);
-                //if something is in a specific dir - do not do anything
-                if (file_exists($localEtcFileName)) {
-                    continue;
-                }
-                copy($etcFilePath, $localEtcFileName);
-            }
-        }
+        $fs = new Filesystem();
+        $fs->mirror(BASE_PATH . self::KUICK_PATH . self::SOURCE_ETC_DIR, BASE_PATH . self::TARGET_ETC_DIR);
     }
 }
