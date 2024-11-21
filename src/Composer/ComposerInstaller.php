@@ -24,7 +24,7 @@ class ComposerInstaller
     private const SOURCE_ETC_DIR = '/etc/example';
     private const TARGET_ETC_DIR = '/etc';
     private const TMP_DIR = '/var/tmp';
-    private const SYS_DIRS = ['etc', 'etc/di', 'etc/routes', 'public', 'bin'];
+    private const SYS_DIRS = ['bin', 'etc', 'etc/di', 'etc/routes', 'public'];
 
     private static bool $freshInstallation = true;
 
@@ -32,7 +32,7 @@ class ComposerInstaller
     {
         $vendorDir = $event->getComposer()->getConfig()->get('vendor-dir');
         define('BASE_PATH', realpath(dirname($vendorDir)));
-        if (file_exists(BASE_PATH . self::INDEX_FILE) || file_exists(BASE_PATH . self::CONSOLE_FILE)) {
+        if (file_exists(BASE_PATH . self::INDEX_FILE) && file_exists(BASE_PATH . self::CONSOLE_FILE)) {
             self::$freshInstallation = false;
         }
         require $vendorDir . '/autoload.php';
