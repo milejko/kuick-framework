@@ -14,4 +14,6 @@ use Kuick\App\Application;
 define('BASE_PATH', dirname(__DIR__));
 require BASE_PATH . '/vendor/autoload.php';
 
+ini_set('max_execution_time', 0);
+
 (new Application())->handleConsoleInput($argv);

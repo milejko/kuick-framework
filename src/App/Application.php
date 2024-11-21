@@ -25,9 +25,9 @@ use Throwable;
  */
 final class Application
 {
-    private const APP_ENV_ENV_KEY = 'APP_ENV';
     public const APP_ENV_DEV = 'dev';
     public const APP_ENV_PROD = 'prod';
+    private const APP_ENV_ENV_KEY = 'APP_ENV';
 
     private const CONTAINER_DEFINITION_LOCATIONS = [
         BASE_PATH . '/etc/di/*.di.php',
@@ -70,8 +70,6 @@ final class Application
     public function handleConsoleInput(array $argv): void
     {
         try {
-            ini_set('max_execution_time', 0);
-            ini_set('memory_limit', '2048M');
             //@TODO: Command input/output instead of array of strings
             echo $this->container->get(CommandLauncher::class)(
                 $this->container->get(CommandMatcher::class)->findRoute($argv),

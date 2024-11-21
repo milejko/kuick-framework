@@ -34,7 +34,7 @@ return [
         foreach (glob(BASE_PATH . '/vendor/kuick/*/etc/*.config.php') as $configFile) {
             $configs = array_merge($configs, include $configFile);
         }
-        //global config (normal priority)
+        //app config (normal priority)
         foreach (glob(BASE_PATH . '/etc/*.config.php') as $configFile) {
             $configs = array_merge($configs, include $configFile);
         }
@@ -60,6 +60,11 @@ return [
             }
         }
         $routes = [];
+        //vendor routes (lower priority)
+        foreach (glob(BASE_PATH . '/vendor/kuick/*/routes/*.actions.php') as $routeFile) {
+            $routes = array_merge($routes, include $routeFile);
+        }
+        //app config (normal priority)
         foreach (glob(BASE_PATH . '/etc/routes/*.actions.php') as $routeFile) {
             $routes = array_merge($routes, include $routeFile);
         }
@@ -83,6 +88,11 @@ return [
             }
         }
         $commands = [];
+        //vendor commands (lower priority)
+        foreach (glob(BASE_PATH . '/vendor/kuick/*/routes/*.actions.php') as $commandFile) {
+            $commands = array_merge($commands, include $commandFile);
+        }
+        //app commands (normal priority)
         foreach (glob(BASE_PATH . '/etc/routes/*.commands.php') as $commandFile) {
             $commands = array_merge($commands, include $commandFile);
         }

@@ -28,6 +28,9 @@ class OpsGuard implements GuardInterface
 
     public function __invoke(Request $request): void
     {
+        if (!$this->appConfig->get(self::TOKEN_CONFIG_KEY)) {
+            return;
+        }
         $requestToken = $request->headers->get(self::AUTHORIZATION_HEADER);
         if (null === $requestToken) {
             throw new UnauthorizedException(self::ERROR_MISSING_TOKEN);
