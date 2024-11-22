@@ -8,10 +8,11 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-namespace Kuick\Http;
+namespace Kuick\Router;
 
-use Symfony\Component\HttpFoundation\JsonResponse as SymfonyJsonResponse;
+use Exception;
 
-class JsonResponse extends SymfonyJsonResponse
+class ActionInvalidMethodException extends Exception
 {
+    protected $message = 'Method not allowed for this route';
 }

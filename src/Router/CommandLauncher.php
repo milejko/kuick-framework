@@ -20,19 +20,16 @@ use Throwable;
  */
 class CommandLauncher
 {
-    public function __construct(private ContainerInterface $container) {}
+    public function __construct(private ContainerInterface $container)
+    {
+    }
 
     public function __invoke(array $command, array $arguments): string
     {
-        try {
-            $command = $this->container->get($command['command']);
-            if (!($command instanceof CommandInterface)) {
-                throw new ConsoleException($command['command'] . ' is not a Command');
-            }
-            return $command->__invoke(array_slice($arguments, 2));
-        } catch (Throwable $error) {
-            echo $error->getMessage() . PHP_EOL;
-            exit(1);
+        $command = $this->container->get($command['command']);
+        if (!($command instanceof CommandInterface)) {
+            throw new ConsoleException($command['command'] . ' is not a Command');
         }
+        return $command->__invoke(array_slice($arguments, 2));
     }
 }

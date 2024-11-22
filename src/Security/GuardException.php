@@ -8,14 +8,12 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-namespace Kuick\Http;
+namespace Kuick\Security;
 
-use Throwable;
+use Exception;
+use Kuick\Http\Response;
 
-class JsonErrorResponse extends JsonErrorResponse
+class GuardException extends Exception
 {
-    public function __construct(Throwable $exception, int $code = Response::HTTP_INTERNAL_SERVER_ERROR)
-    {
-        parent::__construct($exception->getMessage(), $code);
-    }
+    protected $code = Response::HTTP_FORBIDDEN;
 }

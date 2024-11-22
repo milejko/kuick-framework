@@ -16,6 +16,7 @@ class HelloActionTest extends TestCase
         $this->expectException(ApplicationException::class);
         (new DotEnvParser)(BASE_PATH . '/tests/inexisten.env');
     }
+
     public function testIfDotEnvFileIsParsedCorrectly()
     {
         $values = (new DotEnvParser)(BASE_PATH . '/tests/Mocks/.env.sample');

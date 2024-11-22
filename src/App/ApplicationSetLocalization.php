@@ -15,23 +15,23 @@ use DI\Attribute\Inject;
 /**
  * Locale configurator
  */
-final class ApplicationLocale
+final class ApplicationSetLocalization
 {
     private const DEFAULT_LOCALE = 'en_US.utf-8';
-    private const DEFAULT_TIMEZONE = 'Europe/Warsaw';
-    private const DEFAULT_CHARSET = 'UTF-8';
 
-    private function __construct(
-        #[Inject('kuick.app.locale')] private string $locale = self::DEFAULT_LOCALE,
-        #[Inject('kuick.app.timezone')] private string $timezone = self::DEFAULT_TIMEZONE,
+    public function __construct(
+        #[Inject('kuick.app.locale')] private string $locale,
+        #[Inject('kuick.app.timezone')] private string $timezone,
         #[Inject('kuick.app.charset')] private string $charset,
-    )
+    ) {}
+
+    public function __invoke()
     {
-        mb_internal_encoding($charset);
-        ini_set('default_charset', $charset);
-        date_default_timezone_set($timezone);
-        ini_set('date.timezone', $timezone);
-        setlocale(LC_ALL, $locale);
+        mb_internal_encoding($this->charset);
+        ini_set('default_charset', $this->charset);
+        date_default_timezone_set($this->timezone);
+        ini_set('date.timezone', $this->timezone);
+        setlocale(LC_ALL, $this->locale);
         //numbers are always localized to en_US.utf-8'
         setlocale(LC_NUMERIC, self::DEFAULT_LOCALE);
     }

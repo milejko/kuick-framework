@@ -12,7 +12,13 @@ namespace Kuick\Http;
 
 class JsonErrorResponse extends JsonResponse
 {
-    public function __construct(string $message = 'Server error', int $code = Response::HTTP_INTERNAL_SERVER_ERROR) {
-        parent::__construct(['error' => $message], $code, [], false);
+    private const ERROR_KEY = 'error';
+    private const DEFAULT_MESSAGE = 'Internal server error';
+
+    public function __construct(
+        string $message = self::DEFAULT_MESSAGE,
+        int $code = Response::HTTP_INTERNAL_SERVER_ERROR
+    ) {
+        parent::__construct([self::ERROR_KEY => $message], $code, [], false);
     }
 }

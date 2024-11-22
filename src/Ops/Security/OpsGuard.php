@@ -11,8 +11,10 @@
 namespace Kuick\Ops\Security;
 
 use DI\Attribute\Inject;
+use Kuick\App\ApplicationException;
 use Kuick\Http\JsonErrorResponse;
 use Kuick\Http\Request;
+use Kuick\Security\GuardException;
 use Kuick\Security\GuardInterface;
 
 class OpsGuard implements GuardInterface
@@ -20,18 +22,20 @@ class OpsGuard implements GuardInterface
     private const AUTHORIZATION_HEADER = 'Authorization';
     private const BEARER_TOKEN_TEMPLATE = 'Bearer %s';
     
-    public function __construct(#[Inject('kuick.ops.guards.token')] private string $opsToken) {}
+    public function __construct(#[Inject('kuick.ops.guards.token')] private string $opsToken)
+    {
+    }
 
-    public function __invoke(Request $request): ?JsonErrorResponse
+    public function __invoke(Request $request): void
     {
         $requestToken = $request->headers->get(self::AUTHORIZATION_HEADER);
         if (null === $requestToken) {
-            return new JsonErrorResponse('Token is missing');
+            throw new GuardException('test');
         }
         $expectedToken = sprintf(self::BEARER_TOKEN_TEMPLATE, $this->opsToken);
         //token mismatch
         if ($requestToken != $expectedToken) {
-            return new JsonErrorResponse('Token is invalid');
+            throw new GuardException('test');
         }
     }
 }

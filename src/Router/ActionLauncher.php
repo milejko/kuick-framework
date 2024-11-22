@@ -35,29 +35,21 @@ class ActionLauncher
         if (isset($route['guards'])) {
             $this->executeGuards($route['guards'], $request);
         }
-        try {
-            $action = $this->container->get($route['action']);
-            if (!($action instanceof ActionInterface)) {
-                throw new JsonException($route['action'] . ' is not an Action');
-            }
-            return $action->__invoke($request);
-        } catch (Throwable $error) {
-            (new JsonErrorResponse($error))->send();
+        $action = $this->container->get($route['action']);
+        if (!($action instanceof ActionInterface)) {
+            throw new JsonException($route['action'] . ' is not an Action');
         }
+        return $action->__invoke($request);
     }
 
     private function executeGuards(array $guards, Request $request): void
     {
-        try {
-            foreach ($guards as $guardName) {
-                $guard = $this->container->get($guardName);
-                if (!($guard instanceof GuardInterface)) {
-                    throw new JsonException($guardName . ' is not a Guard');
-                }
-                $guard->__invoke($request);
+        foreach ($guards as $guardName) {
+            $guard = $this->container->get($guardName);
+            if (!($guard instanceof GuardInterface)) {
+                throw new JsonException($guardName . ' is not a Guard');
             }
-        } catch (Throwable $error) {
-            (new JsonErrorResponse($error))->send();
+            $guard->__invoke($request);
         }
     }
 }

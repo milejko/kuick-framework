@@ -24,7 +24,7 @@ class DotEnvParser
         }
         $fileResource = fopen($fileName, self::OPEN_FILE_MODE);
         $values = [];
-        while(!feof($fileResource)) {
+        while (!feof($fileResource)) {
             $kv = $this->parseLine(fgets($fileResource));
             //empty line
             if ('' === (current($kv) ?? '')) {

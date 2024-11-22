@@ -12,7 +12,8 @@ namespace Kuick\Http;
 
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
-class Request extends SymfonyRequest {
+class Request extends SymfonyRequest
+{
 
     public const ALL_METHODS = [
         self::METHOD_CONNECT,
@@ -26,5 +27,4 @@ class Request extends SymfonyRequest {
         self::METHOD_PUT,
         self::METHOD_TRACE,
     ];
-
 }

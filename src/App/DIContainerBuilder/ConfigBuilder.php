@@ -8,15 +8,12 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-namespace Kuick\Security;
-
-use Kuick\Http\Request;
+namespace Kuick\App\DIContainerBuilder;
 
 /**
- * Provides actions with optional security layer, like: header validation, request filterint etc.
- * Throw a GuardException if something is wrong with the request
+ *
  */
-interface GuardInterface
+class ConfigDefinitions
 {
-    public function __invoke(Request $request): void;
+    
 }

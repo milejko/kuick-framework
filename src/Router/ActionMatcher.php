@@ -11,8 +11,6 @@
 namespace Kuick\Router;
 
 use Kuick\App\RoutesConfig;
-use Kuick\Http\MethodNotAllowedException;
-use Kuick\Http\NotFoundException;
 use Kuick\Http\Request;
 
 /**
@@ -36,21 +34,22 @@ class ActionMatcher
         }
         $methodNotAllowed = false;
         foreach ($this->routes->getAll() as $route) {
-            $routeMethod = $route['method'] ?? Request::METHOD_GET;            
+            $routeMethod = $route['method'] ?? Request::METHOD_GET;
+            $requestMethod = $request->getMethod();
             if (!preg_match('#^' . $route['pattern'] . '$#', $request->getPathInfo())) {
                 continue;
             }
-            if (Request::METHOD_HEAD == $request->getMethod() && Request::METHOD_GET == $routeMethod) {
-                $routeMethod = Request::METHOD_GET;
+            if (Request::METHOD_HEAD == $requestMethod && Request::METHOD_GET == $routeMethod) {
+                $requestMethod = $routeMethod;
             }
-            if ($request->getMethod() == $routeMethod) {
+            if ($requestMethod == $routeMethod) {
                 return $route;
             }
             $methodNotAllowed = true;
         }
         if ($methodNotAllowed) {
-            throw new MethodNotAllowedException();
+            throw new ActionInvalidMethodException();
         }
-        throw new NotFoundException();
+        throw new ActionNotFoundException();
     }
 }

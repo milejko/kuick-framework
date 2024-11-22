@@ -9,5 +9,5 @@
  */
 
 return [
-    'kuick.ops.guards.token' => '',
+    //'kuick.ops.guards.token' => '',
 ];

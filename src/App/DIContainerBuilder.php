@@ -22,6 +22,13 @@ use Psr\Container\ContainerInterface;
  */
 class DIContainerBuilder
 {
+    private const DEFAULT_CONFIG_SETTINGS = [
+        'kuick.app.charset'   => 'UTF-8',
+        'kuick.app.locale'    => 'en_US.utf-8',
+        'kuick.app.timezone'  => 'UTC',
+        //random token
+        'kuick.ops.guards.token' => 'please-change-this-token',
+    ];
     private const CONTAINER_DEFINITION_LOCATIONS = [
         BASE_PATH . '/etc/di/*.di.php',
         BASE_PATH . '/vendor/kuick/*/etc/di/*.di.php',
@@ -39,25 +46,28 @@ class DIContainerBuilder
         $this->env = $env;
         //remove previous compilation if APP_ENV!=dev
         if ($env == Application::ENV_DEV) {
-            self::removeContainer();
+            $this->removeContainer();
         }
         //build or load from cache
-        $container = self::getBuilder()->build();
+        $container = $this->getBuilder()->build();
         //validating if container is built
         if ($container->has(self::CONTAINER_READY_FLAG)) {
             return $container;
         }
         //rebuilding if validation failed
-        return self::rebuildContainer();
+        return $this->rebuildContainer();
     }
 
     private function rebuildContainer(): ContainerInterface
     {
-        self::removeContainer();
-        $builder = self::getBuilder();
+        $this->removeContainer();
+        $builder = $this->getBuilder();
+
+        //mandatory defaults
+        $builder->addDefinitions(self::DEFAULT_CONFIG_SETTINGS);
 
         //adding configuration definitions
-        self::addConfigDefinitions($builder);
+        $this->addConfigDefinitions($builder);
 
         //adding global definitions
         foreach (self::CONTAINER_DEFINITION_LOCATIONS as $definitionsLocation) {
@@ -95,7 +105,7 @@ class DIContainerBuilder
             return $commandMatcher;
         }]);
         $builder->addDefinitions([self::CONTAINER_READY_FLAG => true]);
-        return $builder->build();        
+        return $builder->build();
     }
 
     private function addConfigDefinitions(ContainerBuilder $builder): void
@@ -109,7 +119,7 @@ class DIContainerBuilder
             $builder->addDefinitions(include$configFile);
         }
         //environment specific config (higher priority)
-        foreach (glob(BASE_PATH . '/etc/*.config@' . $this->env . '.php') as $configFile) {   
+        foreach (glob(BASE_PATH . '/etc/*.config@' . $this->env . '.php') as $configFile) {
             $builder->addDefinitions(include $configFile);
         }
         //environment variables (the highest priority)
@@ -125,7 +135,7 @@ class DIContainerBuilder
             ->useAutowiring(true)
             ->useAttributes(true)
             ->enableCompilation(self::CONTAINER_PATH);
-        if (self::isApcuEnabled()) {
+        if ($this->isApcuEnabled()) {
             $builder->enableDefinitionCache(__DIR__);
         }
         return $builder;
@@ -133,7 +143,7 @@ class DIContainerBuilder
 
     private function removeContainer(): void
     {
-        self::isApcuEnabled() && apcu_clear_cache();
+        $this->isApcuEnabled() && apcu_clear_cache();
         array_map('unlink', glob(self::CONTAINER_PATH . DIRECTORY_SEPARATOR . self::CONTAINER_FILENAME));
     }
 
