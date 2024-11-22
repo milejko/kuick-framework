@@ -15,7 +15,10 @@ use Kuick\Router\ActionMatcher;
 use Kuick\Router\ActionValidator;
 use Kuick\Router\CommandMatcher;
 use Kuick\Router\CommandRouteValidator;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  *
@@ -26,8 +29,9 @@ class DIContainerBuilder
         'kuick.app.charset'   => 'UTF-8',
         'kuick.app.locale'    => 'en_US.utf-8',
         'kuick.app.timezone'  => 'UTC',
-        //random token
         'kuick.ops.guards.token' => 'please-change-this-token',
+        'kuick.monolog.level' => 'DEBUG',
+        'kuick.monolog.handlers' => [],
     ];
     private const CONTAINER_DEFINITION_LOCATIONS = [
         BASE_PATH . '/etc/di/*.di.php',
@@ -79,7 +83,23 @@ class DIContainerBuilder
         foreach (glob(sprintf(self::ENV_SPECIFIC_LOCATION_TEMPLATE, $this->env)) as $definitionFile) {
             $builder->addDefinitions($definitionFile);
         }
-        $builder->addDefinitions([ActionMatcher::class => function () {
+        $builder->addDefinitions([LoggerInterface::class => function (ContainerInterface $container): LoggerInterface {
+            $logger = new Logger('Kuick');
+            $defaultLogLevel = $container->get('kuick.monolog.level');
+            !is_string($defaultLogLevel) && throw new ApplicationException('Logger level must be a string');
+            $logger->pushHandler(new StreamHandler('php://stdout', $defaultLogLevel));
+            $handlers = $container->get('kuick.monolog.handlers');
+            !is_array($handlers) && throw new ApplicationException('Logger handlers are invalid, should be an array');
+            foreach ($handlers as $handler) {
+                $type = $handler['type'] ?? throw new ApplicationException('Logger handler type not defined');
+                $level = $handler['level'] ?? throw new ApplicationException('Logger handler type not defined');
+                $path = $handler['path'] ?? throw new ApplicationException('Logger handler type not defined');
+                //@TODO: handle type
+                $logger->pushHandler(new StreamHandler($path, $level));
+            }
+            return $logger;
+        }]);
+        $builder->addDefinitions([ActionMatcher::class => function (ContainerInterface $container): ActionMatcher {
             $routes = [];
             //app config (normal priority)
             foreach (glob(BASE_PATH . '/etc/routes/*.actions.php') as $routeFile) {
@@ -89,7 +109,7 @@ class DIContainerBuilder
             foreach ($routes as $route) {
                 (new ActionValidator())($route);
             }
-            $actionMatcher = new ActionMatcher(new RoutesConfig($routes));
+            $actionMatcher = (new ActionMatcher($container->get(LoggerInterface::class)))->setRoutes(new RoutesConfig($routes));
             return $actionMatcher;
         }]);
         $builder->addDefinitions([CommandMatcher::class => function () {

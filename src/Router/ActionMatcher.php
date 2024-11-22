@@ -12,14 +12,21 @@ namespace Kuick\Router;
 
 use Kuick\App\RoutesConfig;
 use Kuick\Http\Request;
+use Psr\Log\LoggerInterface;
 
 /**
  *
  */
 class ActionMatcher
 {
-    public function __construct(private RoutesConfig $routes)
+    private RoutesConfig $routes;
+
+    public function __construct(private LoggerInterface $logger) {}
+
+    public function setRoutes(RoutesConfig $routes): self
     {
+        $this->routes = $routes;
+        return $this;
     }
 
     public function getRoutes(): array

@@ -10,9 +10,9 @@
 
 namespace Kuick\Http;
 
-use Exception;
+use Kuick\App\ApplicationException;
 
-class ResponseException extends Exception
+class ResponseException extends ApplicationException
 {
     protected $code = Response::HTTP_INTERNAL_SERVER_ERROR;
 }

@@ -9,5 +9,6 @@
  */
 
 return [
-    //'kuick.ops.guards.token' => '',
+    'kuick.monolog.level' => 'DEBUG',
+    'kuick.ops.guards.token' => '',
 ];
