@@ -12,13 +12,13 @@ namespace Kuick\App;
 
 use Kuick\Http\JsonErrorResponse;
 use Kuick\Http\Request;
+use Kuick\Http\ResponseException;
 use Kuick\Router\ActionInvalidMethodException;
 use Kuick\Router\ActionLauncher;
 use Kuick\Router\ActionMatcher;
 use Kuick\Router\ActionNotFoundException;
 use Kuick\Router\CommandLauncher;
 use Kuick\Router\CommandMatcher;
-use Kuick\Security\GuardException;
 use Psr\Container\ContainerInterface;
 use Throwable;
 
@@ -48,7 +48,7 @@ final class Application
                 $this->container->get(ActionMatcher::class)->findRoute($request),
                 $request
             )->send();
-        } catch (GuardException $error) {
+        } catch (ResponseException $error) {
             (new JsonErrorResponse($error->getMessage(), $error->getCode()))->send();
         } catch (ActionNotFoundException $error) {
             (new JsonErrorResponse($error->getMessage(), JsonErrorResponse::HTTP_NOT_FOUND))->send();

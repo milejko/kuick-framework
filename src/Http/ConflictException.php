@@ -8,12 +8,9 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-namespace Kuick\Security;
+namespace Kuick\Http;
 
-use Exception;
-use Kuick\Http\Response;
-
-class GuardException extends Exception
+class ConflictException extends ResponseException
 {
-    protected $code = Response::HTTP_FORBIDDEN;
+    protected $code = Response::HTTP_CONFLICT;
 }
