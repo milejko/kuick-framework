@@ -10,7 +10,7 @@
 
 namespace Kuick\Router;
 
-use Kuick\App\AppException;
+use Kuick\App\ApplicationException;
 use Kuick\App\RoutesConfig;
 use Kuick\Console\ConsoleIndexCommand;
 
@@ -40,6 +40,6 @@ class CommandMatcher
                 return $command;
             }
         }
-        throw new AppException('Command not found');
+        throw new ApplicationException('Command not found');
     }
 }

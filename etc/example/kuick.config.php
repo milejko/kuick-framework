@@ -9,9 +9,9 @@
  */
 
 return [
-    'kuick_charset'   => 'UTF-8',
-    'kuick_locale'    => 'en_US.utf-8',
-    'kuick_timezone'  => 'UTC',
+    'kuick.charset'   => 'UTF-8',
+    'kuick.locale'    => 'en_US.utf-8',
+    'kuick.timezone'  => 'UTC',
 
-    'kuick_ops_guards_token' => 'secret-token',
+    'kuick.ops.guards.token' => 'secret-token',
 ];

@@ -9,5 +9,5 @@
  */
 
 return [
-    'app_ops_token' => 'production-token',
+    'kuick.ops.guards.token' => 'production-token',
 ];

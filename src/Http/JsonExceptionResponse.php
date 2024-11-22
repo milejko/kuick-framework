@@ -10,7 +10,12 @@
 
 namespace Kuick\Http;
 
-class ConflictException extends ResponseException
+use Throwable;
+
+class JsonErrorResponse extends JsonErrorResponse
 {
-    protected $code = Response::HTTP_CONFLICT;
+    public function __construct(Throwable $exception, int $code = Response::HTTP_INTERNAL_SERVER_ERROR)
+    {
+        parent::__construct($exception->getMessage(), $code);
+    }
 }

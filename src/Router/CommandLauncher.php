@@ -10,10 +10,10 @@
 
 namespace Kuick\Router;
 
-use Kuick\App\AppException;
 use Kuick\Console\ConsoleException;
 use Kuick\UI\CommandInterface;
 use Psr\Container\ContainerInterface;
+use Throwable;
 
 /**
  *
@@ -24,10 +24,15 @@ class CommandLauncher
 
     public function __invoke(array $command, array $arguments): string
     {
-        $command = $this->container->get($command['command']);
-        if (!($command instanceof CommandInterface)) {
-            throw new ConsoleException($command['command'] . ' is not a Command');
+        try {
+            $command = $this->container->get($command['command']);
+            if (!($command instanceof CommandInterface)) {
+                throw new ConsoleException($command['command'] . ' is not a Command');
+            }
+            return $command->__invoke(array_slice($arguments, 2));
+        } catch (Throwable $error) {
+            echo $error->getMessage() . PHP_EOL;
+            exit(1);
         }
-        return $command->__invoke(array_slice($arguments, 2));
     }
 }

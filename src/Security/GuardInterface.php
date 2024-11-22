@@ -10,6 +10,7 @@
 
 namespace Kuick\Security;
 
+use Kuick\Http\JsonErrorResponse;
 use Kuick\Http\Request;
 
 /**
@@ -17,5 +18,5 @@ use Kuick\Http\Request;
  */
 interface GuardInterface
 {
-    public function __invoke(Request $request): void;
+    public function __invoke(Request $request): ?JsonErrorResponse;
 }

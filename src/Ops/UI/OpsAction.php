@@ -10,14 +10,14 @@
 
 namespace Kuick\Ops\UI;
 
-use Kuick\App\AppConfig;
+use DI\Container;
 use Kuick\Http\JsonResponse;
 use Kuick\Http\Request;
 use Kuick\UI\ActionInterface;
 
 class OpsAction implements ActionInterface
 {
-    public function __construct(private AppConfig $appConfig)
+    public function __construct(private Container $container)
     {
     }
 
@@ -32,7 +32,7 @@ class OpsAction implements ActionInterface
                 'queryParams' => $request->query->all(),
                 'body' => $request->getContent(),
             ],
-            'config' => $this->appConfig->getAll(),
+            'config' => $this->getConfigDefinitions(),
             'server' => [
                 'phpversion' => phpversion(),
                 'peakMemory' => round(memory_get_peak_usage() / 1024 / 1024, 2) . ' MB',
@@ -40,5 +40,21 @@ class OpsAction implements ActionInterface
                 'configuration' => ini_get_all(null, false),
             ]
         ]);
+    }
+
+    private function getConfigDefinitions(): array
+    {
+        $configValues = [];
+        foreach ($this->container->getKnownEntryNames() as $entryName) {
+            $definition = $this->container->get($entryName);
+            if (true === $definition) {
+                continue;
+            }
+            if (!is_string($definition) && !is_array($definition)) {
+                continue;
+            }
+            $configValues[$entryName] = $definition;
+        }
+        return $configValues;
     }
 }

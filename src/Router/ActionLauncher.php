@@ -11,12 +11,14 @@
 namespace Kuick\Router;
 
 use JsonException;
+use Kuick\Http\JsonErrorResponse;
 use Kuick\Http\JsonResponse;
 use Kuick\Http\Request;
 use Kuick\Http\Response;
 use Kuick\UI\ActionInterface;
 use Kuick\Security\GuardInterface;
 use Psr\Container\ContainerInterface;
+use Throwable;
 
 /**
  *
@@ -33,21 +35,29 @@ class ActionLauncher
         if (isset($route['guards'])) {
             $this->executeGuards($route['guards'], $request);
         }
-        $action = $this->container->get($route['action']);
-        if (!($action instanceof ActionInterface)) {
-            throw new JsonException($route['action'] . ' is not an Action');
+        try {
+            $action = $this->container->get($route['action']);
+            if (!($action instanceof ActionInterface)) {
+                throw new JsonException($route['action'] . ' is not an Action');
+            }
+            return $action->__invoke($request);
+        } catch (Throwable $error) {
+            (new JsonErrorResponse($error))->send();
         }
-        return $action->__invoke($request);
     }
 
     private function executeGuards(array $guards, Request $request): void
     {
-        foreach ($guards as $guardName) {
-            $guard = $this->container->get($guardName);
-            if (!($guard instanceof GuardInterface)) {
-                throw new JsonException($guardName . ' is not a Guard');
+        try {
+            foreach ($guards as $guardName) {
+                $guard = $this->container->get($guardName);
+                if (!($guard instanceof GuardInterface)) {
+                    throw new JsonException($guardName . ' is not a Guard');
+                }
+                $guard->__invoke($request);
             }
-            $guard->__invoke($request);
+        } catch (Throwable $error) {
+            (new JsonErrorResponse($error))->send();
         }
     }
 }

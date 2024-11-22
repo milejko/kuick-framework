@@ -10,29 +10,9 @@
 
 namespace Kuick\Http;
 
-use Kuick\App\Application;
-use Throwable;
-
 class JsonErrorResponse extends JsonResponse
 {
-    public function __construct(Throwable $error) {
-        $responseCode = isset(Response::$statusTexts[$error->getCode()]) ? 
-            $error->getCode() : 
-            Response::HTTP_INTERNAL_SERVER_ERROR;
-        $message = ('' != $error->getMessage()) ? $error->getMessage() : Response::$statusTexts[$responseCode];
-        $messageArray = [
-            'error' => $message
-        ];
-        if (Application::getAppEnv() == Application::APP_ENV_PROD) {
-            return parent::__construct($messageArray, $responseCode, [], false);
-        }
-        $messageArray['debugData'] = [
-            'exceptionClass' => get_class($this),
-            'message' => $message,
-            'file' => $error->getFile(),
-            'line' => $error->getLine(),
-            'trace' => $error->getTrace(),
-        ];
-        parent::__construct($messageArray, $responseCode, [], false);
+    public function __construct(string $message = 'Server error', int $code = Response::HTTP_INTERNAL_SERVER_ERROR) {
+        parent::__construct(['error' => $message], $code, [], false);
     }
 }
