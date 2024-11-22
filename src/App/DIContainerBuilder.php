@@ -94,7 +94,7 @@ class DIContainerBuilder
             $commandMatcher = new CommandMatcher(new RoutesConfig($commands));
             return $commandMatcher;
         }]);
-        $builder->addDefinitions(self::CONTAINER_READY_FLAG);
+        $builder->addDefinitions([self::CONTAINER_READY_FLAG => true]);
         return $builder->build();        
     }
 
@@ -106,16 +106,16 @@ class DIContainerBuilder
         }
         //app config (normal priority)
         foreach (glob(BASE_PATH . '/etc/*.config.php') as $configFile) {
-            $builder->addDefinitions($configFile);
+            $builder->addDefinitions(include$configFile);
         }
         //environment specific config (higher priority)
         foreach (glob(BASE_PATH . '/etc/*.config@' . $this->env . '.php') as $configFile) {   
-            $builder->addDefinitions($configFile);
+            $builder->addDefinitions(include $configFile);
         }
         //environment variables (the highest priority)
         foreach (getenv() as $envVarKey => $envVarValue) {
             $sanitizedKey = str_replace('_', '.', strtolower($envVarKey));
-            $builder->addDefinitions($sanitizedKey, $envVarValue);
+            $builder->addDefinitions([$sanitizedKey => $envVarValue]);
         }
     }
 
