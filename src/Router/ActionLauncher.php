@@ -25,7 +25,9 @@ use Throwable;
  */
 class ActionLauncher
 {
-    public function __construct(private ContainerInterface $container) {}
+    public function __construct(private ContainerInterface $container)
+    {
+    }
 
     public function __invoke(array $route, Request $request): Response|JsonResponse
     {

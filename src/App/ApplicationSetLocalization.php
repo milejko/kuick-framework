@@ -23,7 +23,8 @@ final class ApplicationSetLocalization
         #[Inject('kuick.app.locale')] private string $locale,
         #[Inject('kuick.app.timezone')] private string $timezone,
         #[Inject('kuick.app.charset')] private string $charset,
-    ) {}
+    ) {
+    }
 
     public function __invoke()
     {
