@@ -1,19 +1,27 @@
 <?php
 
+use Psr\Container\ContainerInterface;
+
 /**
  * PHP-DI definitions
  * @see https://php-di.org/doc/php-definitions.html
  */
-
-use Psr\Container\ContainerInterface;
-
 return [
+    'kuick.app.name'      => 'Kuick app',
     'kuick.app.charset'   => 'UTF-8',
     'kuick.app.locale'    => 'en_US.utf-8',
     'kuick.app.timezone'  => 'UTC',
 
     'kuick.monolog.level' => 'WARNING',
+
     'kuick.ops.guards.token' => 'secret-token',
+
+    'kuick.monolog.handlers' => [
+        [
+            'type' => 'stream',
+            'path' => 'php://stdout',
+        ]
+    ],
  
     //autowiring
     //SomeInterface::class => DI\autowire(SomeImplementation::class),
