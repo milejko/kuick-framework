@@ -12,4 +12,6 @@ namespace Kuick\App;
 
 use Exception;
 
-class AppException extends Exception {}
+class ApplicationException extends Exception
+{
+}

@@ -8,7 +8,10 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
+use Kuick\App\Application;
+use Kuick\Http\Request;
+
 define('BASE_PATH', dirname(__DIR__));
 require BASE_PATH . '/vendor/autoload.php';
 
-(new Kuick\App\Application)->handleRequest(Kuick\Http\Request::createFromGlobals());
+(new Application())->handleRequest(Request::createFromGlobals());

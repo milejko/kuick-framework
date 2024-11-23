@@ -14,14 +14,21 @@ use Kuick\App\RoutesConfig;
 use Kuick\Http\MethodNotAllowedException;
 use Kuick\Http\NotFoundException;
 use Kuick\Http\Request;
+use Psr\Log\LoggerInterface;
 
 /**
  *
  */
 class ActionMatcher
 {
-    public function __construct(private RoutesConfig $routes)
+    private RoutesConfig $routes;
+
+    public function __construct(private LoggerInterface $logger) {}
+
+    public function setRoutes(RoutesConfig $routes): self
     {
+        $this->routes = $routes;
+        return $this;
     }
 
     public function getRoutes(): array
@@ -36,21 +43,22 @@ class ActionMatcher
         }
         $methodNotAllowed = false;
         foreach ($this->routes->getAll() as $route) {
-            $routeMethod = $route['method'] ?? Request::METHOD_GET;            
+            $routeMethod = $route['method'] ?? Request::METHOD_GET;
+            $requestMethod = $request->getMethod();
             if (!preg_match('#^' . $route['pattern'] . '$#', $request->getPathInfo())) {
                 continue;
             }
-            if (Request::METHOD_HEAD == $request->getMethod() && Request::METHOD_GET == $routeMethod) {
-                $routeMethod = Request::METHOD_GET;
+            if (Request::METHOD_HEAD == $requestMethod && Request::METHOD_GET == $routeMethod) {
+                $requestMethod = $routeMethod;
             }
-            if ($request->getMethod() == $routeMethod) {
+            if ($requestMethod == $routeMethod) {
                 return $route;
             }
             $methodNotAllowed = true;
         }
         if ($methodNotAllowed) {
-            throw new MethodNotAllowedException();
+            throw new MethodNotAllowedException('Method:' . $requestMethod . 'is not allowed for ' . $route['pattern'] . ' route');
         }
-        throw new NotFoundException();
+        throw new NotFoundException('Action not found');
     }
 }

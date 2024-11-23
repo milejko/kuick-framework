@@ -16,8 +16,17 @@ use Kuick\UI\ActionInterface;
 
 class HelloAction implements ActionInterface
 {
+    private const DEFAULT_NAME = 'my friend';
+
     public function __invoke(Request $request): JsonResponse
     {
-        return new JsonResponse(['Kuick says: hello!']);
+        $name = ($request->query->get('name') ? $request->query->get('name') : self::DEFAULT_NAME);
+        $message = [
+            'message' => 'Kuick says: hello ' . $name . '!',
+        ];
+        if (!$request->query->get('name')) {
+            $message['hint'] = 'If you want a proper greeting use: ' .$request->getUri(). '?name=NAME';
+        }
+        return new JsonResponse($message);
     }
 }

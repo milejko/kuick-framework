@@ -8,6 +8,10 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-return [
-    'app_ops_token' => '',
-];
+namespace Kuick\Router;
+
+use Kuick\App\ApplicationException;
+
+class RouterException extends ApplicationException
+{
+}

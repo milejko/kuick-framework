@@ -10,35 +10,35 @@
 
 namespace Kuick\Ops\Security;
 
-use Kuick\App\AppConfig;
+use DI\Attribute\Inject;
+use Kuick\Http\ForbiddenException;
 use Kuick\Http\Request;
 use Kuick\Http\UnauthorizedException;
+use Kuick\Security\GuardException;
 use Kuick\Security\GuardInterface;
 
 class OpsGuard implements GuardInterface
 {
-    public const TOKEN_CONFIG_KEY = 'kuick_ops_guard_token';
-
     private const AUTHORIZATION_HEADER = 'Authorization';
     private const BEARER_TOKEN_TEMPLATE = 'Bearer %s';
-    private const ERROR_MISSING_TOKEN = 'Token is missing';
-    private const ERROR_INVALID_TOKEN = 'Token is invalid';
-
-    public function __construct(private AppConfig $appConfig) {}
+    
+    public function __construct(#[Inject('kuick.ops.guards.token')] private string $opsToken)
+    {
+    }
 
     public function __invoke(Request $request): void
     {
-        if (!$this->appConfig->get(self::TOKEN_CONFIG_KEY)) {
+        if (!$this->opsToken) {
             return;
         }
         $requestToken = $request->headers->get(self::AUTHORIZATION_HEADER);
         if (null === $requestToken) {
-            throw new UnauthorizedException(self::ERROR_MISSING_TOKEN);
+            throw new UnauthorizedException('Token not found');
         }
-        $expectedToken = sprintf(self::BEARER_TOKEN_TEMPLATE, $this->appConfig->get(self::TOKEN_CONFIG_KEY));
+        $expectedToken = sprintf(self::BEARER_TOKEN_TEMPLATE, $this->opsToken);
         //token mismatch
         if ($requestToken != $expectedToken) {
-            throw new UnauthorizedException(self::ERROR_INVALID_TOKEN);
+            throw new ForbiddenException('Token invalid');
         }
     }
 }

@@ -12,12 +12,11 @@ namespace Kuick\UI;
 
 use Kuick\Http\JsonResponse;
 use Kuick\Http\Request;
-use Kuick\Http\Response;
 
 /**
  * Kuick Actions should implement this interface
  */
 interface ActionInterface
 {
-    public function __invoke(Request $request): Response|JsonResponse;
+    public function __invoke(Request $request): JsonResponse;
 }

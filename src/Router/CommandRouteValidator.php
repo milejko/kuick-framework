@@ -47,8 +47,7 @@ class CommandRouteValidator
         if (!is_string($command['name'])) {
             throw new ConsoleException('One or more commands name is invalid');
         }
-        if (
-            strlen($command['name']) > self::MAX_COMMAND_NAME_LENGTH ||
+        if (strlen($command['name']) > self::MAX_COMMAND_NAME_LENGTH ||
             strlen($command['name']) < self::MIN_COMMAND_NAME_LENGTH
         ) {
             throw new ConsoleException('Command name ' . $command['name'] . ' is to short(' . self::MIN_COMMAND_NAME_LENGTH . ') or too long(' . self::MAX_COMMAND_NAME_LENGTH . ')');

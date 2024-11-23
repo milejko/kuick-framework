@@ -28,6 +28,7 @@ class ComposerInstaller
 
     private static bool $freshInstallation = true;
 
+    /** @disregard P1009 Undefined type */
     protected static function initAutoload(Event $event)
     {
         $vendorDir = $event->getComposer()->getConfig()->get('vendor-dir');
@@ -38,11 +39,13 @@ class ComposerInstaller
         require $vendorDir . '/autoload.php';
     }
 
+    /** @disregard P1009 Undefined type */
     public static function postUpdate(Event $event)
     {
         self::postInstall($event);
     }
 
+    /** @disregard P1009 Undefined type */
     public static function postInstall(Event $event)
     {
         self::initAutoload($event);

@@ -14,6 +14,7 @@ use Kuick\Http\Request;
 
 /**
  * Provides actions with optional security layer, like: header validation, request filterint etc.
+ * Throw one of HttpExceptions if something is wrong with the request
  */
 interface GuardInterface
 {

@@ -8,10 +8,9 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
+/**
+ * PHP-DI definitions
+ * @see https://php-di.org/doc/php-definitions.html
+ */
 return [
-    'kuick_charset'   => 'UTF-8',
-    'kuick_locale'    => 'en_US.utf-8',
-    'kuick_timezone'  => 'UTC',
-
-    'kuick_ops_guards_token' => 'secret-token',
 ];

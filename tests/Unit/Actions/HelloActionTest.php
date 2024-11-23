@@ -1,9 +1,9 @@
 <?php
 
-namespace Tests\Kuick\Actions;
+namespace Tests\Kuick\Example\UI;
 
-use Kuick\Http\RequestFactory;
-use Kuick\UI\Example\HelloAction;
+use Kuick\Example\UI\HelloAction;
+use Kuick\Http\Request;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -13,15 +13,10 @@ class HelloActionTest extends TestCase
 {
     public function testIfKuickSaysHello(): void
     {
-        $request = RequestFactory::create([]);
+        $request = new Request();
         $response = (new HelloAction())($request);
-        self::assertEquals('["Kuick says: hello!"]', $response->getBody());
-        self::assertEquals([
-            [
-                'name' => 'Content-type',
-                'value' => 'application/json',
-                'code' => 200
-            ]
-        ], $response->getHeaders());
+        $this->assertEquals('["Kuick says: hello!"]', $response->getContent());
+        $this->assertEquals('application/json', $response->headers->get('Content-type'));
+        $this->assertEquals(200, $response->getStatusCode());
     }
 }

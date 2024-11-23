@@ -10,17 +10,19 @@
 
 namespace Kuick\Router;
 
-use Kuick\App\AppException;
 use Kuick\Console\ConsoleException;
 use Kuick\UI\CommandInterface;
 use Psr\Container\ContainerInterface;
+use Throwable;
 
 /**
  *
  */
 class CommandLauncher
 {
-    public function __construct(private ContainerInterface $container) {}
+    public function __construct(private ContainerInterface $container)
+    {
+    }
 
     public function __invoke(array $command, array $arguments): string
     {
