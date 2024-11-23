@@ -73,13 +73,13 @@ class AppDIContainerBuilder
         $this->removeContainer();
         $builder = $this->getBuilder();
 
-        //adding global definitions
+        //adding global definition files
         foreach (self::DEFINITION_LOCATIONS as $definitionsLocation) {
             foreach (glob($definitionsLocation) as $definitionFile) {
                 $builder->addDefinitions($definitionFile);
             }
         }
-        //adding env specific definitions
+        //adding env specific definition files
         foreach (glob(sprintf(self::ENV_SPECIFIC_DEFINITION_LOCATIONS_TEMPLATE, $this->env)) as $definitionFile) {
             $builder->addDefinitions($definitionFile);
         }
@@ -87,13 +87,15 @@ class AppDIContainerBuilder
         //adding environment definitions
         $this->addEnvironmentDefinitions($builder);
 
+        //logger
         $builder->addDefinitions([LoggerInterface::class => function (ContainerInterface $container): LoggerInterface {
             $logger = new Logger($container->get('kuick.app.name'));
-            $handlers = $container->get('kuick.monolog.handlers');
+            $handlers = $container->get('kuick.app.monolog.handlers');
+            $defaultLevel = $container->get('kuick.app.monolog.level') ?? Level::Warning;
             !is_array($handlers) && throw new ApplicationException('Logger handlers are invalid, should be an array');
             foreach ($handlers as $handler) {
                 $type = $handler['type'] ?? throw new ApplicationException('Logger handler type not defined');
-                $level = $handler['level'] ?? 'WARNING';
+                $level = $handler['level'] ?? $defaultLevel;
                 //@TODO: handle more types
                 if ('firePHP' == $type) {
                     $logger->pushHandler(new FirePHPHandler($level));
@@ -108,6 +110,7 @@ class AppDIContainerBuilder
             return $logger;
         }]);
 
+        //action matcher
         $builder->addDefinitions([ActionMatcher::class => function (ContainerInterface $container): ActionMatcher {
             $routes = [];
             //app config (normal priority)
@@ -122,6 +125,7 @@ class AppDIContainerBuilder
             return $actionMatcher;
         }]);
 
+        //command matcher
         $builder->addDefinitions([CommandMatcher::class => function () {
             $commands = [];
             //app commands (normal priority)

@@ -12,15 +12,15 @@ return [
     'kuick.app.locale'    => 'en_US.utf-8',
     'kuick.app.timezone'  => 'UTC',
 
-    'kuick.monolog.level' => 'WARNING',
-    'kuick.monolog.handlers' => [
+    'kuick.app.monolog.level' => 'WARNING',
+    'kuick.app.monolog.handlers' => [
         [
             'type' => 'stream',
             'path' => 'php://stdout',
         ],
     ],
 
-    'kuick.ops.guards.token' => 'secret-token',
+    'kuick.app.ops.guards.token' => 'secret-token',
  
     //autowiring
     //SomeInterface::class => DI\autowire(SomeImplementation::class),

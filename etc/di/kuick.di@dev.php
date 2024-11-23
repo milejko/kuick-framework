@@ -14,12 +14,12 @@
  */
 return [
     //no token for dev
-    'kuick.ops.guards.token' => '',
+    'kuick.app.ops.guards.token' => '',
 
     //debug for dev
-    'kuick.monolog.level' => 'DEBUG',    
-    //different handlers
-    'kuick.monolog.handlers' => [
+    'kuick.app.monolog.level' => 'DEBUG',    
+    //different handlers for dev
+    'kuick.app.monolog.handlers' => [
         [
             'type' => 'stream',
             'path' => 'php://stdout',

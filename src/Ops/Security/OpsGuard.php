@@ -22,7 +22,7 @@ class OpsGuard implements GuardInterface
     private const AUTHORIZATION_HEADER = 'Authorization';
     private const BEARER_TOKEN_TEMPLATE = 'Bearer %s';
     
-    public function __construct(#[Inject('kuick.ops.guards.token')] private string $opsToken)
+    public function __construct(#[Inject('kuick.app.ops.guards.token')] private string $opsToken)
     {
     }
 
