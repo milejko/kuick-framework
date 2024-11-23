@@ -15,6 +15,9 @@ use Kuick\Router\ActionMatcher;
 use Kuick\Router\ActionValidator;
 use Kuick\Router\CommandMatcher;
 use Kuick\Router\CommandRouteValidator;
+use Kuick\Utils\DotEnvParser;
+use Monolog\Handler\BrowserConsoleHandler;
+use Monolog\Handler\FirePHPHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
@@ -23,7 +26,7 @@ use Psr\Log\LoggerInterface;
 /**
  *
  */
-class DIContainerBuilder
+class AppDIContainerBuilder
 {
     private const DEFAULT_CONFIG_SETTINGS = [
         'kuick.app.charset'   => 'UTF-8',
@@ -45,11 +48,11 @@ class DIContainerBuilder
 
     private string $env;
 
-    public function __invoke(string $env): ContainerInterface
+    public function __invoke(): ContainerInterface
     {
-        $this->env = $env;
-        //remove previous compilation if APP_ENV!=dev
-        if ($env == Application::ENV_DEV) {
+        $this->env = $this->determineEnv();
+        //remove previous compilation if KUICK_APP_ENV!=dev
+        if ($this->env == Application::ENV_DEV) {
             $this->removeContainer();
         }
         //build or load from cache
@@ -70,9 +73,6 @@ class DIContainerBuilder
         //mandatory defaults
         $builder->addDefinitions(self::DEFAULT_CONFIG_SETTINGS);
 
-        //adding configuration definitions
-        $this->addConfigDefinitions($builder);
-
         //adding global definitions
         foreach (self::CONTAINER_DEFINITION_LOCATIONS as $definitionsLocation) {
             foreach (glob($definitionsLocation) as $definitionFile) {
@@ -83,19 +83,27 @@ class DIContainerBuilder
         foreach (glob(sprintf(self::ENV_SPECIFIC_LOCATION_TEMPLATE, $this->env)) as $definitionFile) {
             $builder->addDefinitions($definitionFile);
         }
+
+        //adding environment definitions
+        $this->addEnvironmentDefinitions($builder);
+
         $builder->addDefinitions([LoggerInterface::class => function (ContainerInterface $container): LoggerInterface {
-            $logger = new Logger('Kuick');
-            $defaultLogLevel = $container->get('kuick.monolog.level');
-            !is_string($defaultLogLevel) && throw new ApplicationException('Logger level must be a string');
-            $logger->pushHandler(new StreamHandler('php://stdout', $defaultLogLevel));
+            $logger = new Logger($container->get('kuick.app.name'));
             $handlers = $container->get('kuick.monolog.handlers');
-            !is_array($handlers) && throw new ApplicationException('Logger handlers are invalid, should be an array');
+            !is_array($handlers) && throw new AppException('Logger handlers are invalid, should be an array');
             foreach ($handlers as $handler) {
-                $type = $handler['type'] ?? throw new ApplicationException('Logger handler type not defined');
-                $level = $handler['level'] ?? throw new ApplicationException('Logger handler type not defined');
-                $path = $handler['path'] ?? throw new ApplicationException('Logger handler type not defined');
-                //@TODO: handle type
-                $logger->pushHandler(new StreamHandler($path, $level));
+                $type = $handler['type'] ?? throw new AppException('Logger handler type not defined');
+                $level = $handler['level'] ?? 'WARNING';
+                //@TODO: handle more types
+                if ('firePHP' == $type) {
+                    $logger->pushHandler(new FirePHPHandler($level));
+                }
+                if ('stream' == $type) {
+                    $logger->pushHandler(new StreamHandler($handler['path'] ?? throw new AppException('Logger handler type not defined'), $level));
+                }
+                if ('console' == $type) {
+                    $logger->pushHandler(new BrowserConsoleHandler($level));
+                }
             }
             return $logger;
         }]);
@@ -128,21 +136,17 @@ class DIContainerBuilder
         return $builder->build();
     }
 
-    private function addConfigDefinitions(ContainerBuilder $builder): void
+    private function addEnvironmentDefinitions(ContainerBuilder $builder): void
     {
-        //vendor config (lower priority priority)
-        foreach (glob(BASE_PATH . '/vendor/kuick/*/etc/*.config.php') as $configFile) {
-            $builder->addDefinitions($configFile);
-        }
-        //app config (normal priority)
-        foreach (glob(BASE_PATH . '/etc/*.config.php') as $configFile) {
-            $builder->addDefinitions(include$configFile);
-        }
-        //environment specific config (higher priority)
-        foreach (glob(BASE_PATH . '/etc/*.config@' . $this->env . '.php') as $configFile) {
-            $builder->addDefinitions(include $configFile);
-        }
-        //environment variables (the highest priority)
+        //dot env files .env and .env.$env (lower priority)
+        $dotEnvFile = BASE_PATH . '/.env';
+        $dotEnvLocalFile = BASE_PATH . '/.env.local';
+        $dotEnvValues = array_merge(
+            file_exists($dotEnvFile) ? (new DotEnvParser)($dotEnvFile) : [],
+            file_exists($dotEnvLocalFile) ? (new DotEnvParser)($dotEnvLocalFile) : []
+        );
+        $builder->addDefinitions($dotEnvValues);
+        //environment variables (higher)
         foreach (getenv() as $envVarKey => $envVarValue) {
             $sanitizedKey = str_replace('_', '.', strtolower($envVarKey));
             $builder->addDefinitions([$sanitizedKey => $envVarValue]);
@@ -154,7 +158,7 @@ class DIContainerBuilder
         $builder = (new ContainerBuilder())
             ->useAutowiring(true)
             ->useAttributes(true)
-            ->enableCompilation(self::CONTAINER_PATH);
+            ->enableCompilation(self::CONTAINER_PATH . DIRECTORY_SEPARATOR . $this->env);
         if ($this->isApcuEnabled()) {
             $builder->enableDefinitionCache(__DIR__);
         }
@@ -163,13 +167,32 @@ class DIContainerBuilder
 
     private function removeContainer(): void
     {
+        /** @disregard P1009 Undefined type */
         $this->isApcuEnabled() && apcu_clear_cache();
-        array_map('unlink', glob(self::CONTAINER_PATH . DIRECTORY_SEPARATOR . self::CONTAINER_FILENAME));
+        array_map('unlink', glob(self::CONTAINER_PATH . DIRECTORY_SEPARATOR . $this->env . DIRECTORY_SEPARATOR . self::CONTAINER_FILENAME));
     }
 
     private function isApcuEnabled(): bool
     {
         return function_exists('apcu_clear_cache') && ini_get('apc.enabled')
             && !('cli' === \PHP_SAPI && !ini_get('apc.enable_cli'));
+    }
+
+    private function determineEnv(): string
+    {
+        $environmentVariable = getenv(Application::APP_ENV);
+        if ($environmentVariable) {
+            return $environmentVariable;
+        }
+        $dotEnvFile = BASE_PATH . '/.env';
+        $dotEnvLocalFile = BASE_PATH . '/.env.local';
+        $dotEnvValues = array_merge(
+            file_exists($dotEnvFile) ? (new DotEnvParser)($dotEnvFile) : [],
+            file_exists($dotEnvLocalFile) ? (new DotEnvParser)($dotEnvLocalFile) : []
+        );
+        if (isset($dotEnvValues['kuick.app.env'])) {
+            return $dotEnvValues['kuick.app.env'];
+        }
+        return Application::ENV_PROD;
     }
 }

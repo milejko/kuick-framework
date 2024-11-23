@@ -8,11 +8,10 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-return [
-    'kuick.app.charset'   => 'UTF-8',
-    'kuick.app.locale'    => 'en_US.utf-8',
-    'kuick.app.timezone'  => 'UTC',
+namespace Kuick\App;
 
-    'kuick.monolog.level' => 'WARNING',
-    'kuick.ops.guards.token' => 'some-secret-token',
-];
+use Exception;
+
+class AppException extends Exception
+{
+}

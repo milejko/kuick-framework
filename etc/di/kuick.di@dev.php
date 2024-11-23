@@ -8,20 +8,26 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
+/**
+ * PHP-DI definitions
+ * @see https://php-di.org/doc/php-definitions.html
+ */
 return [
-    'kuick.app.charset'   => 'UTF-8',
-    'kuick.app.locale'    => 'en_US.utf-8',
-    'kuick.app.timezone'  => 'UTC',
-
+    //no token for dev
+    'kuick.ops.guards.token' => '',
+    //debug for dev
     'kuick.monolog.level' => 'DEBUG',
-    //additional handlers
+    
+    //different handlers
     'kuick.monolog.handlers' => [
         [
             'type' => 'stream',
-            'path' => '/var/log/path-to-the-custom-log-file.log',
+            'path' => 'php://stdout',
+            'level' => 'DEBUG',
+        ],
+        [
+            'type' => 'console',
             'level' => 'DEBUG',
         ]
     ],
-
-    'kuick.ops.guards.token' => 'secret-token',
 ];

@@ -11,7 +11,7 @@
 namespace Kuick\Ops\Security;
 
 use DI\Attribute\Inject;
-use Kuick\App\ApplicationException;
+use Kuick\App\AppException;
 use Kuick\Http\ForbiddenException;
 use Kuick\Http\JsonErrorResponse;
 use Kuick\Http\Request;

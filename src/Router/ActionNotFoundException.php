@@ -10,9 +10,9 @@
 
 namespace Kuick\Router;
 
-use Kuick\App\ApplicationException;
+use Kuick\App\AppException;
 
-class ActionNotFoundException extends ApplicationException
+class ActionNotFoundException extends AppException
 {
     protected $message = 'Route not found';
 }

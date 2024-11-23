@@ -10,9 +10,9 @@
 
 namespace Kuick\Router;
 
-use Kuick\App\ApplicationException;
+use Kuick\App\AppException;
 
-class ActionInvalidMethodException extends ApplicationException
+class ActionInvalidMethodException extends AppException
 {
     protected $message = 'Method not allowed for this route';
 }

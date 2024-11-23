@@ -38,7 +38,7 @@ class ActionLauncher
         if (!($action instanceof ActionInterface)) {
             throw new InternalServerErrorException($route['action'] . ' is not an Action');
         }
-        $this->logger->info('Action executed: ' . $route['action']);
+        //$this->logger->info('Action executed: ' . $route['action']);
         return $action->__invoke($request);
     }
 

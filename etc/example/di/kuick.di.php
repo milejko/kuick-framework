@@ -8,8 +8,12 @@
 use Psr\Container\ContainerInterface;
 
 return [
-    //values (aka parameters)
-    'some.value' => 'value',
+    'kuick.app.charset'   => 'UTF-8',
+    'kuick.app.locale'    => 'en_US.utf-8',
+    'kuick.app.timezone'  => 'UTC',
+
+    'kuick.monolog.level' => 'WARNING',
+    'kuick.ops.guards.token' => 'secret-token',
  
     //autowiring
     //SomeInterface::class => DI\autowire(SomeImplementation::class),

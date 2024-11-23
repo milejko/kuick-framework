@@ -15,7 +15,7 @@ use DI\Attribute\Inject;
 /**
  * Locale configurator
  */
-final class ApplicationSetLocalization
+final class AppSetLocalization
 {
     private const DEFAULT_LOCALE = 'en_US.utf-8';
 
