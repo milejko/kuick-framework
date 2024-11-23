@@ -19,6 +19,7 @@ use Kuick\Utils\DotEnvParser;
 use Monolog\Handler\BrowserConsoleHandler;
 use Monolog\Handler\FirePHPHandler;
 use Monolog\Handler\StreamHandler;
+use Monolog\Level;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
@@ -28,23 +29,15 @@ use Psr\Log\LoggerInterface;
  */
 class AppDIContainerBuilder
 {
-    private const DEFAULT_CONFIG_SETTINGS = [
-        'kuick.app.charset'   => 'UTF-8',
-        'kuick.app.locale'    => 'en_US.utf-8',
-        'kuick.app.timezone'  => 'UTC',
-        'kuick.ops.guards.token' => 'please-change-this-token',
-        'kuick.monolog.level' => 'DEBUG',
-        'kuick.monolog.handlers' => [],
-    ];
-    private const CONTAINER_DEFINITION_LOCATIONS = [
-        BASE_PATH . '/etc/di/*.di.php',
+    private const DEFINITION_LOCATIONS = [
         BASE_PATH . '/vendor/kuick/*/etc/di/*.di.php',
+        BASE_PATH . '/etc/di/*.di.php',
     ];
-    private const ENV_SPECIFIC_LOCATION_TEMPLATE = BASE_PATH . '/etc/di/*.di@%s.php';
+    private const ENV_SPECIFIC_DEFINITION_LOCATIONS_TEMPLATE = BASE_PATH . '/etc/di/*.di@%s.php';
 
-    private const CONTAINER_PATH = BASE_PATH . '/var/tmp';
-    private const CONTAINER_FILENAME = 'CompiledContainer.php';
-    private const CONTAINER_READY_FLAG = 'kuick.app.container_ready';
+    private const CACHE_PATH = BASE_PATH . '/var/tmp';
+    private const COMPILED_FILENAME = 'CompiledContainer.php';
+    private const READY_FLAG = 'kuick.app.name';
 
     private string $env;
 
@@ -58,11 +51,21 @@ class AppDIContainerBuilder
         //build or load from cache
         $container = $this->getBuilder()->build();
         //validating if container is built
-        if ($container->has(self::CONTAINER_READY_FLAG)) {
+        if ($container->has(self::READY_FLAG)) {
+            $logger = $container->get(LoggerInterface::class);
+            $logger->info('Application is running in ' . $this->env . ' mode');
+            $logger->info('DI container loaded from cache');
             return $container;
         }
         //rebuilding if validation failed
-        return $this->rebuildContainer();
+        $container = $this->rebuildContainer();
+        $logger = $container->get(LoggerInterface::class);
+        $logger->log(
+            $this->env == Application::ENV_DEV ? Level::Warning : Level::Info,
+            'Application is running in ' . $this->env . ' mode'
+        );
+        $logger->notice('DI container rebuilt');
+        return $container;
     }
 
     private function rebuildContainer(): ContainerInterface
@@ -70,17 +73,14 @@ class AppDIContainerBuilder
         $this->removeContainer();
         $builder = $this->getBuilder();
 
-        //mandatory defaults
-        $builder->addDefinitions(self::DEFAULT_CONFIG_SETTINGS);
-
         //adding global definitions
-        foreach (self::CONTAINER_DEFINITION_LOCATIONS as $definitionsLocation) {
+        foreach (self::DEFINITION_LOCATIONS as $definitionsLocation) {
             foreach (glob($definitionsLocation) as $definitionFile) {
                 $builder->addDefinitions($definitionFile);
             }
         }
         //adding env specific definitions
-        foreach (glob(sprintf(self::ENV_SPECIFIC_LOCATION_TEMPLATE, $this->env)) as $definitionFile) {
+        foreach (glob(sprintf(self::ENV_SPECIFIC_DEFINITION_LOCATIONS_TEMPLATE, $this->env)) as $definitionFile) {
             $builder->addDefinitions($definitionFile);
         }
 
@@ -90,16 +90,16 @@ class AppDIContainerBuilder
         $builder->addDefinitions([LoggerInterface::class => function (ContainerInterface $container): LoggerInterface {
             $logger = new Logger($container->get('kuick.app.name'));
             $handlers = $container->get('kuick.monolog.handlers');
-            !is_array($handlers) && throw new AppException('Logger handlers are invalid, should be an array');
+            !is_array($handlers) && throw new ApplicationException('Logger handlers are invalid, should be an array');
             foreach ($handlers as $handler) {
-                $type = $handler['type'] ?? throw new AppException('Logger handler type not defined');
+                $type = $handler['type'] ?? throw new ApplicationException('Logger handler type not defined');
                 $level = $handler['level'] ?? 'WARNING';
                 //@TODO: handle more types
                 if ('firePHP' == $type) {
                     $logger->pushHandler(new FirePHPHandler($level));
                 }
                 if ('stream' == $type) {
-                    $logger->pushHandler(new StreamHandler($handler['path'] ?? throw new AppException('Logger handler type not defined'), $level));
+                    $logger->pushHandler(new StreamHandler($handler['path'] ?? throw new ApplicationException('Logger handler type not defined'), $level));
                 }
                 if ('console' == $type) {
                     $logger->pushHandler(new BrowserConsoleHandler($level));
@@ -107,6 +107,7 @@ class AppDIContainerBuilder
             }
             return $logger;
         }]);
+
         $builder->addDefinitions([ActionMatcher::class => function (ContainerInterface $container): ActionMatcher {
             $routes = [];
             //app config (normal priority)
@@ -120,6 +121,7 @@ class AppDIContainerBuilder
             $actionMatcher = (new ActionMatcher($container->get(LoggerInterface::class)))->setRoutes(new RoutesConfig($routes));
             return $actionMatcher;
         }]);
+
         $builder->addDefinitions([CommandMatcher::class => function () {
             $commands = [];
             //app commands (normal priority)
@@ -132,7 +134,6 @@ class AppDIContainerBuilder
             $commandMatcher = new CommandMatcher(new RoutesConfig($commands));
             return $commandMatcher;
         }]);
-        $builder->addDefinitions([self::CONTAINER_READY_FLAG => true]);
         return $builder->build();
     }
 
@@ -158,7 +159,7 @@ class AppDIContainerBuilder
         $builder = (new ContainerBuilder())
             ->useAutowiring(true)
             ->useAttributes(true)
-            ->enableCompilation(self::CONTAINER_PATH . DIRECTORY_SEPARATOR . $this->env);
+            ->enableCompilation(self::CACHE_PATH . DIRECTORY_SEPARATOR . $this->env);
         if ($this->isApcuEnabled()) {
             $builder->enableDefinitionCache(__DIR__);
         }
@@ -169,7 +170,7 @@ class AppDIContainerBuilder
     {
         /** @disregard P1009 Undefined type */
         $this->isApcuEnabled() && apcu_clear_cache();
-        array_map('unlink', glob(self::CONTAINER_PATH . DIRECTORY_SEPARATOR . $this->env . DIRECTORY_SEPARATOR . self::CONTAINER_FILENAME));
+        array_map('unlink', glob(self::CACHE_PATH . DIRECTORY_SEPARATOR . $this->env . DIRECTORY_SEPARATOR . self::COMPILED_FILENAME));
     }
 
     private function isApcuEnabled(): bool

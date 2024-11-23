@@ -15,9 +15,9 @@
 return [
     //no token for dev
     'kuick.ops.guards.token' => '',
+
     //debug for dev
-    'kuick.monolog.level' => 'DEBUG',
-    
+    'kuick.monolog.level' => 'DEBUG',    
     //different handlers
     'kuick.monolog.handlers' => [
         [
@@ -26,8 +26,13 @@ return [
             'level' => 'DEBUG',
         ],
         [
+            'type' => 'stream',
+            'path' => BASE_PATH . '/var/tmp/kuick.app.log',
+            'level' => 'DEBUG',
+        ],
+        [
             'type' => 'console',
             'level' => 'DEBUG',
-        ]
+        ],
     ],
 ];

@@ -13,15 +13,14 @@ return [
     'kuick.app.timezone'  => 'UTC',
 
     'kuick.monolog.level' => 'WARNING',
-
-    'kuick.ops.guards.token' => 'secret-token',
-
     'kuick.monolog.handlers' => [
         [
             'type' => 'stream',
             'path' => 'php://stdout',
-        ]
+        ],
     ],
+
+    'kuick.ops.guards.token' => 'secret-token',
  
     //autowiring
     //SomeInterface::class => DI\autowire(SomeImplementation::class),

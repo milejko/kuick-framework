@@ -11,6 +11,8 @@
 namespace Kuick\Router;
 
 use Kuick\App\RoutesConfig;
+use Kuick\Http\MethodNotAllowedException;
+use Kuick\Http\NotFoundException;
 use Kuick\Http\Request;
 use Psr\Log\LoggerInterface;
 
@@ -55,8 +57,8 @@ class ActionMatcher
             $methodNotAllowed = true;
         }
         if ($methodNotAllowed) {
-            throw new ActionInvalidMethodException();
+            throw new MethodNotAllowedException('Method:' . $requestMethod . 'is not allowed for ' . $route['pattern'] . ' route');
         }
-        throw new ActionNotFoundException();
+        throw new NotFoundException('Action not found');
     }
 }

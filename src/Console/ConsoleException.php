@@ -10,8 +10,8 @@
 
 namespace Kuick\Console;
 
-use Exception;
+use Kuick\App\ApplicationException;
 
-class ConsoleException extends Exception
+class ConsoleException extends ApplicationException
 {
 }

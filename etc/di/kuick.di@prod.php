@@ -13,5 +13,4 @@
  * @see https://php-di.org/doc/php-definitions.html
  */
 return [
-    //put some prod dependencies here
 ];

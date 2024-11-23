@@ -18,8 +18,9 @@ return [
             'level' => 'DEBUG',
         ],
         [
-            'type' => 'console',
+            'type' => 'stream',
+            'path' => BASE_PATH . '/var/tmp/kuick.app.log',
             'level' => 'DEBUG',
-        ]
+        ],
     ],
 ];

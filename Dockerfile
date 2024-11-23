@@ -5,7 +5,7 @@ ARG PHP_VERSION=8.3
 ###########################################
 # Base PHP target                         #
 ###########################################
-FROM milejko/php:${PHP_VERSION}-cli AS base
+FROM milejko/php:${PHP_VERSION}-apache AS base
 
 ENV OPCACHE_VALIDATE_TIMESTAMPS=0 \
     MEMORY_LIMIT=128M
@@ -16,6 +16,7 @@ ENV OPCACHE_VALIDATE_TIMESTAMPS=0 \
 FROM base AS dist
 
 COPY . .
+COPY ./etc/apache2 /etc/apache2
 
 RUN composer install --no-dev
 
@@ -34,8 +35,8 @@ RUN composer install --dev
 ###########################################
 FROM base AS dev-server
 
+COPY ./etc/apache2 /etc/apache2
+
 ENV OPCACHE_VALIDATE_TIMESTAMPS=1
 
 EXPOSE 8080
-
-CMD [ "php", "-S", "0.0.0.0:8080", "-t", "./public" ]

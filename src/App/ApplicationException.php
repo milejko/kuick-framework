@@ -8,11 +8,10 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-namespace Kuick\Router;
+namespace Kuick\App;
 
-use Kuick\App\AppException;
+use Exception;
 
-class ActionInvalidMethodException extends AppException
+class ApplicationException extends Exception
 {
-    protected $message = 'Method not allowed for this route';
 }

@@ -19,6 +19,7 @@ class JsonErrorResponse extends JsonResponse
         string $message = self::DEFAULT_MESSAGE,
         int $code = Response::HTTP_INTERNAL_SERVER_ERROR
     ) {
+        $code = isset(JsonResponse::$statusTexts[$code]) ? $code : Response::HTTP_INTERNAL_SERVER_ERROR;
         parent::__construct([self::ERROR_KEY => $message], $code, [], false);
     }
 }

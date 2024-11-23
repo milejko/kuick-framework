@@ -12,13 +12,12 @@ namespace Kuick\App;
 
 use Kuick\Http\JsonErrorResponse;
 use Kuick\Http\Request;
-use Kuick\Http\ResponseException;
-use Kuick\Router\ActionInvalidMethodException;
+use Kuick\Http\Response;
 use Kuick\Router\ActionLauncher;
 use Kuick\Router\ActionMatcher;
-use Kuick\Router\ActionNotFoundException;
 use Kuick\Router\CommandLauncher;
 use Kuick\Router\CommandMatcher;
+use Monolog\Level;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Throwable;
@@ -35,6 +34,16 @@ final class Application
     private ContainerInterface $container;
     private LoggerInterface $logger;
 
+
+    private const DEFAULT_EXCEPTION_CODE_LOG_LEVEL = Level::Error;
+    private const EXCEPTION_CODE_LOG_LEVEL_MAP = [
+        Response::HTTP_NOT_FOUND => Level::Notice,
+        Response::HTTP_UNAUTHORIZED => Level::Notice,
+        Response::HTTP_BAD_REQUEST => Level::Warning,
+        Response::HTTP_METHOD_NOT_ALLOWED => Level::Warning,
+        Response::HTTP_FORBIDDEN => Level::Warning,
+    ];
+
     public function __construct()
     {
         $this->container = (new AppDIContainerBuilder)();
@@ -43,30 +52,24 @@ final class Application
 
     public function handleRequest(Request $request): void
     {
-        //matching and launching UI action
         try {
-            $this->logger->info($request->getPathInfo() . ' - Start processing request');
+            $this->logger->info('Handling request: ' . $request->getPathInfo());
+            //setting up locale
             ($this->container->get(AppSetLocalization::class))();
+            //matching and launching UI action
             $response = ($this->container->get(ActionLauncher::class))(
                 $this->container->get(ActionMatcher::class)->findRoute($request),
                 $request
             );
             $response->send();
-        } catch (ResponseException $error) {
-            (new JsonErrorResponse($error->getMessage(), $error->getCode()))->send();
-            $this->logger->notice($request->getPathInfo() . ' - ' . $error->getMessage());
-        } catch (ActionNotFoundException $error) {
-            $this->logger->notice($request->getPathInfo() . ' - ' . $error->getMessage());
-            (new JsonErrorResponse($error->getMessage(), JsonErrorResponse::HTTP_NOT_FOUND))->send();
-            $this->logger->notice($request->getPathInfo() . ' - ' . $error->getMessage());
-        } catch (ActionInvalidMethodException $error) {
-            (new JsonErrorResponse($error->getMessage(), JsonErrorResponse::HTTP_METHOD_NOT_ALLOWED))->send();
-            $this->logger->notice($request->getPathInfo() . ' - ' . $error->getMessage());
         } catch (Throwable $error) {
-            (new JsonErrorResponse($error->getMessage()))->send();
-            $this->logger->error($request->getPathInfo() . ' - ' . $error->getMessage());
+            (new JsonErrorResponse($error->getMessage(), $error->getCode()))->send();
+            $this->logger->log(
+                self::EXCEPTION_CODE_LOG_LEVEL_MAP[$error->getCode()] ?? self::DEFAULT_EXCEPTION_CODE_LOG_LEVEL,
+                $error->getMessage()
+            );
         }
-        $this->logger->info($request->getPathInfo() . ' - Response sent');
+        $this->logger->info('Response sent, closing connection');
     }
 
     public function handleConsoleInput(array $argv): void
@@ -78,7 +81,9 @@ final class Application
                 $this->container->get(CommandMatcher::class)->findRoute($argv),
                 $argv
             ) . PHP_EOL;
+            $this->logger->info('Command executed: ' . implode(' ', $argv));
         } catch (Throwable $error) {
+            $this->logger->error($error->getMessage());
             echo $error->getMessage() . PHP_EOL;
             exit(1);
         }

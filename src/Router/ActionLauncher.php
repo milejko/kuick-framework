@@ -10,7 +10,6 @@
 
 namespace Kuick\Router;
 
-use Kuick\Http\InternalServerErrorException;
 use Kuick\Http\JsonResponse;
 use Kuick\Http\Request;
 use Kuick\Http\Response;
@@ -29,6 +28,7 @@ class ActionLauncher
     public function __invoke(array $route, Request $request): Response|JsonResponse
     {
         if (empty($route)) {
+            $this->logger->info('No action was executed to serve OPTIONS');
             return (new Response())->setStatusCode(Response::HTTP_NO_CONTENT);
         }
         if (isset($route['guards'])) {
@@ -36,10 +36,11 @@ class ActionLauncher
         }
         $action = $this->container->get($route['action']);
         if (!($action instanceof ActionInterface)) {
-            throw new InternalServerErrorException($route['action'] . ' is not an Action');
+            throw new RouterException($route['action'] . ' is not an Action');
         }
-        //$this->logger->info('Action executed: ' . $route['action']);
-        return $action->__invoke($request);
+        $response = $action->__invoke($request);
+        $this->logger->info('Action executed: ' . $route['action']);
+        return $response;
     }
 
     private function executeGuards(array $guards, Request $request): void
@@ -47,7 +48,7 @@ class ActionLauncher
         foreach ($guards as $guardName) {
             $guard = $this->container->get($guardName);
             if (!($guard instanceof GuardInterface)) {
-                throw new InternalServerErrorException($guardName . ' is not a Guard');
+                throw new RouterException($guardName . ' is not a Guard');
             }
             $this->logger->info('Guard executed: ' . $guardName);
             $guard->__invoke($request);

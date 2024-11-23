@@ -21,24 +21,12 @@ return [
     'kuick.app.timezone'  => 'UTC',
 
     'kuick.monolog.level' => 'WARNING',
-
-    'kuick.ops.guards.token' => 'secret-token',
-
     'kuick.monolog.handlers' => [
         [
             'type' => 'stream',
             'path' => 'php://stdout',
-        ]
+        ],
     ],
- 
-    //autowiring
-    //SomeInterface::class => DI\autowire(SomeImplementation::class),
 
-    //create
-    //LoggerInterface::class => DI\create(Logger::class),
- 
-    //factory
-    //AnotherInterface::class => function (ContainerInterface $container) {
-    //    return new AnotherClass($container->get('something'));
-    //},
+    'kuick.ops.guards.token' => 'secret-token',
 ];

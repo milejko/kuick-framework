@@ -15,7 +15,7 @@ use Kuick\UI\CommandInterface;
 class HelloCommand implements CommandInterface
 {
     private const MESSAGE_TEMPLATE = 'Kuick says: Hello %s!';
-    private const DEFAULT_NAME = 'you';
+    private const DEFAULT_NAME = 'my friend';
 
     public function __invoke(array $arguments): string
     {
