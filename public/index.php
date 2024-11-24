@@ -8,10 +8,10 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-use Kuick\App\Application;
+use Kuick\App\JsonKernel;
 use Kuick\Http\Request;
 
 define('BASE_PATH', dirname(__DIR__));
 require BASE_PATH . '/vendor/autoload.php';
 
-(new Application())->handleRequest(Request::createFromGlobals());
+(new JsonKernel())(Request::createFromGlobals());

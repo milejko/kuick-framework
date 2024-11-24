@@ -10,8 +10,8 @@
 
 namespace Kuick\Router;
 
-use Kuick\App\ApplicationException;
+use Kuick\App\AppException;
 
-class RouterException extends ApplicationException
+class RouterException extends AppException
 {
 }

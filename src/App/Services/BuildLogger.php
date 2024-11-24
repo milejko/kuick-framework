@@ -11,7 +11,7 @@
 namespace Kuick\App\Services;
 
 use DateTimeZone;
-use Kuick\App\ApplicationException;
+use Kuick\App\AppException;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\BrowserConsoleHandler;
 use Monolog\Handler\FingersCrossedHandler;
@@ -35,9 +35,9 @@ class BuildLogger extends ServiceBuildAbstract
             $logger->setTimezone(new DateTimeZone($container->get('kuick.app.timezone')));
             $handlers = $container->get('kuick.app.monolog.handlers');
             $defaultLevel = $container->get('kuick.app.monolog.level') ?? Level::Warning;
-            !is_array($handlers) && throw new ApplicationException('Logger handlers are invalid, should be an array');
+            !is_array($handlers) && throw new AppException('Logger handlers are invalid, should be an array');
             foreach ($handlers as $handler) {
-                $type = $handler['type'] ?? throw new ApplicationException('Logger handler type not defined');
+                $type = $handler['type'] ?? throw new AppException('Logger handler type not defined');
                 $level = $handler['level'] ?? $defaultLevel;
                 //@TODO: handle more types
                 if ('firePHP' == $type) {
@@ -47,7 +47,7 @@ class BuildLogger extends ServiceBuildAbstract
                 }
                 if ('stream' == $type) {
                     $logger->pushHandler(
-                        (new StreamHandler($handler['path'] ?? throw new ApplicationException('Logger handler type not defined'), $level))
+                        (new StreamHandler($handler['path'] ?? throw new AppException('Logger handler type not defined'), $level))
                     );
                 }
                 if ('console' == $type) {

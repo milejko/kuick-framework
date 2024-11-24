@@ -9,11 +9,9 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-use Kuick\App\Application;
+use Kuick\App\ConsoleKernel;
 
 define('BASE_PATH', dirname(__DIR__));
 require BASE_PATH . '/vendor/autoload.php';
 
-ini_set('max_execution_time', 0);
-
-(new Application())->handleConsoleInput($argv);
+(new ConsoleKernel())($argv);

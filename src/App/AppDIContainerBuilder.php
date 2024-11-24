@@ -37,10 +37,10 @@ class AppDIContainerBuilder
         //loading environment variables
         $this->envVars = (new AppGetEnvironment())();
         //determining kuick.app.env (ie. dev, prod)
-        $this->appEnv = $this->envVars[self::APP_ENV_KEY] ?? Application::ENV_PROD;
+        $this->appEnv = $this->envVars[self::APP_ENV_KEY] ?? KernelAbstract::ENV_PROD;
 
         //remove previous compilation if KUICK_APP_ENV!=dev
-        if ($this->appEnv == Application::ENV_DEV) {
+        if ($this->appEnv == KernelAbstract::ENV_DEV) {
             $this->removeContainer();
         }
 
@@ -59,7 +59,7 @@ class AppDIContainerBuilder
         $container = $this->rebuildContainer();
         $logger = $container->get(LoggerInterface::class);
         $logger->log(
-            $this->appEnv == Application::ENV_DEV ? Level::Warning : Level::Info,
+            $this->appEnv == KernelAbstract::ENV_DEV ? Level::Warning : Level::Info,
             'Application is running in ' . $this->appEnv . ' mode'
         );
         $logger->notice('DI container rebuilt');
@@ -76,7 +76,7 @@ class AppDIContainerBuilder
 
         //load environment variables
         $builder->addDefinitions($this->envVars);
-        
+
         //logger
         (new BuildLogger($builder))();
 

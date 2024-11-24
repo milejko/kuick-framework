@@ -12,7 +12,7 @@ namespace Kuick\App;
 
 use Exception;
 
-class ApplicationException extends Exception
+class AppException extends Exception
 {
     protected $code = 0;
 }

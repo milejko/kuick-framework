@@ -14,7 +14,6 @@ use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
 class Request extends SymfonyRequest
 {
-
     public const ALL_METHODS = [
         self::METHOD_CONNECT,
         self::METHOD_DELETE,
