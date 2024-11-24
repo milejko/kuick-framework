@@ -8,18 +8,13 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-/**
- * PHP-DI definitions
- * @see https://php-di.org/doc/php-definitions.html
- */
-use Psr\Container\ContainerInterface;
-
 return [
     'kuick.app.name'      => 'Kuick App',
     'kuick.app.charset'   => 'UTF-8',
     'kuick.app.locale'    => 'en_US.utf-8',
     'kuick.app.timezone'  => 'UTC',
 
+    'kuick.app.monolog.useMicroseconds' => false,
     'kuick.app.monolog.level' => 'WARNING',
     'kuick.app.monolog.handlers' => [
         [
@@ -28,5 +23,5 @@ return [
         ],
     ],
 
-    'kuick.app.ops.guards.token' => 'secret-token',
+    'kuick.app.ops.guards.token' => 'secret-kuick-token-needed-to-be-changed',
 ];

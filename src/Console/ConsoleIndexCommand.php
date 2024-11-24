@@ -27,8 +27,8 @@ class ConsoleIndexCommand implements CommandInterface
     public function __invoke(array $arguments): string
     {
         $commandList = '';
-        foreach ($this->commandMatcher->getCommands() as $command) {
-            $commandList .= sprintf(self::COMMAND_LINE_TEMPLATE, str_pad($command['name'], 32), $command['description'] ?? sprintf(self::USAGE_TEMPLATE, $command['name']));
+        foreach ($this->commandMatcher->getRoutes() as $route) {
+            $commandList .= sprintf(self::COMMAND_LINE_TEMPLATE, str_pad($route['name'], 32), $route['description'] ?? sprintf(self::USAGE_TEMPLATE, $route['name']));
         }
         return self::COMMAND_HEADER . $commandList . self::COMMAND_FOOTER;
     }

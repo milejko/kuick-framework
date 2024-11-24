@@ -23,7 +23,9 @@ use Psr\Log\LoggerInterface;
  */
 class ActionLauncher
 {
-    public function __construct(private ContainerInterface $container, private LoggerInterface $logger) {}
+    public function __construct(private ContainerInterface $container, private LoggerInterface $logger)
+    {
+    }
 
     public function __invoke(array $route, Request $request): Response|JsonResponse
     {

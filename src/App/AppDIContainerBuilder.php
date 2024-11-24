@@ -11,16 +11,11 @@
 namespace Kuick\App;
 
 use DI\ContainerBuilder;
-use Kuick\Router\ActionMatcher;
-use Kuick\Router\ActionValidator;
-use Kuick\Router\CommandMatcher;
-use Kuick\Router\CommandRouteValidator;
-use Kuick\Utils\DotEnvParser;
-use Monolog\Handler\BrowserConsoleHandler;
-use Monolog\Handler\FirePHPHandler;
-use Monolog\Handler\StreamHandler;
+use Kuick\App\Services\BuildActionMatcher;
+use Kuick\App\Services\BuildCommandMatcher;
+use Kuick\App\Services\BuildConfiguration;
+use Kuick\App\Services\BuildLogger;
 use Monolog\Level;
-use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
@@ -29,40 +24,43 @@ use Psr\Log\LoggerInterface;
  */
 class AppDIContainerBuilder
 {
-    private const DEFINITION_LOCATIONS = [
-        BASE_PATH . '/vendor/kuick/*/etc/di/*.di.php',
-        BASE_PATH . '/etc/di/*.di.php',
-    ];
-    private const ENV_SPECIFIC_DEFINITION_LOCATIONS_TEMPLATE = BASE_PATH . '/etc/di/*.di@%s.php';
-
     private const CACHE_PATH = BASE_PATH . '/var/tmp';
     private const COMPILED_FILENAME = 'CompiledContainer.php';
-    private const READY_FLAG = 'kuick.app.name';
+    private const APP_ENV_KEY = 'kuick.app.env';
+    private const READY_DEFINITION = 'kuick.app.name';
 
-    private string $env;
+    private array $envVars = [];
+    private string $appEnv;
 
     public function __invoke(): ContainerInterface
     {
-        $this->env = $this->determineEnv();
+        //loading environment variables
+        $this->envVars = (new AppGetEnvironment())();
+        //determining kuick.app.env (ie. dev, prod)
+        $this->appEnv = $this->envVars[self::APP_ENV_KEY] ?? Application::ENV_PROD;
+
         //remove previous compilation if KUICK_APP_ENV!=dev
-        if ($this->env == Application::ENV_DEV) {
+        if ($this->appEnv == Application::ENV_DEV) {
             $this->removeContainer();
         }
+
         //build or load from cache
-        $container = $this->getBuilder()->build();
+        $container = $this->configureBuilder()->build();
+
         //validating if container is built
-        if ($container->has(self::READY_FLAG)) {
+        if ($container->has(self::READY_DEFINITION)) {
             $logger = $container->get(LoggerInterface::class);
-            $logger->info('Application is running in ' . $this->env . ' mode');
+            $logger->info('Application is running in ' . $this->appEnv . ' mode');
             $logger->info('DI container loaded from cache');
             return $container;
         }
+
         //rebuilding if validation failed
         $container = $this->rebuildContainer();
         $logger = $container->get(LoggerInterface::class);
         $logger->log(
-            $this->env == Application::ENV_DEV ? Level::Warning : Level::Info,
-            'Application is running in ' . $this->env . ' mode'
+            $this->appEnv == Application::ENV_DEV ? Level::Warning : Level::Info,
+            'Application is running in ' . $this->appEnv . ' mode'
         );
         $logger->notice('DI container rebuilt');
         return $container;
@@ -71,99 +69,32 @@ class AppDIContainerBuilder
     private function rebuildContainer(): ContainerInterface
     {
         $this->removeContainer();
-        $builder = $this->getBuilder();
+        $builder = $this->configureBuilder();
 
-        //adding global definition files
-        foreach (self::DEFINITION_LOCATIONS as $definitionsLocation) {
-            foreach (glob($definitionsLocation) as $definitionFile) {
-                $builder->addDefinitions($definitionFile);
-            }
-        }
-        //adding env specific definition files
-        foreach (glob(sprintf(self::ENV_SPECIFIC_DEFINITION_LOCATIONS_TEMPLATE, $this->env)) as $definitionFile) {
-            $builder->addDefinitions($definitionFile);
-        }
+        //DI definitions (configuration)
+        (new BuildConfiguration($builder))($this->appEnv);
 
-        //adding environment definitions
-        $this->addEnvironmentDefinitions($builder);
-
+        //load environment variables
+        $builder->addDefinitions($this->envVars);
+        
         //logger
-        $builder->addDefinitions([LoggerInterface::class => function (ContainerInterface $container): LoggerInterface {
-            $logger = new Logger($container->get('kuick.app.name'));
-            $handlers = $container->get('kuick.app.monolog.handlers');
-            $defaultLevel = $container->get('kuick.app.monolog.level') ?? Level::Warning;
-            !is_array($handlers) && throw new ApplicationException('Logger handlers are invalid, should be an array');
-            foreach ($handlers as $handler) {
-                $type = $handler['type'] ?? throw new ApplicationException('Logger handler type not defined');
-                $level = $handler['level'] ?? $defaultLevel;
-                //@TODO: handle more types
-                if ('firePHP' == $type) {
-                    $logger->pushHandler(new FirePHPHandler($level));
-                }
-                if ('stream' == $type) {
-                    $logger->pushHandler(new StreamHandler($handler['path'] ?? throw new ApplicationException('Logger handler type not defined'), $level));
-                }
-                if ('console' == $type) {
-                    $logger->pushHandler(new BrowserConsoleHandler($level));
-                }
-            }
-            return $logger;
-        }]);
+        (new BuildLogger($builder))();
 
         //action matcher
-        $builder->addDefinitions([ActionMatcher::class => function (ContainerInterface $container): ActionMatcher {
-            $routes = [];
-            //app config (normal priority)
-            foreach (glob(BASE_PATH . '/etc/routes/*.actions.php') as $routeFile) {
-                $routes = array_merge($routes, include $routeFile);
-            }
-            //validating routes
-            foreach ($routes as $route) {
-                (new ActionValidator())($route);
-            }
-            $actionMatcher = (new ActionMatcher($container->get(LoggerInterface::class)))->setRoutes(new RoutesConfig($routes));
-            return $actionMatcher;
-        }]);
+        (new BuildActionMatcher($builder))();
 
         //command matcher
-        $builder->addDefinitions([CommandMatcher::class => function () {
-            $commands = [];
-            //app commands (normal priority)
-            foreach (glob(BASE_PATH . '/etc/routes/*.commands.php') as $commandFile) {
-                $commands = array_merge($commands, include $commandFile);
-            }
-            foreach ($commands as $command) {
-                (new CommandRouteValidator())($command);
-            }
-            $commandMatcher = new CommandMatcher(new RoutesConfig($commands));
-            return $commandMatcher;
-        }]);
+        (new BuildCommandMatcher($builder))();
+
         return $builder->build();
     }
 
-    private function addEnvironmentDefinitions(ContainerBuilder $builder): void
-    {
-        //dot env files .env and .env.$env (lower priority)
-        $dotEnvFile = BASE_PATH . '/.env';
-        $dotEnvLocalFile = BASE_PATH . '/.env.local';
-        $dotEnvValues = array_merge(
-            file_exists($dotEnvFile) ? (new DotEnvParser)($dotEnvFile) : [],
-            file_exists($dotEnvLocalFile) ? (new DotEnvParser)($dotEnvLocalFile) : []
-        );
-        $builder->addDefinitions($dotEnvValues);
-        //environment variables (higher)
-        foreach (getenv() as $envVarKey => $envVarValue) {
-            $sanitizedKey = str_replace('_', '.', strtolower($envVarKey));
-            $builder->addDefinitions([$sanitizedKey => $envVarValue]);
-        }
-    }
-
-    private function getBuilder(): ContainerBuilder
+    private function configureBuilder(): ContainerBuilder
     {
         $builder = (new ContainerBuilder())
             ->useAutowiring(true)
             ->useAttributes(true)
-            ->enableCompilation(self::CACHE_PATH . DIRECTORY_SEPARATOR . $this->env);
+            ->enableCompilation(self::CACHE_PATH . DIRECTORY_SEPARATOR . $this->appEnv);
         if ($this->isApcuEnabled()) {
             $builder->enableDefinitionCache(__DIR__);
         }
@@ -174,30 +105,12 @@ class AppDIContainerBuilder
     {
         /** @disregard P1009 Undefined type */
         $this->isApcuEnabled() && apcu_clear_cache();
-        array_map('unlink', glob(self::CACHE_PATH . DIRECTORY_SEPARATOR . $this->env . DIRECTORY_SEPARATOR . self::COMPILED_FILENAME));
+        array_map('unlink', glob(self::CACHE_PATH . DIRECTORY_SEPARATOR . $this->appEnv . DIRECTORY_SEPARATOR . self::COMPILED_FILENAME));
     }
 
     private function isApcuEnabled(): bool
     {
-        return function_exists('apcu_clear_cache') && ini_get('apc.enabled')
-            && !('cli' === \PHP_SAPI && !ini_get('apc.enable_cli'));
-    }
-
-    private function determineEnv(): string
-    {
-        $environmentVariable = getenv(Application::APP_ENV);
-        if ($environmentVariable) {
-            return $environmentVariable;
-        }
-        $dotEnvFile = BASE_PATH . '/.env';
-        $dotEnvLocalFile = BASE_PATH . '/.env.local';
-        $dotEnvValues = array_merge(
-            file_exists($dotEnvFile) ? (new DotEnvParser)($dotEnvFile) : [],
-            file_exists($dotEnvLocalFile) ? (new DotEnvParser)($dotEnvLocalFile) : []
-        );
-        if (isset($dotEnvValues['kuick.app.env'])) {
-            return $dotEnvValues['kuick.app.env'];
-        }
-        return Application::ENV_PROD;
+        /** @disregard P1009 Undefined type */
+        return function_exists('apcu_enabled') && apcu_enabled();
     }
 }

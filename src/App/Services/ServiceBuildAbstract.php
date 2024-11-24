@@ -8,21 +8,13 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-namespace Kuick\App;
+namespace Kuick\App\Services;
 
-class RoutesConfig
+use DI\ContainerBuilder;
+
+class ServiceBuildAbstract
 {
-    public function __construct(private array $values)
+    public function __construct(protected ContainerBuilder $builder)
     {
-    }
-
-    public function get(string $name): array
-    {
-        return $this->values[$name] ?? [];
-    }
-
-    public function getAll(): array
-    {
-        return $this->values;
     }
 }

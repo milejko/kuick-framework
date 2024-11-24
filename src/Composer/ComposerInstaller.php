@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Kuick Framework (https://github.com/milejko/kuick-framework.git)
+ * Kuick Framework (https://github.com/milejko/kuick-framework)
  *
- * @link       https://github.com/milejko/mmi.git
- * @copyright  Copyright (c) 2010-2015 Mariusz Miłejko (mariusz@milejko.pl)
+ * @link       https://github.com/milejko/kuick-framework
+ * @copyright  Copyright (c) 2010-2024 Mariusz Miłejko (mariusz@milejko.pl)
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
@@ -29,7 +29,7 @@ class ComposerInstaller
     private static bool $freshInstallation = true;
 
     /** @disregard P1009 Undefined type */
-    protected static function initAutoload(Event $event)
+    protected static function initAutoload(Event $event): void
     {
         $vendorDir = $event->getComposer()->getConfig()->get('vendor-dir');
         define('BASE_PATH', realpath(dirname($vendorDir)));
@@ -40,13 +40,13 @@ class ComposerInstaller
     }
 
     /** @disregard P1009 Undefined type */
-    public static function postUpdate(Event $event)
+    public static function postUpdate(Event $event): void
     {
         self::postInstall($event);
     }
 
     /** @disregard P1009 Undefined type */
-    public static function postInstall(Event $event)
+    public static function postInstall(Event $event): void
     {
         self::initAutoload($event);
         if (!self::$freshInstallation) {
@@ -56,7 +56,7 @@ class ComposerInstaller
         self::copyDistributionFiles();
     }
 
-    protected static function createSysDirs()
+    protected static function createSysDirs(): void
     {
         !file_exists(BASE_PATH . self::TMP_DIR) ?
             mkdir(BASE_PATH . self::TMP_DIR, 0777, true) :
@@ -68,7 +68,7 @@ class ComposerInstaller
         }
     }
 
-    protected static function copyDistributionFiles()
+    protected static function copyDistributionFiles(): void
     {
         if (!file_exists(BASE_PATH . self::KUICK_PATH)) {
             return;

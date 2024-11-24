@@ -7,9 +7,6 @@ ARG PHP_VERSION=8.3
 ###########################################
 FROM milejko/php:${PHP_VERSION}-apache AS base
 
-ENV OPCACHE_VALIDATE_TIMESTAMPS=0 \
-    MEMORY_LIMIT=128M
-
 ###########################################
 # Distribution target                     #
 ###########################################

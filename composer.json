@@ -11,7 +11,7 @@
         }
     ],
     "require": {
-        "php": ">=8.1.0",
+        "php": ">=8.2.0",
         "ext-bcmath": "*",
         "ext-date": "*",
         "ext-fileinfo": "*",
@@ -35,7 +35,7 @@
             "@fix:php-cs-fixer"
         ],
         "test:security-checker": "security-checker security:check",
-        "test:phpstan": "XDEBUG_MODE=off phpstan --level=1 --no-progress --memory-limit=512M analyse src tests -c phpstan-baseline.neon",
+        "test:phpstan": "XDEBUG_MODE=off phpstan --level=5 --no-progress --memory-limit=512M analyse src tests -c phpstan-baseline.neon",
         "test:phpcs": "phpcs",
         "test:phpmd": "phpmd ./src text phpmd.xml.dist",
         "test:phpunit": "XDEBUG_MODE=coverage phpunit --coverage-html ./public/phpunit",
@@ -45,7 +45,6 @@
             "@test:phpmd",
             "@test:phpunit"
         ],
-        "generate:metrics": "phpmetrics --report-html=./public/phpmetrics ./src",
         "generate:phpmd-baseline": "phpmd --generate-baseline ./src text phpmd.xml.dist",
         "post-install-cmd": [
             "Kuick\\Composer\\ComposerInstaller::postInstall"
@@ -66,7 +65,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.0-dev"
+            "dev-master": "0.0-dev"
         }
     },
     "require-dev": {
@@ -74,7 +73,6 @@
         "phpmd/phpmd": "^2.0",
         "squizlabs/php_codesniffer": "^3.0",
         "phpstan/phpstan": "^1.0",
-        "friendsofphp/php-cs-fixer": "^3.0",
-        "phpmetrics/phpmetrics": "^2.0"
+        "friendsofphp/php-cs-fixer": "^3.0"
     }
 }

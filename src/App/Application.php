@@ -34,8 +34,6 @@ final class Application
     private ContainerInterface $container;
     private LoggerInterface $logger;
 
-
-    private const DEFAULT_EXCEPTION_CODE_LOG_LEVEL = Level::Error;
     private const EXCEPTION_CODE_LOG_LEVEL_MAP = [
         Response::HTTP_NOT_FOUND => Level::Notice,
         Response::HTTP_UNAUTHORIZED => Level::Notice,
@@ -54,7 +52,7 @@ final class Application
     {
         try {
             $this->logger->info('Handling request: ' . $request->getPathInfo());
-            //setting up locale
+            //localization setup
             ($this->container->get(AppSetLocalization::class))();
             //matching and launching UI action
             $response = ($this->container->get(ActionLauncher::class))(
@@ -65,16 +63,16 @@ final class Application
         } catch (Throwable $error) {
             (new JsonErrorResponse($error->getMessage(), $error->getCode()))->send();
             $this->logger->log(
-                self::EXCEPTION_CODE_LOG_LEVEL_MAP[$error->getCode()] ?? self::DEFAULT_EXCEPTION_CODE_LOG_LEVEL,
-                $error->getMessage()
+                self::EXCEPTION_CODE_LOG_LEVEL_MAP[$error->getCode()] ?? Response::HTTP_INTERNAL_SERVER_ERROR,
+                $error->getMessage() . ' ' . $error->getFile() . ' (' . $error->getLine() . ') ' . $error->getTraceAsString()
             );
         }
-        $this->logger->info('Response sent, closing connection');
     }
 
     public function handleConsoleInput(array $argv): void
     {
         try {
+            //localization setup
             ($this->container->get(AppSetLocalization::class))();
             //@TODO: Command input/output instead of array of strings
             echo $this->container->get(CommandLauncher::class)(

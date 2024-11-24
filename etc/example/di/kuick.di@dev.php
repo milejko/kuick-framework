@@ -7,9 +7,9 @@
 return [
     //no token for dev
     'kuick.app.ops.guards.token' => '',
+
     //debug for dev
     'kuick.app.monolog.level' => 'DEBUG',
-    
     //different handlers
     'kuick.app.monolog.handlers' => [
         [

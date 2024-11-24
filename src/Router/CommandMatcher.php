@@ -10,24 +10,32 @@
 
 namespace Kuick\Router;
 
-use Kuick\App\RoutesConfig;
 use Kuick\Console\ConsoleException;
 use Kuick\Console\ConsoleIndexCommand;
+use Psr\Log\LoggerInterface;
 
 /**
  *
  */
 class CommandMatcher
 {
-    private const LIST_COMMAND = ['name' => 'default', 'command' => ConsoleIndexCommand::class];
+    private const LIST_COMMAND = ['command' => ConsoleIndexCommand::class];
 
-    public function __construct(private RoutesConfig $routes)
+    private array $routes;
+
+    public function __construct(private LoggerInterface $logger)
     {
     }
 
-    public function getCommands(): array
+    public function setRoutes(array $routes): self
     {
-        return $this->routes->getAll();
+        $this->routes = $routes;
+        return $this;
+    }
+
+    public function getRoutes(): array
+    {
+        return $this->routes;
     }
 
     public function findRoute(array $arguments): array
@@ -35,8 +43,9 @@ class CommandMatcher
         if (!isset($arguments[1])) {
             return self::LIST_COMMAND;
         }
-        foreach ($this->routes->getAll() as $command) {
+        foreach ($this->routes as $command) {
             if ($arguments[1] == $command['name']) {
+                $this->logger->info('Command matched: ' . $command['name']);
                 return $command;
             }
         }

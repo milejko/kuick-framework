@@ -10,7 +10,6 @@
 
 namespace Kuick\Router;
 
-use Kuick\App\RoutesConfig;
 use Kuick\Http\MethodNotAllowedException;
 use Kuick\Http\NotFoundException;
 use Kuick\Http\Request;
@@ -21,11 +20,13 @@ use Psr\Log\LoggerInterface;
  */
 class ActionMatcher
 {
-    private RoutesConfig $routes;
+    private array $routes = [];
 
-    public function __construct(private LoggerInterface $logger) {}
+    public function __construct(private LoggerInterface $logger)
+    {
+    }
 
-    public function setRoutes(RoutesConfig $routes): self
+    public function setRoutes(array $routes): self
     {
         $this->routes = $routes;
         return $this;
@@ -33,7 +34,7 @@ class ActionMatcher
 
     public function getRoutes(): array
     {
-        return $this->routes->getAll();
+        return $this->routes;
     }
 
     public function findRoute(Request $request): array
@@ -41,23 +42,25 @@ class ActionMatcher
         if (Request::METHOD_OPTIONS == $request->getMethod()) {
             return [];
         }
-        $methodNotAllowed = false;
-        foreach ($this->routes->getAll() as $route) {
-            $routeMethod = $route['method'] ?? Request::METHOD_GET;
-            $requestMethod = $request->getMethod();
+        $requestMethod = $request->getMethod();
+        $methodNotAllowedForRoute = null;
+        foreach ($this->routes as $route) {
             if (!preg_match('#^' . $route['pattern'] . '$#', $request->getPathInfo())) {
                 continue;
             }
+            $routeMethod = $route['method'] ?? Request::METHOD_GET;
             if (Request::METHOD_HEAD == $requestMethod && Request::METHOD_GET == $routeMethod) {
                 $requestMethod = $routeMethod;
             }
             if ($requestMethod == $routeMethod) {
+                $this->logger->debug('Action matched to the pattern: ' . $route['pattern']);
                 return $route;
             }
-            $methodNotAllowed = true;
+            $this->logger->debug('Method mismatch, but action matched to the pattern: ' . $route['pattern']);
+            $methodNotAllowedForRoute = $route;
         }
-        if ($methodNotAllowed) {
-            throw new MethodNotAllowedException('Method:' . $requestMethod . 'is not allowed for ' . $route['pattern'] . ' route');
+        if (null !== $methodNotAllowedForRoute) {
+            throw new MethodNotAllowedException($requestMethod . ' method is not allowed for ' . $methodNotAllowedForRoute['pattern'] . ' route');
         }
         throw new NotFoundException('Action not found');
     }

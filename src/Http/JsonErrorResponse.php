@@ -10,6 +10,8 @@
 
 namespace Kuick\Http;
 
+use Throwable;
+
 class JsonErrorResponse extends JsonResponse
 {
     private const ERROR_KEY = 'error';
@@ -19,7 +21,11 @@ class JsonErrorResponse extends JsonResponse
         string $message = self::DEFAULT_MESSAGE,
         int $code = Response::HTTP_INTERNAL_SERVER_ERROR
     ) {
-        $code = isset(JsonResponse::$statusTexts[$code]) ? $code : Response::HTTP_INTERNAL_SERVER_ERROR;
-        parent::__construct([self::ERROR_KEY => $message], $code, [], false);
+        $code = $code == 0 ? Response::HTTP_INTERNAL_SERVER_ERROR : $code;
+        try {
+            parent::__construct([self::ERROR_KEY => $message], $code, [], false);
+        } catch (Throwable $error) {
+            parent::__construct([self::ERROR_KEY => $error->getMessage()], self::HTTP_INTERNAL_SERVER_ERROR, [], false);
+        }
     }
 }

@@ -8,31 +8,20 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-/**
- * PHP-DI definitions
- * @see https://php-di.org/doc/php-definitions.html
- */
 return [
     //no token for dev
     'kuick.app.ops.guards.token' => '',
 
     //debug for dev
-    'kuick.app.monolog.level' => 'DEBUG',    
+    'kuick.app.monolog.level' => 'DEBUG',
     //different handlers for dev
     'kuick.app.monolog.handlers' => [
         [
             'type' => 'stream',
             'path' => 'php://stdout',
-            'level' => 'DEBUG',
-        ],
-        [
-            'type' => 'stream',
-            'path' => BASE_PATH . '/var/tmp/kuick.app.log',
-            'level' => 'DEBUG',
         ],
         [
             'type' => 'console',
-            'level' => 'DEBUG',
         ],
     ],
 ];

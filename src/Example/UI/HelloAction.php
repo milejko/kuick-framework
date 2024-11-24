@@ -25,7 +25,7 @@ class HelloAction implements ActionInterface
             'message' => 'Kuick says: hello ' . $name . '!',
         ];
         if (!$request->query->get('name')) {
-            $message['hint'] = 'If you want a proper greeting use: ' .$request->getUri(). '?name=NAME';
+            $message['hint'] = 'If you want a proper greeting use: ' .$request->getUri(). '?name=Your-name';
         }
         return new JsonResponse($message);
     }
