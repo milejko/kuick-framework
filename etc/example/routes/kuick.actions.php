@@ -13,7 +13,7 @@ return [
         //'method' => Request::METHOD_GET,
         'action' => HelloAction::class,
     ],
-    //this route is protected by Bearer Token (see the configuration file)
+    //this route is protected by Bearer Token (see the configuration file, and the OpsGuard)
     [
         'pattern' => '/api/ops',
         'action' => OpsAction::class,

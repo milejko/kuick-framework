@@ -8,13 +8,8 @@
  * @license    https://en.wikipedia.org/wiki/BSD_licenses New BSD License
  */
 
-use Kuick\Example\UI\Console\HelloCommand;
+use Kuick\Example\Console\HelloCommand;
 
 return [
-    //You probably need to remove this sample command
-    [
-        'name' => 'hello',
-        'command' => HelloCommand::class,
-        //'description' => 'Optional description'
-    ]
+    HelloCommand::class,
 ];

@@ -12,6 +12,8 @@ namespace Kuick\App;
 
 use Kuick\Router\CommandLauncher;
 use Kuick\Router\CommandMatcher;
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Command\Command;
 use Throwable;
 
 /**
@@ -19,18 +21,14 @@ use Throwable;
  */
 final class ConsoleKernel extends KernelAbstract
 {
-    public function __invoke(array $argv): void
+    public function __invoke(): void
     {
         ini_set('max_execution_time', 0);
         try {
             //localization setup
             ($this->container->get(AppSetLocalization::class))();
-            //@TODO: Command input/output instead of array of strings
-            echo $this->container->get(CommandLauncher::class)(
-                $this->container->get(CommandMatcher::class)->findRoute($argv),
-                $argv
-            ) . PHP_EOL;
-            $this->logger->info('Command executed: ' . implode(' ', $argv));
+            $application = $this->container->get(Application::class);
+            $application->run();
         } catch (Throwable $error) {
             $this->logger->error($error->getMessage());
             echo $error->getMessage() . PHP_EOL;

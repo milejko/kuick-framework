@@ -10,29 +10,28 @@
 
 namespace Kuick\App\Services;
 
-use Kuick\Router\CommandMatcher;
 use Kuick\Router\CommandRouteValidator;
 use Psr\Container\ContainerInterface;
-use Psr\Log\LoggerInterface;
+use Symfony\Component\Console\Application;
 
 /**
  *
  */
-class BuildCommandMatcher extends ServiceBuildAbstract
+class BuildConsoleApplication extends ServiceBuildAbstract
 {
     public function __invoke(): void
     {
-        $this->builder->addDefinitions([CommandMatcher::class => function (ContainerInterface $container): CommandMatcher {
-            $routes = [];
+        $this->builder->addDefinitions([Application::class => function (ContainerInterface $container): Application {
+            $commands = [];
             //app commands (normal priority)
             foreach (glob(BASE_PATH . '/etc/routes/*.commands.php') as $commandFile) {
-                $routes = array_merge($routes, include $commandFile);
+                $commands = array_merge($commands, include $commandFile);
             }
-            foreach ($routes as $route) {
-                (new CommandRouteValidator())($route);
+            $application = new Application($container->get('kuick.app.name'));
+            foreach ($commands as $commandClass) {
+                $application->add($container->get($commandClass));
             }
-            $commandMatcher = (new CommandMatcher($container->get(LoggerInterface::class)))->setRoutes($routes);
-            return $commandMatcher;
+            return $application;
         }]);
     }
 }

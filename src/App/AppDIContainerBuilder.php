@@ -12,12 +12,12 @@ namespace Kuick\App;
 
 use DI\ContainerBuilder;
 use Kuick\App\Services\BuildActionMatcher;
-use Kuick\App\Services\BuildCommandMatcher;
 use Kuick\App\Services\BuildConfiguration;
+use Kuick\App\Services\BuildConsoleApplication;
 use Kuick\App\Services\BuildLogger;
-use Monolog\Level;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
 
 /**
  *
@@ -59,7 +59,7 @@ class AppDIContainerBuilder
         $container = $this->rebuildContainer();
         $logger = $container->get(LoggerInterface::class);
         $logger->log(
-            $this->appEnv == KernelAbstract::ENV_DEV ? Level::Warning : Level::Info,
+            $this->appEnv == KernelAbstract::ENV_DEV ? LogLevel::WARNING : LogLevel::INFO,
             'Application is running in ' . $this->appEnv . ' mode'
         );
         $logger->notice('DI container rebuilt');
@@ -83,8 +83,8 @@ class AppDIContainerBuilder
         //action matcher
         (new BuildActionMatcher($builder))();
 
-        //command matcher
-        (new BuildCommandMatcher($builder))();
+        //console application
+        (new BuildConsoleApplication($builder))();
 
         return $builder->build();
     }

@@ -3,10 +3,6 @@
 use Kuick\Example\UI\Console\HelloCommand;
 
 return [
-    //you probably want to remove this one
-    [
-        'name' => 'hello',
-        'command' => HelloCommand::class,
-        //'description' => 'Optional description'
-    ],
+    //you probably want to comment this one out, or remove this file entirely
+    HelloCommand::class,
 ];

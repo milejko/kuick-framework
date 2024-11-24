@@ -21,7 +21,9 @@ return [
             'path' => 'php://stdout',
         ],
         [
-            'type' => 'console',
+            'type' => 'stream',
+            'path' => BASE_PATH . '/var/log/error.log',
+            'level' => 'ERROR',
         ],
     ],
 ];

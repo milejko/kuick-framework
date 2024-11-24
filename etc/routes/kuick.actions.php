@@ -13,12 +13,10 @@ use Kuick\Ops\Security\OpsGuard;
 use Kuick\Ops\UI\OpsAction;
 
 return [
-    //you probably want to remove this sample homepage
     [
         'pattern' => '/',
         'action' => HelloAction::class,
     ],
-    //this route is protected by Bearer Token (see the configuration file)
     [
         'pattern' => '/api/ops',
         'action' => OpsAction::class,
