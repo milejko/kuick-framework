@@ -38,7 +38,7 @@ class CommandConfigValidatorTest extends TestCase
     public function testIfInexistentCommandClassNameRaisesException(): void
     {
         $this->expectException(ConfigException::class);
-        $this->expectExceptionMessage('Command class: "InexistentCommand" does not exist, name: /test');
+        $this->expectExceptionMessage('Command class: InexistentCommand does not exist, name: /test');
         (new CommandConfigValidator())->validate(new CommandConfig('/test', 'InexistentCommand'));
     }
 

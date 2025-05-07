@@ -25,15 +25,15 @@ final class ListenerConfigValidator
     {
         //callable empty
         if (empty($listenerConfig->listenerClassName)) {
-            throw new ConfigException('Listener class name should not be empty');
+            throw new ConfigException("Listener class name should not be empty");
         }
         //inexistent class
         if (!class_exists($listenerConfig->listenerClassName)) {
-            throw new ConfigException('Listener class: "' . $listenerConfig->listenerClassName . '" does not exist');
+            throw new ConfigException("Listener class: $listenerConfig->listenerClassName does not exist");
         }
         //inexistent __invoke() method
         if (!method_exists($listenerConfig->listenerClassName, '__invoke')) {
-            throw new ConfigException('Listener class: "' . $listenerConfig->listenerClassName . '" is not invokable');
+            throw new ConfigException("Listener class: $listenerConfig->listenerClassName is not invokable");
         }
     }
 

@@ -23,7 +23,7 @@
         "kuick/event-dispatcher": "^1.1",
         "kuick/http": "^2.0",
         "kuick/routing": "^1.1",
-        "kuick/security": "^1.1",
+        "kuick/security": "^1.3",
         "monolog/monolog": "^3.0",
         "nyholm/psr7": "^1.8",
         "nyholm/psr7-server": "^1.1",

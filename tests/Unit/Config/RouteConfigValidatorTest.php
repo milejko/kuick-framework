@@ -38,14 +38,14 @@ class RouteConfigValidatorTest extends TestCase
     public function testIfInexistentRouteClassNameRaisesException(): void
     {
         $this->expectException(ConfigException::class);
-        $this->expectExceptionMessage('Route controller class: "InexistentRoute" does not exist');
+        $this->expectExceptionMessage('Route controller class: InexistentRoute does not exist');
         (new RouteConfigValidator())->validate(new RouteConfig('/test', 'InexistentRoute'));
     }
 
     public function testIfNotInvokableRouteClassNameRaisesException(): void
     {
         $this->expectException(ConfigException::class);
-        $this->expectExceptionMessage('Route controller class: "stdClass" is not invokable');
+        $this->expectExceptionMessage('Route controller class: stdClass is not invokable');
         (new RouteConfigValidator())->validate(new RouteConfig('/test', 'stdClass'));
     }
 

@@ -35,7 +35,7 @@ final class WebKernel extends KernelAbstract
         $guardhouse = $this->getContainer()->get(Guardhouse::class);
         foreach ($configIndexer->getConfigFilePaths(ConfigIndexer::GUARDS_FILE_SUFFIX) as $guardConfigFile) {
             foreach (require $guardConfigFile as $guardConfig) {
-                $logger->debug('Adding guard: ' . $guardConfig->path);
+                $logger->debug("Adding guard: $guardConfig->path");
                 $guardhouse->addGuard(
                     $guardConfig->path,
                     $this->getContainer()->get($guardConfig->guardClassName),
@@ -49,7 +49,7 @@ final class WebKernel extends KernelAbstract
         $router = $this->getContainer()->get(Router::class);
         foreach ($configIndexer->getConfigFilePaths(ConfigIndexer::ROUTES_FILE_SUFFIX) as $routeConfigFile) {
             foreach (require $routeConfigFile as $routeConfig) {
-                $logger->debug('Adding route: ' . $routeConfig->path, $routeConfig->methods);
+                $logger->debug("Adding route: $routeConfig->path", $routeConfig->methods);
                 $router->addRoute(
                     $routeConfig->path,
                     $this->getContainer()->get($routeConfig->controllerClassName),

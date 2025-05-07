@@ -11,6 +11,7 @@
 namespace Kuick\Framework\Api\Security;
 
 use DI\Attribute\Inject;
+use Kuick\Http\HttpException;
 use Kuick\Http\Message\JsonResponse;
 use OpenApi\Attributes\SecurityScheme;
 use Psr\Http\Message\ServerRequestInterface;
@@ -25,17 +26,15 @@ final class OpsGuard
     {
     }
 
-    public function __invoke(ServerRequestInterface $request): ?JsonResponse
+    public function __invoke(ServerRequestInterface $request): void
     {
         $requestToken = $request->getHeaderLine(self::AUTHORIZATION_HEADER);
         if (!$requestToken) {
-            return new JsonResponse(['error' => 'Token not found'], JsonResponse::HTTP_UNAUTHORIZED);
+            throw new HttpException(JsonResponse::HTTP_UNAUTHORIZED, 'Token not found');
         }
-        $expectedToken = sprintf(self::BEARER_TOKEN_TEMPLATE, $this->opsToken);
-        //token mismatch
-        if ($requestToken != $expectedToken) {
-            return new JsonResponse(['error' => 'Token invalid'], JsonResponse::HTTP_FORBIDDEN);
+        //request token is invalid
+        if ($requestToken != sprintf(self::BEARER_TOKEN_TEMPLATE, $this->opsToken)) {
+            throw new HttpException(JsonResponse::HTTP_FORBIDDEN, 'Token invalid');
         }
-        return null;
     }
 }

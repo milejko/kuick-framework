@@ -38,14 +38,14 @@ class ListenerConfigValidatorTest extends TestCase
     public function testIfInexistentListenerClassNameRaisesException(): void
     {
         $this->expectException(ConfigException::class);
-        $this->expectExceptionMessage('Listener class: "InexistentListener" does not exist');
+        $this->expectExceptionMessage('Listener class: InexistentListener does not exist');
         (new ListenerConfigValidator())->validate(new ListenerConfig('*', 'InexistentListener'));
     }
 
     public function testIfNotInvokableListenerClassNameRaisesException(): void
     {
         $this->expectException(ConfigException::class);
-        $this->expectExceptionMessage('Listener class: "stdClass" is not invokable');
+        $this->expectExceptionMessage('Listener class: stdClass is not invokable');
         (new ListenerConfigValidator())->validate(new ListenerConfig('*', 'stdClass'));
     }
 }

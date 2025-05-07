@@ -37,7 +37,7 @@ final class GuardConfigValidator
             //test against empty string
             preg_match(sprintf(self::MATCH_PATTERN, $guardConfig->path), '');
         } catch (Throwable) {
-            throw new ConfigException('Guard path should be a valid regex pattern: ' . $guardConfig->path);
+            throw new ConfigException("Guard path should be a valid regex pattern: $guardConfig->path");
         }
     }
 
@@ -55,7 +55,7 @@ final class GuardConfigValidator
                 RequestInterface::METHOD_DELETE,
                 ])
             ) {
-                throw new ConfigException('Guard method invalid, path: ' . $guardConfig->path . ', method: ' . $method);
+                throw new ConfigException("Guard method invalid, path: $guardConfig->path, method: $method");
             }
         }
     }
@@ -64,15 +64,15 @@ final class GuardConfigValidator
     {
         //action not defined
         if (empty($guardConfig->guardClassName)) {
-            throw new ConfigException('Guard class name should not be empty, path: ' . $guardConfig->path);
+            throw new ConfigException("Guard class name should not be empty, path: $guardConfig->path");
         }
         //inexistent class
         if (!class_exists($guardConfig->guardClassName)) {
-            throw new ConfigException('Guard class: "' . $guardConfig->guardClassName . '" does not exist, path: ' . $guardConfig->path);
+            throw new ConfigException("Guard class: $guardConfig->guardClassName does not exist, path: $guardConfig->path");
         }
         //inexistent __invoke() method
         if (!method_exists($guardConfig->guardClassName, '__invoke')) {
-            throw new ConfigException('Guard class: "' . $guardConfig->guardClassName . '" is not invokable, path: ' . $guardConfig->path);
+            throw new ConfigException("Guard class: $guardConfig->guardClassName is not invokable, path: $guardConfig->path");
         }
         //@TODO: validate __invoke() method parameters
     }

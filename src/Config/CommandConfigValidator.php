@@ -35,15 +35,15 @@ final class CommandConfigValidator
     {
         //action not defined
         if (empty($commandConfig->commandClassName)) {
-            throw new ConfigException('Command class name should not be empty, name: ' . $commandConfig->name);
+            throw new ConfigException("Command class name should not be empty, name: $commandConfig->name");
         }
         //inexistent class
         if (!class_exists($commandConfig->commandClassName)) {
-            throw new ConfigException('Command class: "' . $commandConfig->commandClassName . '" does not exist, name: ' . $commandConfig->name);
+            throw new ConfigException("Command class: $commandConfig->commandClassName does not exist, name: $commandConfig->name");
         }
         //not a subclass of command
         if (!is_subclass_of($commandConfig->commandClassName, Command::class)) {
-            throw new ConfigException('Command does not extend Command, name: ' . $commandConfig->name);
+            throw new ConfigException("Command does not extend Command, name: $commandConfig->name");
         }
     }
 }

@@ -29,7 +29,7 @@ final class ConsoleKernel extends KernelAbstract
         // adding commands to console application
         foreach ($configIndexer->getConfigFilePaths(ConfigIndexer::COMMANDS_FILE_SUFFIX) as $commandConfigFile) {
             foreach (require $commandConfigFile as $commandConfig) {
-                $logger->debug('Adding command: ' . $commandConfig->name);
+                $logger->debug("Adding command: $commandConfig->name");
                 $command = $this->getContainer()->get($commandConfig->commandClassName);
                 $command->setName($commandConfig->name);
                 $command->setDescription($commandConfig->description);

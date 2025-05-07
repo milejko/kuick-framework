@@ -45,14 +45,14 @@ class GuardConfigValidatorTest extends TestCase
     public function testIfInexistentGuardClassNameRaisesException(): void
     {
         $this->expectException(ConfigException::class);
-        $this->expectExceptionMessage('Guard class: "InexistentGuard" does not exist, path: /test');
+        $this->expectExceptionMessage('Guard class: InexistentGuard does not exist, path: /test');
         (new GuardConfigValidator())->validate(new GuardConfig('/test', 'InexistentGuard'));
     }
 
     public function testIfNotInvokableGuardClassNameRaisesException(): void
     {
         $this->expectException(ConfigException::class);
-        $this->expectExceptionMessage('Guard class: "stdClass" is not invokable, path: /test');
+        $this->expectExceptionMessage('Guard class: stdClass is not invokable, path: /test');
         (new GuardConfigValidator())->validate(new GuardConfig('/test', 'stdClass'));
     }
 

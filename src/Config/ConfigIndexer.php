@@ -58,26 +58,26 @@ final class ConfigIndexer
         // loading from cache
         $cachedFileNames = $this->cache->get($cacheKey = sprintf(self::CACHE_KEY_TEMPLATE, $fileSuffix));
         if ($cachedFileNames) {
-            $this->logger->info('Loading ' . $fileSuffix . ' from cache');
+            $this->logger->info("Loading $fileSuffix from cache");
             return $cachedFileNames;
         }
         // unknown config file key
         if (!in_array($fileSuffix, array_keys(self::CONFIG_MAP))) {
-            throw new ConfigException('Unknown config file key: ' . $fileSuffix);
+            throw new ConfigException("Unknown config file key: $fileSuffix");
         }
         $fileNames = [];
         // iterating over all possible locations
         foreach (self::CONFIG_LOCATION_TEMPLATES as $configPathTemplate) {
             // iterating all files matching the template
             foreach (glob($this->projectDir . sprintf($configPathTemplate, $fileSuffix)) as $fileName) {
-                $this->logger->notice('Indexing ' . $fileSuffix . ': ' . $fileName);
+                $this->logger->notice("Indexing $fileSuffix: $fileName");
                 $this->validateFileContents($fileName, $fileSuffix);
                 $fileNames[] = $fileName;
             }
         }
         // iterating over all env specific locations
         foreach (glob($this->projectDir . sprintf(self::ENV_SPECIFIC_CONFIG_LOCATION_TEMPLATES, $fileSuffix, $this->appEnv)) as $fileName) {
-            $this->logger->notice('Indexing ' . $fileSuffix . ': ' . $fileName);
+            $this->logger->notice("Indexing $fileSuffix: $fileName");
             $this->validateFileContents($fileName, $fileSuffix);
             $fileNames[] = $fileName;
         }
@@ -92,12 +92,12 @@ final class ConfigIndexer
         $configObjects = require $fileName;
         // validating if the config file returns an array
         if (!is_array($configObjects)) {
-            throw new ConfigException('Config file: ' . $fileName . ' must return an array');
+            throw new ConfigException("Config file: $fileName must return an array");
         }
         // validating each config
         foreach ($configObjects as $configObject) {
             if (!is_object($configObject)) {
-                throw new ConfigException('Config item is not an object: ' . $fileName);
+                throw new ConfigException("Config item is not an object: $fileName");
             }
             if (get_class($configObject) !== self::CONFIG_MAP[$fileSuffix]) {
                 throw new ConfigException('Config item is not a: ' . self::CONFIG_MAP[$fileSuffix] . ': ' . $fileName);

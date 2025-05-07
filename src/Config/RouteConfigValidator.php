@@ -37,7 +37,7 @@ final class RouteConfigValidator
             //test against empty string
             preg_match(sprintf(self::MATCH_PATTERN, $routeConfig->path), '');
         } catch (Throwable) {
-            throw new ConfigException('Route path should be a valid regex pattern: ' . $routeConfig->path);
+            throw new ConfigException("Route path should be a valid regex pattern: $routeConfig->path");
         }
     }
 
@@ -58,7 +58,7 @@ final class RouteConfigValidator
                 RequestInterface::METHOD_CONNECT,
                 ])
             ) {
-                throw new ConfigException('Route method: ' . $method . ' is invalid, path: ' . $routeConfig->path);
+                throw new ConfigException("Route method: $method is invalid, path: $routeConfig->path");
             }
         }
     }
@@ -67,15 +67,15 @@ final class RouteConfigValidator
     {
         // controller not defined
         if (empty($routeConfig->controllerClassName)) {
-            throw new ConfigException('Route controller class name should not be empty, path: ' . $routeConfig->path);
+            throw new ConfigException("Route controller class name should not be empty, path: $routeConfig->path");
         }
         // inexistent class
         if (!class_exists($routeConfig->controllerClassName)) {
-            throw new ConfigException('Route controller class: "' . $routeConfig->controllerClassName . '" does not exist, path: ' . $routeConfig->path);
+            throw new ConfigException("Route controller class: $routeConfig->controllerClassName does not exist, path: $routeConfig->path");
         }
         // inexistent __invoke() method
         if (!method_exists($routeConfig->controllerClassName, '__invoke')) {
-            throw new ConfigException('Route controller class: "' . $routeConfig->controllerClassName . '" is not invokable, path: ' . $routeConfig->path);
+            throw new ConfigException("Route controller class: $routeConfig->controllerClassName is not invokable, path: $routeConfig->path");
         }
         //@TODO: validate __invoke() method parameters and return type
     }
