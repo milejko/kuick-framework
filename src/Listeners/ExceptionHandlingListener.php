@@ -13,8 +13,10 @@ namespace Kuick\Framework\Listeners;
 use Kuick\EventDispatcher\EventDispatcher;
 use Kuick\Framework\Events\ExceptionRaisedEvent;
 use Kuick\Framework\Events\ResponseCreatedEvent;
+use Kuick\Http\HttpException;
 use Kuick\Http\Server\FallbackRequestHandlerInterface;
 use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
 
 final class ExceptionHandlingListener
 {
@@ -31,6 +33,10 @@ final class ExceptionHandlingListener
         $this->eventDispatcher->dispatch(new ResponseCreatedEvent(
             $this->fallbackHandler->handleError($exception)
         ));
-        $this->logger->error($exception->getMessage(), $exception->getTrace());
+        $this->logger->log(
+            $exception instanceof HttpException ? LogLevel::NOTICE : LogLevel::ERROR,
+            $exception->getMessage(),
+            $exception->getTrace()
+        );
     }
 }
