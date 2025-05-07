@@ -7,7 +7,6 @@ use Kuick\Framework\Config\RouteConfig;
 use Kuick\Framework\Config\RouteConfigValidator;
 use Tests\Unit\Kuick\Framework\Mocks\MockRoute;
 use PHPUnit\Framework\TestCase;
-use stdClass;
 
 /**
  * @covers Kuick\Framework\Config\RouteConfigValidator
