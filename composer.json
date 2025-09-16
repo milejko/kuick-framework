@@ -18,7 +18,7 @@
         "ext-mbstring": "*",
         "ext-reflection": "*",
         "ext-spl": "*",
-        "kuick/cache": "^1.5",
+        "kuick/cache": "^1.6",
         "kuick/dotenv": "^1.0",
         "kuick/event-dispatcher": "^1.1",
         "kuick/http": "^2.0",
