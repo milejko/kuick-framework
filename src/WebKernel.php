@@ -13,9 +13,7 @@ namespace Kuick\Framework;
 use Kuick\Framework\Config\ConfigIndexer;
 use Kuick\Framework\Events\KernelCreatedEvent;
 use Kuick\Routing\Router;
-use Kuick\Routing\RoutingMiddleware;
 use Kuick\Security\Guardhouse;
-use Kuick\Security\SecurityMiddleware;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerInterface;
@@ -60,10 +58,17 @@ final class WebKernel extends KernelAbstract
         $logger->info('Router initialized');
 
         // adding middlewares to StackRequestHandler
-        $this->getContainer()->get(RequestHandlerInterface::class)
-            ->addMiddleware($this->getContainer()->get(SecurityMiddleware::class))
-            ->addMiddleware($this->getContainer()->get(RoutingMiddleware::class));
-        $logger->info('Routing and security middlewares registered to the Request Handler');
+        $requestHandler = $this->getContainer()->get(RequestHandlerInterface::class);
+        foreach ($configIndexer->getConfigFilePaths(ConfigIndexer::MIDDLEWARES_FILE_SUFFIX) as $middlewareConfigFile) {
+            foreach (require $middlewareConfigFile as $middlewareConfig) {
+                $logger->debug("Adding middleware: $middlewareConfig->middlewareClassName", $middlewareConfig->beforeMiddlewareClassName ? ['before' => $middlewareConfig->beforeMiddlewareClassName] : []);
+                $requestHandler->addMiddleware(
+                    $this->getContainer()->get($middlewareConfig->middlewareClassName),
+                    $middlewareConfig->beforeMiddlewareClassName
+                );
+            }
+        }
+        $logger->info('Request Handler initialized');
 
         // dispatching KernelCreatedEvent
         $this->getContainer()->get(EventDispatcherInterface::class)->dispatch(new KernelCreatedEvent($this));

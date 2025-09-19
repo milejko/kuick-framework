@@ -23,12 +23,14 @@ final class ConfigIndexer
     public const LISTENERS_FILE_SUFFIX = 'listeners';
     public const GUARDS_FILE_SUFFIX = 'guards';
     public const ROUTES_FILE_SUFFIX = 'routes';
+    public const MIDDLEWARES_FILE_SUFFIX = 'middlewares';
 
     public const VALIDATOR_MAP = [
         self::COMMANDS_FILE_SUFFIX => CommandConfigValidator::class,
         self::LISTENERS_FILE_SUFFIX => ListenerConfigValidator::class,
         self::GUARDS_FILE_SUFFIX => GuardConfigValidator::class,
         self::ROUTES_FILE_SUFFIX => RouteConfigValidator::class,
+        self::MIDDLEWARES_FILE_SUFFIX => MiddlewareConfigValidator::class,
     ];
 
     public const CONFIG_MAP = [
@@ -36,6 +38,7 @@ final class ConfigIndexer
         self::LISTENERS_FILE_SUFFIX => ListenerConfig::class,
         self::GUARDS_FILE_SUFFIX => GuardConfig::class,
         self::ROUTES_FILE_SUFFIX => RouteConfig::class,
+        self::MIDDLEWARES_FILE_SUFFIX => MiddlewareConfig::class,
     ];
 
     private const CACHE_KEY_TEMPLATE = 'app-config-%s';
