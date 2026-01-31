@@ -29,7 +29,7 @@ final class DocJsonController
     }
 
     /**
-     * @SuppressWarnings(PHPMD.StaticAccess)
+     * @SuppressWarnings(PHPMD)
      */
     public function __invoke(): JsonResponse
     {

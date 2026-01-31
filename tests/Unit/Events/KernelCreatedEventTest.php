@@ -3,12 +3,11 @@
 namespace Tests\Unit\Kuick\Framework\Events;
 
 use Kuick\Framework\Events\KernelCreatedEvent;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\Unit\Kuick\Framework\Mocks\MockKernel;
 use Monolog\Test\TestCase;
 
-/**
- * @covers Kuick\Framework\Events\KernelCreatedEvent
- */
+#[CoversClass(KernelCreatedEvent::class)]
 class KernelCreatedEventTest extends TestCase
 {
     /**

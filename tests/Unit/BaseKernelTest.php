@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Kuick\Framework;
 
-use Kuick\Framework\ConsoleKernel;
+use Kuick\Framework\BaseKernel;
 use Kuick\Framework\KernelInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
@@ -10,8 +10,8 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
-#[CoversClass(ConsoleKernel::class)]
-class ConsoleKernelTest extends TestCase
+#[CoversClass(BaseKernel::class)]
+class BaseKernelTest extends TestCase
 {
     public static string $projectDir;
 
@@ -27,7 +27,7 @@ class ConsoleKernelTest extends TestCase
     public function testIfDevKernelIsWellDefined(): void
     {
         putenv('APP_ENV=dev');
-        $kernel = new ConsoleKernel(self::$projectDir);
+        $kernel = new BaseKernel(self::$projectDir);
         $this->assertInstanceOf(KernelInterface::class, $kernel);
         $this->assertInstanceOf(ContainerInterface::class, $container = $kernel->getContainer());
         $this->assertInstanceOf(EventDispatcherInterface::class, $container->get(EventDispatcherInterface::class));
@@ -43,7 +43,7 @@ class ConsoleKernelTest extends TestCase
     public function testIfTestKernelIsWellDefined(): void
     {
         putenv('APP_ENV=test');
-        $kernel = new ConsoleKernel(self::$projectDir);
+        $kernel = new BaseKernel(self::$projectDir);
         $this->assertInstanceOf(KernelInterface::class, $kernel);
         $this->assertInstanceOf(ContainerInterface::class, $container = $kernel->getContainer());
         $this->assertInstanceOf(EventDispatcherInterface::class, $container->get(EventDispatcherInterface::class));

@@ -5,10 +5,9 @@ namespace Tests\Unit\Kuick\Framework\Events;
 use Exception;
 use Kuick\Framework\Events\ExceptionRaisedEvent;
 use Monolog\Test\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @covers Kuick\Framework\Events\ExceptionRaisedEvent
- */
+#[CoversClass(ExceptionRaisedEvent::class)]
 class ExceptionRaisedEventTest extends TestCase
 {
     public function testIfResponseCanBeRetrievedFromTheEvent(): void

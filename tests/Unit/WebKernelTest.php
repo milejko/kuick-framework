@@ -4,15 +4,14 @@ namespace Tests\Unit\Kuick\Framework;
 
 use Kuick\Framework\WebKernel;
 use Kuick\Framework\KernelInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
-/**
- * @covers Kuick\Framework\WebKernel
- * @covers Kuick\Framework\KernelAbstract
- */
+#[CoversClass(BaseKernel::class)]
+#[CoversClass(WebKernel::class)]
 class WebKernelTest extends TestCase
 {
     public static string $projectDir;

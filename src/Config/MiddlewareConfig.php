@@ -13,7 +13,7 @@ namespace Kuick\Framework\Config;
 final class MiddlewareConfig
 {
     /**
-     * @SuppressWarnings(PHPMD.LongVariable)
+     * @SuppressWarnings(PHPMD)
      */
     public function __construct(
         public readonly string $middlewareClassName,

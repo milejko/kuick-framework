@@ -12,16 +12,18 @@ namespace Kuick\Framework;
 
 use Kuick\Framework\Config\ConfigIndexer;
 use Kuick\Framework\Events\KernelCreatedEvent;
+use Kuick\Framework\Events\RequestReceivedEvent;
 use Kuick\Routing\Router;
 use Kuick\Security\Guardhouse;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerInterface;
 
 /**
  * Web application Kernel
  */
-final class WebKernel extends KernelAbstract
+final class WebKernel extends BaseKernel
 {
     public function __construct(string $projectDir)
     {
@@ -72,5 +74,11 @@ final class WebKernel extends KernelAbstract
 
         // dispatching KernelCreatedEvent
         $this->getContainer()->get(EventDispatcherInterface::class)->dispatch(new KernelCreatedEvent($this));
+    }
+
+    public function run(ServerRequestInterface $request): void
+    {
+        $this->getContainer()->get(EventDispatcherInterface::class)
+            ->dispatch(new RequestReceivedEvent($request));
     }
 }

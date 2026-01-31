@@ -3,12 +3,11 @@
 namespace Tests\Unit\Kuick\Framework\Config;
 
 use Kuick\Framework\Config\GuardConfig;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\Unit\Kuick\Framework\Mocks\MockGuard;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @covers Kuick\Framework\Config\GuardConfig
- */
+#[CoversClass(GuardConfig::class)]
 class GuardConfigTest extends TestCase
 {
     public function testIfGuardConfigIsDefinedWithTheDefaultMethods(): void

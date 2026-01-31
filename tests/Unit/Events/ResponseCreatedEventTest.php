@@ -5,10 +5,9 @@ namespace Tests\Unit\Kuick\Framework\Events;
 use Kuick\Framework\Events\ResponseCreatedEvent;
 use Kuick\Http\Message\Response;
 use Monolog\Test\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @covers Kuick\Framework\Events\ResponseCreatedEvent
- */
+#[CoversClass(ResponseCreatedEvent::class)]
 class ResponseCreatedEventTest extends TestCase
 {
     public function testIfResponseCanBeRetrievedFromTheEvent(): void

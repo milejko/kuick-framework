@@ -2,22 +2,36 @@
 
 namespace Tests\Unit\Kuick\Framework\Config;
 
+use ErrorException;
 use Kuick\Framework\Config\ConfigException;
 use Kuick\Framework\Config\RouteConfig;
 use Kuick\Framework\Config\RouteConfigValidator;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\Unit\Kuick\Framework\Mocks\MockRoute;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @covers Kuick\Framework\Config\RouteConfigValidator
- */
+#[CoversClass(RouteConfigValidator::class)]
 class RouteConfigValidatorTest extends TestCase
 {
+    public static function setUpBeforeClass(): void
+    {
+        // register error handler
+        set_error_handler(function ($errno, $errstr, $errfile, $errline): void {
+            throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+        });
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        // restore previous error handler
+        restore_error_handler();
+    }
+
     public function testIfCorrectRouteConfigValidatorDoesNothing(): void
     {
         $routeConfig = new RouteConfig('/test', MockRoute::class);
         (new RouteConfigValidator())->validate($routeConfig);
-        $this->assertTrue(true);
+        $this->expectNotToPerformAssertions();
     }
 
     public function testIfEmptyPathRaisesException(): void

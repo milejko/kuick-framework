@@ -5,20 +5,18 @@ namespace Tests\Unit\Kuick\Framework\Config;
 use Kuick\Framework\Config\ConfigException;
 use Kuick\Framework\Config\CommandConfig;
 use Kuick\Framework\Config\CommandConfigValidator;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\Unit\Kuick\Framework\Mocks\MockCommand;
 use PHPUnit\Framework\TestCase;
-use stdClass;
 
-/**
- * @covers Kuick\Framework\Config\CommandConfigValidator
- */
+#[CoversClass(CommandConfigValidator::class)]
 class CommandConfigValidatorTest extends TestCase
 {
     public function testIfCorrectCommandConfigValidatorDoesNothing(): void
     {
         $commandConfig = new CommandConfig('/test', MockCommand::class);
         (new CommandConfigValidator())->validate($commandConfig);
-        $this->assertTrue(true);
+        $this->expectNotToPerformAssertions();
     }
 
     public function testIfEmptyPathRaisesException(): void

@@ -19,8 +19,8 @@ use Psr\Http\Message\ServerRequestInterface;
 #[SecurityScheme(securityScheme: 'Bearer Token', type: 'http', scheme: 'bearer')]
 final class OpsGuard
 {
-    private const AUTHORIZATION_HEADER = 'Authorization';
-    private const BEARER_TOKEN_TEMPLATE = 'Bearer %s';
+    private const string AUTHORIZATION_HEADER = 'Authorization';
+    private const string BEARER_TOKEN_TEMPLATE = 'Bearer %s';
 
     public function __construct(#[Inject('api.security.ops.guard.token')] private string $opsToken)
     {

@@ -7,23 +7,18 @@ use Kuick\Framework\Events\ResponseCreatedEvent;
 use Kuick\Framework\Listeners\RequestHandlingListener;
 use Kuick\EventDispatcher\EventDispatcher;
 use Kuick\EventDispatcher\ListenerProvider;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\Unit\Kuick\Framework\Mocks\MockRequestHandler;
 use Nyholm\Psr7\ServerRequest;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 
-/**
- * @covers Kuick\Framework\Listeners\RequestHandlingListener
- */
+#[CoversClass(RequestHandlingListener::class)]
 class RequestHandlingListenerTest extends TestCase
 {
     public function testIfRequestIsHandled(): void
     {
         $listenerProvider = new ListenerProvider();
-        /**
-         * @var \Psr\Http\Message\ResponseInterface $responseCreated
-         */
-        $responseCreated = null;
         $listenerProvider->registerListener(ResponseCreatedEvent::class, function (ResponseCreatedEvent $event) use (&$responseCreated) {
             $responseCreated = $event->getResponse();
         });

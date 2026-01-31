@@ -5,11 +5,10 @@ namespace Tests\Unit\Kuick\Framework\Config;
 use Kuick\Framework\Config\MiddlewareConfig;
 use Kuick\Routing\RoutingMiddleware;
 use Kuick\Security\SecurityMiddleware;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @covers Kuick\Framework\Config\MiddlewareConfig
- */
+#[CoversClass(MiddlewareConfig::class)]
 class MiddlewareConfigTest extends TestCase
 {
     public function testIfMiddlewareConfigIsDefinedWithTheDefaultMethods(): void

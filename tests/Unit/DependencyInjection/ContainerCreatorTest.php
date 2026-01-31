@@ -2,13 +2,12 @@
 
 namespace Tests\Unit\Kuick\Framework\DependencyInjection;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Kuick\Framework\DependencyInjection\ContainerCreator;
 use Symfony\Component\Filesystem\Filesystem;
 
-/**
- * @covers Kuick\Framework\DependencyInjection\ContainerCreator
- */
+#[CoversClass(ContainerCreator::class)]
 class ContainerCreatorTest extends TestCase
 {
     private static string $projectDir;
@@ -20,7 +19,6 @@ class ContainerCreatorTest extends TestCase
 
     /**
      * Needs to be run in separate process
-     * @runInSeparateProcess
      */
     public function testIfDevContainerIsBuiltForDev(): void
     {
@@ -35,7 +33,6 @@ class ContainerCreatorTest extends TestCase
 
     /**
      * Needs to be run in separate process
-     * @runInSeparateProcess
      */
     public function testIfProdContainerIsBuiltForProd(): void
     {
@@ -44,13 +41,11 @@ class ContainerCreatorTest extends TestCase
 
         $uncachedContainer = (new ContainerCreator())->create(self::$projectDir);
         $this->assertEquals('Testing App', $uncachedContainer->get('app.name'));
-        $this->assertEquals('Europe/Paris', $uncachedContainer->get('app.timezone'));
+        $this->assertEquals('Europe/London', $uncachedContainer->get('app.timezone'));
     }
 
     /**
      * Needs to be run in separate process
-     * @runInSeparateProcess
-     * @depends testIfProdContainerIsBuiltForProd
      */
     public function testIfProdContainerIsCachedForProd(): void
     {

@@ -3,12 +3,11 @@
 namespace Tests\Unit\Kuick\Framework\DependencyInjection;
 
 use DI\ContainerBuilder;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Kuick\Framework\DependencyInjection\DefinitionConfigLoader;
 
-/**
- * @covers Kuick\Framework\DependencyInjection\DefinitionConfigLoader
- */
+#[CoversClass(DefinitionConfigLoader::class)]
 class DefinitionConfigLoaderTest extends TestCase
 {
     private static string $projectDir;

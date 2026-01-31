@@ -5,11 +5,10 @@ namespace Tests\Unit\Kuick\Framework\Api\Security;
 use Kuick\Framework\Api\Security\OpsGuard;
 use Kuick\Http\HttpException;
 use Nyholm\Psr7\ServerRequest;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @covers Kuick\Framework\Api\Security\OpsGuard
- */
+#[CoversClass(OpsGuard::class)]
 class OpsGuardTest extends TestCase
 {
     public function testIfQuitsGracefullyGivenAValidToken(): void
@@ -17,8 +16,8 @@ class OpsGuardTest extends TestCase
         $guard = new OpsGuard('let-me-in');
         $request = (new ServerRequest('GET', '/'))
             ->withAddedHeader('Authorization', 'Bearer let-me-in');
+        $this->expectNotToPerformAssertions();
         $guard($request);
-        $this->assertTrue(true);
     }
 
     public function testIfMissingTokenThrowsUnauthorized(): void

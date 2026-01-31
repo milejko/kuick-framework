@@ -2,15 +2,14 @@
 
 namespace Tests\Unit\Kuick\Framework\Config;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Kuick\Framework\SystemCache;
 use Kuick\Framework\Config\ConfigException;
 use Kuick\Framework\Config\ConfigIndexer;
 use Psr\Log\NullLogger;
 
-/**
- * @covers Kuick\Framework\Config\ConfigIndexer
- */
+#[CoversClass(ConfigIndexer::class)]
 class ConfigIndexerTest extends TestCase
 {
     private static string $projectDir;

@@ -3,11 +3,10 @@
 namespace Tests\Unit\Kuick\Framework\Api\UI;
 
 use Kuick\Framework\Api\UI\DocHtmlController;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @covers Kuick\Framework\Api\UI\DocHtmlController
- */
+#[CoversClass(DocHtmlController::class)]
 class DocHtmlControllerTest extends TestCase
 {
     public function testIfAllValuesAreReturned(): void

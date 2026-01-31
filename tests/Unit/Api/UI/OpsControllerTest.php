@@ -5,11 +5,10 @@ namespace Tests\Unit\Kuick\Framework\Api\UI;
 use DI\Container;
 use Kuick\Framework\Api\UI\OpsController;
 use Nyholm\Psr7\ServerRequest;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @covers Kuick\Framework\Api\UI\OpsController
- */
+#[CoversClass(OpsController::class)]
 class OpsControllerTest extends TestCase
 {
     public function testIfAllValuesAreReturned(): void

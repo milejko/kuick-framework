@@ -16,10 +16,10 @@ use Kuick\Framework\Api\Security\OpsGuard;
 use Kuick\Framework\Api\UI\DocHtmlController;
 use Kuick\Framework\Api\UI\DocJsonController;
 use Kuick\Framework\Api\UI\OpsController;
-use Kuick\Framework\Api\UI\OptionsController;
 use Kuick\Framework\Config\ConfigIndexer;
 use Kuick\Framework\Listeners\ExceptionHandlingListener;
 use Kuick\Framework\Listeners\RegisteringPhpErrorHandlerListener;
+use Kuick\Framework\OptionsServingMiddleware;
 use Kuick\Routing\Router;
 use Kuick\Routing\RoutingMiddleware;
 use Kuick\Security\Guardhouse;
@@ -45,11 +45,11 @@ return [
     // middlewares
     RoutingMiddleware::class => autowire(),
     SecurityMiddleware::class => autowire(),
+    OptionsServingMiddleware::class => autowire(),
 
     // UI
     DocHtmlController::class => autowire(),
     DocJsonController::class => autowire(),
     OpsController::class => autowire(),
     OpsGuard::class => autowire(),
-    OptionsController::class => autowire(),
 ];

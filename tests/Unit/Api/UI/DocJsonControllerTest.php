@@ -3,11 +3,10 @@
 namespace Tests\Unit\Kuick\Framework\Api\UI;
 
 use Kuick\Framework\Api\UI\DocJsonController;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @covers Kuick\Framework\Api\UI\DocJsonController
- */
+#[CoversClass(DocJsonController::class)]
 class DocJsonControllerTest extends TestCase
 {
     public function testIfDocJsonIsReturned(): void

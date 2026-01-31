@@ -8,14 +8,12 @@
  * @license    https://github.com/milejko/kuick-framework?tab=MIT-1-ov-file#readme New BSD License
  */
 
-use Kuick\Framework\Events\RequestReceivedEvent;
 use Kuick\Framework\WebKernel;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7Server\ServerRequestCreator;
-use Psr\EventDispatcher\EventDispatcherInterface;
 
 $projectDir = dirname(__DIR__);
-require $projectDir . '/vendor/autoload.php';
+require "$projectDir /vendor/autoload.php";
 
 // Using .env loader is not recommended from the performance perspective
 // uncomment the line below if you really want to use it
@@ -24,13 +22,10 @@ require $projectDir . '/vendor/autoload.php';
 $psr17Factory = new Psr17Factory();
 
 $request = (new ServerRequestCreator(
-    $psr17Factory, // ServerRequestFactory
-    $psr17Factory, // UriFactory
-    $psr17Factory, // UploadedFileFactory
-    $psr17Factory, // StreamFactory
+    serverRequestFactory: $psr17Factory,
+    uriFactory: $psr17Factory,
+    uploadedFileFactory: $psr17Factory,
+    streamFactory: $psr17Factory,
 ))->fromGlobals();
 
-(new WebKernel($projectDir))
-    ->getContainer()
-        ->get(EventDispatcherInterface::class)
-            ->dispatch(new RequestReceivedEvent($request));
+(new WebKernel($projectDir))->run($request);

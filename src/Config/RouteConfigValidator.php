@@ -18,7 +18,7 @@ use Throwable;
  */
 final class RouteConfigValidator
 {
-    private const MATCH_PATTERN = '#^%s$#';
+    private const string MATCH_PATTERN = '#^%s$#';
 
     public function validate(RouteConfig $configObject): void
     {
