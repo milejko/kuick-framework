@@ -22,6 +22,7 @@ Designed for developers seeking speed, efficiency, and flexibility in web applic
 2. Require the framework to your project
 ```
 composer require kuick/framework
+composer require kuick/api-tools
 ```
 3. Run the installer
 ```

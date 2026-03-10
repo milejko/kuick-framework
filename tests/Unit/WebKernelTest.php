@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Kuick\Framework;
 
+use Kuick\Framework\BaseKernel;
 use Kuick\Framework\WebKernel;
 use Kuick\Framework\KernelInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
