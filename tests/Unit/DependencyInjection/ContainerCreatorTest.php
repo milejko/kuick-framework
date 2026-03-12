@@ -33,15 +33,16 @@ class ContainerCreatorTest extends TestCase
 
     /**
      * Needs to be run in separate process
+     * @runInSeparateProcess
      */
     public function testIfProdContainerIsBuiltForProd(): void
     {
-        // prod should be set by default
+        putenv('APP_ENV=prod');
         (new Filesystem())->remove(self::$projectDir . '/var/cache');
 
         $uncachedContainer = (new ContainerCreator())->create(self::$projectDir);
         $this->assertEquals('Testing App', $uncachedContainer->get('app.name'));
-        $this->assertEquals('Europe/London', $uncachedContainer->get('app.timezone'));
+        $this->assertEquals('Europe/Paris', $uncachedContainer->get('app.timezone'));
     }
 
     /**
