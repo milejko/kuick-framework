@@ -1,5 +1,4 @@
 composer.lock
-.phpunit*
 /.idea
 /.php*
 /vendor/
