@@ -12,7 +12,7 @@
     ],
     "bin": ["bin/kuick-installer"],
     "require": {
-        "php": ">=8.3.0",
+        "php": ">=8.2.0",
         "ext-date": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
