@@ -1,6 +1,6 @@
 # Kuick Framework – Copilot Instructions
 
-Kuick is a minimal, high-throughput PHP framework built on PSR standards (PSR-3, 7, 11, 14, 15, 16). PHP 8.2+ required.
+Kuick is a minimal, high-throughput PHP framework built on PSR standards (PSR-3, 7, 11, 14, 15, 16). PHP 8.3+ required.
 
 ## Commands
 

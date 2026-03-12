@@ -14,7 +14,7 @@ jobs:
     name: "PHP Checks"
     strategy:
       matrix:
-        php-version: ['8.2', '8.3', '8.4']
+        php-version: ['8.3', '8.4', '8.5']
         os-variant: ['jammy', 'noble', 'alpine', 'bookworm', 'trixie']
       fail-fast: true
     runs-on: ubuntu-latest
