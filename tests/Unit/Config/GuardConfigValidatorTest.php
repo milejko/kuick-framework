@@ -2,23 +2,36 @@
 
 namespace Tests\Unit\Kuick\Framework\Config;
 
+use ErrorException;
 use Kuick\Framework\Config\ConfigException;
 use Kuick\Framework\Config\GuardConfig;
 use Kuick\Framework\Config\GuardConfigValidator;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\Unit\Kuick\Framework\Mocks\MockGuard;
 use PHPUnit\Framework\TestCase;
-use stdClass;
 
-/**
- * @covers Kuick\Framework\Config\GuardConfigValidator
- */
+#[CoversClass(GuardConfigValidator::class)]
 class GuardConfigValidatorTest extends TestCase
 {
+    public static function setUpBeforeClass(): void
+    {
+        // register error handler
+        set_error_handler(function ($errno, $errstr, $errfile, $errline): void {
+            throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+        });
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        // restore previous error handler
+        restore_error_handler();
+    }
+
     public function testIfCorrectGuardConfigValidatorDoesNothing(): void
     {
         $guardConfig = new GuardConfig('/test', MockGuard::class);
         (new GuardConfigValidator())->validate($guardConfig);
-        $this->assertTrue(true);
+        $this->expectNotToPerformAssertions();
     }
 
     public function testIfEmptyPathRaisesException(): void

@@ -1,6 +1,7 @@
 <?php
 
 use Kuick\Framework\Config\MiddlewareConfig;
+use Kuick\Framework\OptionsServingMiddleware;
 use Kuick\Routing\RoutingMiddleware;
 use Kuick\Security\SecurityMiddleware;
 
@@ -15,6 +16,8 @@ use Kuick\Security\SecurityMiddleware;
 return [
     // middleware for security (guards)
     new MiddlewareConfig(SecurityMiddleware::class),
+    // middleware for serving OPTIONS requests
+    new MiddlewareConfig(OptionsServingMiddleware::class),
     // middleware for routing
     new MiddlewareConfig(RoutingMiddleware::class),
 ];

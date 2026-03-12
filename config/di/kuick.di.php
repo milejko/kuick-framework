@@ -24,8 +24,5 @@ return [
     // log to standard output
     'app.log.handlers' => [
         ['type' => 'stream', 'path' => 'php://stdout'],
-    ],
-
-    // there is no valid token by default, you should provide one through environment variables
-    'api.security.ops.guard.token' => env('API_SECURITY_OPS_GUARD_TOKEN', ''),
+    ]
 ];

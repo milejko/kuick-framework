@@ -19,7 +19,7 @@ use Psr\Log\LoggerInterface;
 /**
  * Abstract Kernel
  */
-class KernelAbstract implements KernelInterface
+class BaseKernel implements KernelInterface
 {
     private ContainerInterface $container;
 
@@ -27,17 +27,17 @@ class KernelAbstract implements KernelInterface
     {
         // building DI container
         $this->container = (new ContainerCreator())->create($projectDir);
-        $logger = $this->getContainer()->get(LoggerInterface::class);
+        $logger = $this->container->get(LoggerInterface::class);
         $logger->info("Kernel created for: $projectDir");
-        $configIndexer = $this->getContainer()->get(ConfigIndexer::class);
-        $listenerProvider = $this->getContainer()->get(ListenerProviderInterface::class);
+        $configIndexer = $this->container->get(ConfigIndexer::class);
+        $listenerProvider = $this->container->get(ListenerProviderInterface::class);
         // registering listeners "on the fly", as they can depend on EventDispatcher
         foreach ($configIndexer->getConfigFilePaths(ConfigIndexer::LISTENERS_FILE_SUFFIX) as $listenerConfigFile) {
             foreach (require $listenerConfigFile as $listenerConfig) {
                 $logger->debug("Registering listener: $listenerConfig->listenerClassName");
                 $listenerProvider->registerListener(
                     $listenerConfig->pattern,
-                    $this->getContainer()->get($listenerConfig->listenerClassName),
+                    $this->container->get($listenerConfig->listenerClassName),
                     $listenerConfig->priority
                 );
             }

@@ -19,7 +19,7 @@ use Symfony\Component\Console\Application;
 /**
  * Console application Kernel
  */
-final class ConsoleKernel extends KernelAbstract
+final class ConsoleKernel extends BaseKernel
 {
     public function __construct(string $projectDir)
     {
@@ -39,5 +39,10 @@ final class ConsoleKernel extends KernelAbstract
         $logger->info('Console application initialized');
         // dispatching KernelCreatedEvent
         $this->getContainer()->get(EventDispatcherInterface::class)->dispatch(new KernelCreatedEvent($this));
+    }
+
+    public function run(): int
+    {
+        return $this->getContainer()->get(Application::class)->run();
     }
 }

@@ -29,7 +29,7 @@ final class ResponseEmittingListener
         $response = $responseCreatedEvent->getResponse();
         // emmit response
         (new ResponseEmitter())->emitResponse($response);
-        $this->logger->info('Response emitted succesfully:', [
+        $this->logger->info('Response emitted successfully:', [
             'code' => $response->getStatusCode(),
             'content-type' => $response->getHeaderLine('Content-Type'),
             'body-size' => $response->getBody()->getSize(),

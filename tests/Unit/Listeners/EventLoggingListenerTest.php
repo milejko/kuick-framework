@@ -3,19 +3,18 @@
 namespace Tests\Unit\Kuick\Framework\Listeners;
 
 use Kuick\Framework\Listeners\EventLoggingListener;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use stdClass;
 
-/**
- * @covers Kuick\Framework\Listeners\EventLoggingListener
- */
+#[CoversClass(EventLoggingListener::class)]
 class EventLoggingListenerTest extends TestCase
 {
     public function testIfStdClassEventIsLogged(): void
     {
         $listener = new EventLoggingListener(new NullLogger());
         $listener(new stdClass());
-        $this->assertTrue(true);
+        $this->expectNotToPerformAssertions();
     }
 }

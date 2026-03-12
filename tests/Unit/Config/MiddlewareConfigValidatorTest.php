@@ -7,26 +7,25 @@ use Kuick\Framework\Config\MiddlewareConfig;
 use Kuick\Framework\Config\MiddlewareConfigValidator;
 use Kuick\Routing\RoutingMiddleware;
 use Kuick\Security\SecurityMiddleware;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
-/**
- * @covers Kuick\Framework\Config\MiddlewareConfigValidator
- */
+#[CoversClass(MiddlewareConfigValidator::class)]
 class MiddlewareConfigValidatorTest extends TestCase
 {
     public function testIfCorrectMiddlewareConfigValidatorDoesNothing(): void
     {
         $middlewareConfig = new MiddlewareConfig(SecurityMiddleware::class, RoutingMiddleware::class);
         (new MiddlewareConfigValidator())->validate($middlewareConfig);
-        $this->assertTrue(true);
+        $this->expectNotToPerformAssertions();
     }
 
     public function testIfCorrectMiddlewareWithoutBeforeMiddlewareConfigValidatorDoesNothing(): void
     {
         $middlewareConfig = new MiddlewareConfig(SecurityMiddleware::class);
         (new MiddlewareConfigValidator())->validate($middlewareConfig);
-        $this->assertTrue(true);
+        $this->expectNotToPerformAssertions();
     }
 
     public function testIfEmptyMiddlewareClassNameRaisesException(): void

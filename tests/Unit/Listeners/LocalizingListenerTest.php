@@ -3,12 +3,11 @@
 namespace Tests\Unit\Kuick\Framework\Listeners;
 
 use Kuick\Framework\Listeners\LocalizingListener;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 
-/**
- * @covers Kuick\Framework\Listeners\LocalizingListener
- */
+#[CoversClass(LocalizingListener::class)]
 class LocalizingListenerTest extends TestCase
 {
     public function testIfLocalizationIsSet(): void

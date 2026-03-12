@@ -7,12 +7,11 @@ use Kuick\EventDispatcher\ListenerProvider;
 use Kuick\Framework\Events\ResponseCreatedEvent;
 use Kuick\Framework\Listeners\ResponseEmittingListener;
 use Kuick\Http\Message\Response;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 
-/**
- * @covers Kuick\Framework\Listeners\ResponseEmittingListener
- */
+#[CoversClass(ResponseEmittingListener::class)]
 class ResponseEmittingListenerTest extends TestCase
 {
     /**

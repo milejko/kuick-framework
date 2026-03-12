@@ -11,22 +11,16 @@ use Kuick\Framework\Listeners\ExceptionHandlingListener;
 use Kuick\Http\HttpException;
 use Kuick\Http\Server\HtmlNotFoundRequestHandler;
 use Kuick\Http\Server\JsonNotFoundRequestHandler;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
-use stdClass;
 
-/**
- * @covers Kuick\Framework\Listeners\ExceptionHandlingListener
- */
+#[CoversClass(ExceptionHandlingListener::class)]
 class ExceptionHandlingListenerTest extends TestCase
 {
     public function testIfExceptionHandlerProduces500Response(): void
     {
         $listenerProvider = new ListenerProvider();
-        /**
-         * @var \Psr\Http\Message\ResponseInterface $responseCreated
-         */
-        $responseCreated = null;
         $listenerProvider->registerListener(ResponseCreatedEvent::class, function (ResponseCreatedEvent $event) use (&$responseCreated) {
             $responseCreated = $event->getResponse();
         });
@@ -43,10 +37,6 @@ class ExceptionHandlingListenerTest extends TestCase
     public function testIfHttpExceptionHandlerProducesJsonResponse(): void
     {
         $listenerProvider = new ListenerProvider();
-        /**
-         * @var \Psr\Http\Message\ResponseInterface $responseCreated
-         */
-        $responseCreated = null;
         $listenerProvider->registerListener(ResponseCreatedEvent::class, function (ResponseCreatedEvent $event) use (&$responseCreated) {
             $responseCreated = $event->getResponse();
         });
@@ -64,10 +54,6 @@ class ExceptionHandlingListenerTest extends TestCase
     public function testIfHttpExceptionHandlerProducesHtmlResponse(): void
     {
         $listenerProvider = new ListenerProvider();
-        /**
-         * @var \Psr\Http\Message\ResponseInterface $responseCreated
-         */
-        $responseCreated = null;
         $listenerProvider->registerListener(ResponseCreatedEvent::class, function (ResponseCreatedEvent $event) use (&$responseCreated) {
             $responseCreated = $event->getResponse();
         });

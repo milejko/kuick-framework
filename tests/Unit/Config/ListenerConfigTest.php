@@ -4,12 +4,11 @@ namespace Tests\Unit\Kuick\Framework\Config;
 
 use Kuick\Framework\Config\ListenerConfig;
 use Kuick\EventDispatcher\ListenerPriority;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\Unit\Kuick\Framework\Mocks\MockListener;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @covers Kuick\Framework\Config\ListenerConfig
- */
+#[CoversClass(ListenerConfig::class)]
 class ListenerConfigTest extends TestCase
 {
     public function testIfListenerConfigIsDefinedWithTheDefaultMethods(): void

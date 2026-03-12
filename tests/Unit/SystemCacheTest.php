@@ -4,11 +4,10 @@ namespace Tests\Unit\Kuick\Framework;
 
 use Kuick\Framework\SystemCache;
 use Kuick\Cache\LayeredCache;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @covers Kuick\Framework\SystemCache
- */
+#[CoversClass(SystemCache::class)]
 class SystemCacheTest extends TestCase
 {
     public function testIfProdCacheServiceIsWellDefined(): void

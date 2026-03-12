@@ -15,8 +15,8 @@ $fileMap = [
     // executable files
     'vendor/kuick/framework/public/index.php' => 'public/index.php',
     'vendor/kuick/framework/bin/console' => 'bin/console',    
-    // DI definition config files
 
+    // DI definition config files
     'vendor/kuick/framework/config/di/kuick.di.php' => 'config/di/app.di.php',
 
     // sample config files
@@ -24,6 +24,7 @@ $fileMap = [
     'vendor/kuick/framework/config-example/app.commands.php' => 'config/app.commands.php',
     'vendor/kuick/framework/config-example/app.guards.php' => 'config/app.guards.php',
     'vendor/kuick/framework/config-example/app.listeners.php' => 'config/app.listeners.php',
+    'vendor/kuick/framework/config-example/app.middlewares.php' => 'config/app.middlewares.php',
     'vendor/kuick/framework/config-example/app.routes.php' => 'config/app.routes.php',
 ];
 

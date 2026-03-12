@@ -3,13 +3,11 @@
 namespace Tests\Unit\Kuick\Framework\Config;
 
 use Kuick\Framework\Config\RouteConfig;
-use Kuick\EventDispatcher\RoutePriority;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\Unit\Kuick\Framework\Mocks\MockRoute;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @covers Kuick\Framework\Config\RouteConfig
- */
+#[CoversClass(RouteConfig::class)]
 class RouteConfigTest extends TestCase
 {
     public function testIfRouteConfigIsDefinedWithTheDefaultMethods(): void

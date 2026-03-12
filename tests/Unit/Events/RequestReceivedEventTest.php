@@ -5,10 +5,9 @@ namespace Tests\Unit\Kuick\Framework\Events;
 use Kuick\Framework\Events\RequestReceivedEvent;
 use Monolog\Test\TestCase;
 use Nyholm\Psr7\ServerRequest;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @covers Kuick\Framework\Events\RequestReceivedEvent
- */
+#[CoversClass(RequestReceivedEvent::class)]
 class RequestReceivedEventTest extends TestCase
 {
     public function testIfRequestCanBeRetrievedFromTheEvent(): void

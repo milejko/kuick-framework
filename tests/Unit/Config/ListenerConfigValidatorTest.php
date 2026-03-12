@@ -5,20 +5,18 @@ namespace Tests\Unit\Kuick\Framework\Config;
 use Kuick\Framework\Config\ConfigException;
 use Kuick\Framework\Config\ListenerConfig;
 use Kuick\Framework\Config\ListenerConfigValidator;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\Unit\Kuick\Framework\Mocks\MockListener;
 use PHPUnit\Framework\TestCase;
-use stdClass;
 
-/**
- * @covers Kuick\Framework\Config\ListenerConfigValidator
- */
+#[CoversClass(ListenerConfigValidator::class)]
 class ListenerConfigValidatorTest extends TestCase
 {
     public function testIfCorrectListenerConfigValidatorDoesNothing(): void
     {
         $listenerConfig = new ListenerConfig('*', MockListener::class);
         (new ListenerConfigValidator())->validate($listenerConfig);
-        $this->assertTrue(true);
+        $this->expectNotToPerformAssertions();
     }
 
     public function testIfEmptyPathRaisesException(): void

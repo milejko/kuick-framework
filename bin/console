@@ -10,7 +10,6 @@
  */
 
 use Kuick\Framework\ConsoleKernel;
-use Symfony\Component\Console\Application;
 
 $projectDir = dirname(__DIR__);
 require $projectDir . '/vendor/autoload.php';
@@ -19,7 +18,4 @@ require $projectDir . '/vendor/autoload.php';
 // uncomment the line below if you really want to use it
 // Kuick\Dotenv\DotEnvLoader::fromDirectory($projectDir);
 
-(new ConsoleKernel($projectDir))
-    ->getContainer()
-        ->get(Application::class)
-            ->run();
+(new ConsoleKernel($projectDir))->run();

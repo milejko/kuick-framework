@@ -20,7 +20,7 @@ use Kuick\Cache\NullCache;
 final class SystemCache extends LayeredCache implements SystemCacheInterface
 {
     public function __construct(
-        #[Inject('app.projectDir')] string $projetcDir,
+        #[Inject('app.projectDir')] string $projectDir,
         #[Inject('app.env')] string $env,
     ) {
         // in non-prod env we use NullCache only
@@ -37,7 +37,7 @@ final class SystemCache extends LayeredCache implements SystemCacheInterface
             $prodCacheStack[] = new ApcuCache();
         }
         // filesystem cache is always used
-        $prodCacheStack[] = new FilesystemCache($projetcDir . self::CACHE_PATH);
+        $prodCacheStack[] = new FilesystemCache($projectDir . self::CACHE_PATH);
         parent::__construct($prodCacheStack);
     }
 }
