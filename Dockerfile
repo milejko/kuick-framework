@@ -1,17 +1,7 @@
-# syntax=docker/dockerfile:1.6
-
 ARG PHP_VERSION=8.5 \
     OS_VARIANT=noble
 
-###################
-# Base PHP target #
-###################
-FROM milejko/php:${PHP_VERSION}-${OS_VARIANT} AS base
-
-######################
-# Test runner target #
-######################
-FROM base AS test-runner
+FROM milejko/php:${PHP_VERSION}-${OS_VARIANT}
 
 ENV XDEBUG_ENABLE=1 \
     XDEBUG_MODE=coverage \
