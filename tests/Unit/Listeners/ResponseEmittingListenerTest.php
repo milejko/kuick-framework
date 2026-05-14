@@ -14,10 +14,6 @@ use Psr\Log\NullLogger;
 #[CoversClass(ResponseEmittingListener::class)]
 class ResponseEmittingListenerTest extends TestCase
 {
-    /**
-     * Needs to be run in separate process, cause emmiter sends headers
-     * @runInSeparateProcess
-     */
     public function testIfResponseIsEmitted(): void
     {
         $responseCreatedEvent = new ResponseCreatedEvent(new Response(200, [], 'Hello world!'));

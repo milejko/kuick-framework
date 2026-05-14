@@ -10,10 +10,6 @@ use Monolog\Test\TestCase;
 #[CoversClass(KernelCreatedEvent::class)]
 class KernelCreatedEventTest extends TestCase
 {
-    /**
-     * Needs to be run in separate process, cause emmiter sends headers
-     * @runInSeparateProcess
-     */
     public function testIfKernelObjectCanBeRetrievedFromTheEvent(): void
     {
         $kernel = new MockKernel();

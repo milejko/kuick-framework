@@ -20,10 +20,6 @@ class BaseKernelTest extends TestCase
         self::$projectDir = realpath(__DIR__ . '/Mocks/project-dir');
     }
 
-    /**
-     * Needs to be run in separate process, cause emmiter sends headers
-     * @runInSeparateProcess
-     */
     public function testIfDevKernelIsWellDefined(): void
     {
         putenv('APP_ENV=dev');
@@ -36,10 +32,6 @@ class BaseKernelTest extends TestCase
         $this->assertEquals('Europe/Warsaw', $container->get('app.timezone'));
     }
 
-    /**
-     * Needs to be run in separate process, cause emmiter sends headers
-     * @runInSeparateProcess
-     */
     public function testIfTestKernelIsWellDefined(): void
     {
         putenv('APP_ENV=test');

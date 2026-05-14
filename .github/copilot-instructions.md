@@ -114,6 +114,6 @@ Test namespace mirrors: `Tests\Unit\Kuick\Framework\`
 ## Testing patterns
 
 - PHPUnit 10+ attribute syntax: `#[CoversClass(Foo::class)]` on every test class
-- Tests that emit HTTP headers require `@runInSeparateProcess`
+- Tests that emit HTTP headers require `#[RunInSeparateProcess()]`
 - Mock project structures live in `tests/Unit/Mocks/project-dir/` and provide realistic config/DI fixtures
 - `expectNotToPerformAssertions()` used when testing that no exception is thrown

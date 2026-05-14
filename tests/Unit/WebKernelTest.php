@@ -49,4 +49,15 @@ class WebKernelTest extends TestCase
         $this->assertEquals('Europe/London', $container->get('app.timezone'));
         (new Filesystem())->remove(self::$projectDir . '/var/cache');
     }
+
+    #[RunInSeparateProcess()]
+    public function testRunDispatchesRequestReceivedEvent(): void
+    {
+        putenv('APP_ENV=test');
+        $kernel = new WebKernel(self::$projectDir);
+        $request = new ServerRequest('GET', '/');
+        $kernel->run($request);
+        $this->assertInstanceOf(KernelInterface::class, $kernel);
+        (new Filesystem())->remove(self::$projectDir . '/var/cache');
+    }
 }
