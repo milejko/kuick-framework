@@ -5,7 +5,9 @@ namespace Tests\Unit\Kuick\Framework;
 use Kuick\Framework\BaseKernel;
 use Kuick\Framework\WebKernel;
 use Kuick\Framework\KernelInterface;
+use Nyholm\Psr7\ServerRequest;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Container\ContainerInterface;
@@ -22,10 +24,7 @@ class WebKernelTest extends TestCase
         self::$projectDir = realpath(__DIR__ . '/Mocks/project-dir');
     }
 
-    /**
-     * Needs to be run in separate process, cause emmiter sends headers
-     * @runInSeparateProcess
-     */
+    #[RunInSeparateProcess()]
     public function testIfDevKernelIsWellDefined(): void
     {
         putenv('APP_ENV=dev');
@@ -38,10 +37,7 @@ class WebKernelTest extends TestCase
         $this->assertEquals('Europe/Warsaw', $container->get('app.timezone'));
     }
 
-    /**
-     * Needs to be run in separate process, cause emmiter sends headers
-     * @runInSeparateProcess
-     */
+    #[RunInSeparateProcess()]
     public function testIfTestKernelIsWellDefined(): void
     {
         putenv('APP_ENV=test');
