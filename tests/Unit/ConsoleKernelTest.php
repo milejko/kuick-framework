@@ -8,6 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Container\ContainerInterface;
+use Symfony\Component\Console\Application;
 use Symfony\Component\Filesystem\Filesystem;
 
 #[CoversClass(ConsoleKernel::class)]
@@ -42,5 +43,23 @@ class ConsoleKernelTest extends TestCase
         $this->assertEquals('test', $container->get('app.env'));
         $this->assertEquals('Europe/London', $container->get('app.timezone'));
         (new Filesystem())->remove(self::$projectDir . '/var/cache');
+    }
+
+    public function testRun(): void
+    {
+        putenv('APP_ENV=test');
+        $kernel = new ConsoleKernel(self::$projectDir);
+
+        $mockApplication = $this->createMock(Application::class);
+        $mockApplication->expects($this->once())
+            ->method('run')
+            ->willReturn(0);
+
+        $container = $kernel->getContainer();
+        /** @phpstan-ignore method.notFound */
+        $container->set(Application::class, $mockApplication);
+
+        $exitCode = $kernel->run();
+        $this->assertEquals(0, $exitCode);
     }
 }
